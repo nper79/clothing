@@ -1,17 +1,21 @@
 {
-  "name": "gemini-personal-stylist",
+  "name": "styleai-personal-stylist",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@google/genai": "^1.27.0",
+    "@supabase/supabase-js": "^2.76.1",
+    "firebase": "^12.4.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.4"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

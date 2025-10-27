@@ -1,4 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import UserHeader from './components/UserHeader';
 import Questionnaire from './components/Questionnaire';
 import ImageUploader from './components/ImageUploader';
 import StyleResults from './components/StyleResults';
@@ -9,7 +13,7 @@ import { initializeUserProfile, updateProfileFromFeedback, saveUserProfile, load
 import type { Answers, StyleSuggestion, DislikedStyle, UserProfile, UserFeedback } from './types';
 import { AppState } from './types';
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
   // Generate or retrieve user ID
   const getUserId = () => {
     const stored = localStorage.getItem('user_id');
@@ -235,20 +239,37 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="h-[100dvh] w-full">
-        <main className="w-full h-full">
-            {renderContent()}
-        </main>
-        <style>{`
-          .animate-fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-          }
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}</style>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <UserHeader />
+      <main className="w-full" style={{ height: 'calc(100vh - 64px)' }}>
+        {renderContent()}
+      </main>
+      <style>{`
+        .animate-fade-in {
+          animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/*" element={
+            <ProtectedRoute>
+              <AppContent />
+            </ProtectedRoute>
+          } />
+        </Routes>
+      </AuthProvider>
+    </Router>
   );
 };
 
