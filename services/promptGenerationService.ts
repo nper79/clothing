@@ -31,96 +31,63 @@ export class PromptGenerationService {
         const topDislikes = PreferenceServiceSupabase.getTopDislikedAttributes(userProfile, 3);
         const hardBans = userProfile.rejections.filter(r => r.isHardBan);
 
-        // DIVERSE STYLE CATEGORIES for more interesting suggestions
-        const styleCategories = [
-            // Street & Urban
-            'modern streetwear', 'urban casual', 'skate-inspired', 'hip-hop style', 'technical wear',
-            // Rock & Alternative
-            'rocker chic', 'punk-inspired casual', 'grunge revival', 'alternative style', 'metal aesthetic',
-            // High Fashion & Avant-Garde
-            'minimalist avant-garde', 'deconstructed style', 'architectural fashion', 'experimental casual',
-            // Cultural & Global
-            'Japanese street style', 'Korean fashion', 'Scandinavian minimal', 'Mediterranean chic',
-            // Niche & Specific
-            'techwear', 'workwear-inspired', 'vintage revival', 'retro-futuristic', 'cyberpunk casual'
+        // EXTREME STYLE DIVERSITY - Bold and specific styles
+        const extremeStyles = [
+            // Street & Urban - Youth Culture
+            'SKATE PUNK STYLE: oversized hoodies, ripped jeans, skate shoes, beanies',
+            'HIP-HOP URBAN: baggy pants, graphic tees, sneakers, gold chains, baseball caps',
+            'STREETWEAR CORE: tech jackets, cargo pants, combat boots, utility belts',
+            'MODERN SKATER: loose fit t-shirts, wide-leg jeans, high-tops, caps',
+
+            // Rock & Alternative - Edge & Rebellion
+            'PUNK ROCK ATTITUDE: leather jackets, ripped shirts, combat boots, chains',
+            'GOTHIC DARK STYLE: black everything, velvet, platform boots, dramatic makeup',
+            'METAL HEAD VIBE: band t-shirts, black jeans, leather boots, silver jewelry',
+            'GRUNGE REVIVAL: flannel shirts, ripped denim, combat boots, layering',
+
+            // Tech & Future - Cyberpunk & Sci-Fi
+            'CYBERPUNK FUTURE: neon accents, tech wear, LED elements, tactical gear',
+            'RETRO-FUTURISTIC: 80s neon, metallic fabrics, geometric patterns, visors',
+            'TECHNO NOMAD: functional fabrics, modular clothing, utility belts, gear',
+            'SPACE AGE: iridescent materials, metallic textures, futuristic silhouettes',
+
+            // Cultural Fusion - Global Influences
+            'JAPANESE STREET: Harajuku layers, kawaii elements, platform shoes',
+            'KOREAN FASHION: K-pop influence, bold colors, street style fusion',
+            'MEDITERRANEAN COOL: linen, earth tones, relaxed silhouettes, sandals',
+            'SCANDINAVIAN MINIMAL: clean lines, monochrome, functional design',
+
+            // High Fashion - Experimental
+            'AVANT-GARDE ART: deconstructed clothing, unusual proportions, artistic',
+            'MINIMALIST LUXURY: clean cuts, neutral palette, architectural shapes',
+            'EXPERIMENTAL FASHION: unusual materials, sculptural forms, concept-driven',
+
+            // Vintage & Niche - Retro & Specialized
+            '90S HIP-HOP: bright colors, oversized everything, sportswear fusion',
+            '80S POWER DRESSING: shoulder pads, bold colors, confidence attitude',
+            'VINTAGE WORKWEAR: denim overalls, utility pieces, authentic materials',
+            'MILITARY TACTICAL: cargo, camouflage, boots, functionality first'
         ];
 
-        // Use variation + random for more diversity
-        const styleIndex = (variation + Math.floor(Math.random() * 3)) % styleCategories.length;
-        const selectedStyle = styleCategories[styleIndex];
+        // FORCE COMPLETE RANDOMIZATION - no patterns, no repetition
+        const randomIndex = Math.floor(Math.random() * extremeStyles.length);
+        const selectedStyle = extremeStyles[randomIndex];
 
-        // Base context from onboarding
-        let prompt = '';
+        // Create a focused prompt that emphasizes the style
+        let prompt = `Generate an outfit image with this specific style: ${selectedStyle}. `;
 
-        // Add style category for diversity - Make it the primary focus
-        prompt += `${selectedStyle} outfit, `;
+        // Keep it simple - let the style dominate
+        prompt += `High quality fashion photography, full body shot, clean background.`;
 
-        // Add context/occasion
-        if (context) {
-            prompt += `${context} outfit, `;
-        } else if (constraints.contexts && constraints.contexts.length > 0) {
-            const primaryContext = constraints.contexts[0];
-            prompt += `${primaryContext} outfit, `;
-        } else {
-            prompt += 'versatile everyday outfit, ';
+        // Add strong avoidances if there are disliked styles
+        if (hardBans && hardBans.length > 0) {
+            const bannedStyles = hardBans.map(ban => ban.attribute).join(', ');
+            prompt += ` IMPORTANT: Avoid anything related to: ${bannedStyles}`;
         }
 
-        // Add season/weather context
-        if (season) {
-            prompt += `suitable for ${season}, `;
-        } else if (constraints.seasons && constraints.seasons.length > 0) {
-            const seasonMap: { [key: string]: string } = {
-                'All year': 'all seasons',
-                'Spring–Summer': 'warm weather',
-                'Fall–Winter': 'cold weather'
-            };
-            const weatherContext = constraints.seasons.map(s => seasonMap[s] || s).join(' and ');
-            prompt += `suitable for ${weatherContext}, `;
-        }
-
-        // Positive preferences (3-4 strongest likes)
-        const positivePrompts = this.buildPositivePromptSections(topLikes, variation);
-        prompt += positivePrompts.join(', ');
-
-        // Soft avoids (2-3 moderate dislikes)
-        const negativePrompts = this.buildNegativePromptSections(topDislikes);
-        if (negativePrompts.length > 0) {
-            prompt += `, avoiding ${negativePrompts.join(', ')}`;
-        }
-
-        // Hard bans from progressive rejection
-        const hardBanPrompts = this.buildHardBanSections(hardBans);
-        if (hardBanPrompts.length > 0) {
-            prompt += `. ABSOLUTELY NO: ${hardBanPrompts.join(', ')}`;
-        }
-
-        // Budget considerations
-        if (constraints.budget) {
-            const budgetModifiers = {
-                'Low': 'affordable, budget-friendly',
-                'Medium': 'mid-range quality',
-                'High': 'premium, luxury'
-            };
-            prompt += `, ${budgetModifiers[constraints.budget as keyof typeof budgetModifiers] || 'quality'}`;
-        }
-
-        // Add style diversity based on variation
-        const styleDiversity = this.addStyleDiversity(variation, userProfile);
-        if (styleDiversity) {
-            prompt += `, ${styleDiversity}`;
-        }
-
-        // Add color scheme guidance
-        const colorScheme = this.generateColorScheme(userProfile, variation);
-        if (colorScheme) {
-            prompt += `, ${colorScheme} color palette`;
-        }
-
-        // Finish with quality and style specifications
-        prompt += ', professional fashion photography, clean lighting, full body shot';
-
-        // Add negative prompt for AI generators that support it
-        prompt += ' --no unrealistic proportions, distorted clothing, poor quality';
+        console.log('🎨 GENERATING PROMPT:', prompt);
+        console.log('🎨 SELECTED STYLE:', selectedStyle);
+        console.log('🎨 STYLE INDEX:', styleIndex);
 
         return prompt;
     }

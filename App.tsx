@@ -453,11 +453,11 @@ const AppContent: React.FC = () => {
           updatedProfile,
           contexts?.[0],
           seasons?.[0],
-          1
+          3  // Generate 3 new styles for variety
         );
 
         const answersWithGender = { ...answers, gender: detectedGender || 'Male' };
-        const result = await generateStyleSuggestions(answersWithGender, userImage, updatedDislikedStyles, updatedProfile, 1);
+        const result = await generateStyleSuggestions(answersWithGender, userImage, updatedDislikedStyles, updatedProfile, 3);
 
         const enhancedNewSuggestions = await Promise.all(
           result.map(suggestion => VisionAnalysisService.enhanceWithAnalysis(suggestion))
