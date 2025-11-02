@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserHeader from './components/UserHeader';
 import Questionnaire from './components/Questionnaire';
@@ -8,50 +8,103 @@ import ImageUploader from './components/ImageUploader';
 import StyleResults from './components/StyleResults';
 import LoadingSpinner from './components/LoadingSpinner';
 import Feedback from './components/Feedback';
+import Onboarding from './components/Onboarding';
 import { generateStyleSuggestions, extractOutfitMetadata, detectGender } from './services/geminiService';
 import { initializeUserProfile, updateProfileFromFeedback, saveUserProfile, loadUserProfile } from './services/preferenceService';
-import type { Answers, StyleSuggestion, DislikedStyle, UserProfile, UserFeedback } from './types';
+import { PreferenceServiceSupabase } from './services/preferenceServiceSupabase';
+import { VisionAnalysisService } from './services/visionAnalysisService';
+import { PromptGenerationService } from './services/promptGenerationService';
+import type { Answers, StyleSuggestion, DislikedStyle, UserProfile, UserFeedback, FeedbackReason } from './types';
 import { AppState } from './types';
 
 const AppContent: React.FC = () => {
-  // Generate or retrieve user ID
-  const getUserId = () => {
-    const stored = localStorage.getItem('user_id');
-    if (stored) return stored;
-    const newId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem('user_id', newId);
-    return newId;
-  };
+  const { user } = useAuth(); // Obter Firebase user
+  const userId = user?.id || null; // Usar Firebase UID real
 
-  const userId = getUserId();
-
-  const [appState, setAppState] = useState<AppState>(AppState.QUESTIONNAIRE);
+  const [appState, setAppState] = useState<AppState>(AppState.ONBOARDING);
   const [answers, setAnswers] = useState<Answers>({});
   const [userImage, setUserImage] = useState<{ base64: string; mimeType: string } | null>(null);
   const [suggestions, setSuggestions] = useState<StyleSuggestion[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dislikedStyles, setDislikedStyles] = useState<DislikedStyle[]>([]);
   const [dislikedSuggestion, setDislikedSuggestion] = useState<StyleSuggestion | null>(null);
-  const [userProfile, setUserProfile] = useState<UserProfile>(() => {
-    const saved = loadUserProfile(userId);
-    return saved || initializeUserProfile(userId);
-  });
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [isProcessingFeedback, setIsProcessingFeedback] = useState(false);
+  const [detectedGender, setDetectedGender] = useState<string | null>(null);
+
+  // Load user profile from Supabase when userId is available
+  useEffect(() => {
+    if (!userId) return; // Wait for Firebase user to be available
+
+    const loadProfile = async () => {
+      try {
+        console.log('Loading profile for Firebase User ID:', userId);
+        let profile = await PreferenceServiceSupabase.loadUserProfile(userId);
+
+        if (!profile) {
+          // Initialize with onboarding if no profile exists
+          // The onboarding will create the profile
+          console.log('No existing profile found, user needs to complete onboarding');
+          setProfileLoading(false);
+          return;
+        }
+
+        setUserProfile(profile);
+        console.log('Profile loaded successfully');
+      } catch (error) {
+        console.error('Error loading user profile:', error);
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, [userId]);
 
   // Save profile whenever it changes
   useEffect(() => {
-    saveUserProfile(userProfile);
+    if (userProfile) {
+      saveUserProfile(userProfile);
+    }
   }, [userProfile]);
 
 
-  const handleQuestionnaireComplete = useCallback((finalAnswers: Answers) => {
+  const handleQuestionnaireComplete = useCallback(async (finalAnswers: Answers) => {
+    if (!userId) {
+      console.error('No Firebase user available for profile creation');
+      setError('You must be logged in to create a profile. Please try logging in again.');
+      setAppState(AppState.ERROR);
+      return;
+    }
+
     setAnswers(finalAnswers);
-    setAppState(AppState.IMAGE_UPLOAD);
-  }, []);
+    console.log('Creating profile for Firebase User ID:', userId);
+
+    // Create user profile from onboarding answers
+    try {
+      const profile = await PreferenceServiceSupabase.initializeUserProfile(userId, finalAnswers);
+      setUserProfile(profile);
+      console.log('Profile created successfully');
+      setAppState(AppState.IMAGE_UPLOAD);
+    } catch (error) {
+      console.error('Error creating user profile:', error);
+      setError('Failed to create your profile. Please try again.');
+      setAppState(AppState.ERROR);
+    }
+  }, [userId]);
 
   const handleGenerate = async (image: { base64: string; mimeType: string }) => {
+    if (!userProfile) {
+      setError('Profile not loaded. Please complete onboarding first.');
+      setAppState(AppState.ERROR);
+      return;
+    }
+
     setUserImage(image);
     setAppState(AppState.LOADING);
     setError(null);
+
     try {
       // Detect gender from the image only once
       let gender = detectedGender;
@@ -61,8 +114,34 @@ const AppContent: React.FC = () => {
       }
       const answersWithGender = { ...answers, gender };
 
+      // Generate style suggestions using the new system
       const result = await generateStyleSuggestions(answersWithGender, image, dislikedStyles, userProfile);
-      setSuggestions(result);
+
+      // Enhance suggestions with Vision AI analysis
+      const enhancedSuggestions = await Promise.all(
+        result.map(suggestion => VisionAnalysisService.enhanceWithAnalysis(suggestion))
+      );
+
+      // Score and sort suggestions based on user preferences
+      const scoredSuggestions = enhancedSuggestions
+        .map(suggestion => {
+          if (!suggestion.analysis) return suggestion;
+
+          const { score, explanation } = PromptGenerationService.scoreOutfitForUser(
+            userProfile,
+            suggestion.analysis
+          );
+
+          return {
+            ...suggestion,
+            score,
+            whyThis: explanation
+          };
+        })
+        .filter(suggestion => !suggestion.score || suggestion.score > -50) // Filter out very bad matches
+        .sort((a, b) => (b.score || 0) - (a.score || 0));
+
+      setSuggestions(scoredSuggestions);
       setAppState(AppState.RESULTS);
     } catch (e) {
       console.error(e);
@@ -72,7 +151,7 @@ const AppContent: React.FC = () => {
   };
 
   const handleReset = useCallback(() => {
-    setAppState(AppState.QUESTIONNAIRE);
+    setAppState(AppState.ONBOARDING);
     setAnswers({});
     setUserImage(null);
     setSuggestions(null);
@@ -85,117 +164,238 @@ const AppContent: React.FC = () => {
   }, []);
 
   const handleDislike = useCallback((suggestion: StyleSuggestion) => {
+    console.log('=== APP HANDLE DISLIKE ===');
     console.log('Dislike clicked for suggestion:', suggestion.theme);
-    // Show feedback modal to capture reason
-    setDislikedSuggestion(suggestion);
-    setAppState(AppState.FEEDBACK);
-  }, []);
+    console.log('Current isProcessingFeedback:', isProcessingFeedback);
+    console.log('Current suggestions count:', suggestions?.length || 0);
 
-  const generateNewSuggestionsInBackground = useCallback(async (dislikedTheme: string) => {
-    if (!userImage || !answers) return;
+    // REMOÇÃO IMEDIATA: Remove a sugestão da lista imediatamente
+    setSuggestions(currentSuggestions => {
+      console.log('Before filter, suggestions count:', currentSuggestions?.length || 0);
 
-    // Add the disliked style to the list
-    const newDislikedStyle: DislikedStyle = {
-      theme: dislikedTheme,
-      reason: 'User disliked',
-    };
-    const updatedDislikedStyles = [...dislikedStyles, newDislikedStyle];
-    setDislikedStyles(updatedDislikedStyles);
-
-    // Generate new suggestions in background
-    try {
-      const result = await generateStyleSuggestions(answers, userImage, updatedDislikedStyles, userProfile);
-      setSuggestions(currentSuggestions => {
-        // Only update if we have fewer than 3 suggestions
-        if (!currentSuggestions || currentSuggestions.length < 3) {
-          return result;
-        }
+      if (!currentSuggestions) {
+        console.log('❌ No current suggestions, returning');
         return currentSuggestions;
+      }
+
+      // Remove a sugestão rejeitada imediatamente
+      const filtered = currentSuggestions.filter(s => s.theme !== suggestion.theme);
+      console.log('✅ Suggestion removed immediately. Remaining:', filtered.length);
+      console.log('Removed suggestion with theme:', suggestion.theme);
+      console.log('Remaining themes:', filtered.map(s => s.theme));
+
+      // Se ficarmos com poucas sugestões, já começamos a gerar mais
+      if (filtered.length < 3) {
+        console.log('Low suggestions detected, starting background generation');
+        setTimeout(() => generateMoreInBackground(suggestion.theme), 100);
+      }
+
+      return filtered;
+    });
+
+    // Show feedback modal to capture micro-reasons
+    setDislikedSuggestion(suggestion);
+    setCurrentOutfitAnalysis(suggestion.analysis);
+    setAppState(AppState.FEEDBACK);
+  }, []); // Removido isProcessingFeedback da dependência
+
+  const generateMoreInBackground = useCallback(async (dislikedTheme?: string) => {
+    if (!userImage || !answers || !userProfile) {
+      console.log('Missing required data for background generation');
+      return;
+    }
+
+    // Add the disliked style to the list if provided
+    let updatedDislikedStyles = dislikedStyles;
+    if (dislikedTheme) {
+      const newDislikedStyle: DislikedStyle = {
+        theme: dislikedTheme,
+        reason: 'User disliked',
+      };
+      updatedDislikedStyles = [...dislikedStyles, newDislikedStyle];
+      setDislikedStyles(updatedDislikedStyles);
+    }
+
+    console.log('Starting background generation...');
+
+    // Generate 2-3 new suggestions in background
+    try {
+      const answersWithGender = { ...answers, gender: detectedGender || 'Male' };
+      const result = await generateStyleSuggestions(answersWithGender, userImage, updatedDislikedStyles, userProfile, 3);
+
+      const enhancedNewSuggestions = await Promise.all(
+        result.map(suggestion => VisionAnalysisService.enhanceWithAnalysis(suggestion))
+      );
+
+      setSuggestions(currentSuggestions => {
+        if (!currentSuggestions) return enhancedNewSuggestions;
+
+        // Add only new themes that don't exist yet
+        const existingThemes = currentSuggestions.map(s => s.theme);
+        const newSuggestions = enhancedNewSuggestions.filter(s => !existingThemes.includes(s.theme));
+
+        // Combine and maintain a pool of 5-7 suggestions
+        const combined = [...currentSuggestions, ...newSuggestions];
+        const finalSuggestions = combined.slice(0, 7);
+
+        console.log(`Background generation complete: ${finalSuggestions.length} total suggestions`);
+        console.log(`Existing themes: [${existingThemes.join(', ')}]`);
+        console.log(`New themes: [${newSuggestions.map(s => s.theme).join(', ')}]`);
+        return finalSuggestions;
       });
     } catch (e) {
       console.error('Background regeneration failed:', e);
     }
-  }, [dislikedStyles, answers, userImage, userProfile]);
+  }, [dislikedStyles, answers, userImage, userProfile, detectedGender]);
 
-  const [isProcessingFeedback, setIsProcessingFeedback] = useState(false);
+  const generateNewSuggestionsInBackground = useCallback(async (dislikedTheme: string) => {
+    await generateMoreInBackground(dislikedTheme);
+  }, [generateMoreInBackground]);
+
   const [showFeedbackConfirmation, setShowFeedbackConfirmation] = useState(false);
-  const [detectedGender, setDetectedGender] = useState<string | null>(null);
+  const [currentOutfitAnalysis, setCurrentOutfitAnalysis] = useState<any>(null);
+  const [isGeneratingInBackground, setIsGeneratingInBackground] = useState(false);
 
-  const handleFeedbackSubmit = useCallback(async (reason: string) => {
-    console.log('Feedback submitted:', reason);
+  // Geração contínua: manter sempre 5+ sugestões disponíveis
+  useEffect(() => {
+    const ensureEnoughSuggestions = async () => {
+      if (!suggestions || !userImage || !answers || !userProfile || isGeneratingInBackground) {
+        return;
+      }
 
-    // Prevent multiple submissions
-    if (isProcessingFeedback || !dislikedSuggestion || !userImage) {
-      console.log('Ignoring duplicate or invalid feedback submission');
+      if (suggestions.length < 5) {
+        console.log('Auto-generating more suggestions. Current count:', suggestions.length);
+        setIsGeneratingInBackground(true);
+        await generateMoreInBackground();
+        setIsGeneratingInBackground(false);
+      }
+    };
+
+    // Verificar a cada 10 segundos
+    const interval = setInterval(ensureEnoughSuggestions, 10000);
+
+    // Verificar imediatamente quando as sugestões mudam
+    ensureEnoughSuggestions();
+
+    return () => clearInterval(interval);
+  }, [suggestions, userImage, answers, userProfile, isGeneratingInBackground, generateMoreInBackground]);
+
+  const handleFeedbackSubmit = useCallback(async (microReasons: FeedbackReason[]) => {
+    console.log('Feedback submitted with micro-reasons:', microReasons);
+
+    if (isProcessingFeedback || !dislikedSuggestion || !userProfile || !userId) {
+      console.log('Ignoring duplicate or invalid feedback submission', {
+        isProcessingFeedback,
+        hasDislikedSuggestion: !!dislikedSuggestion,
+        hasUserProfile: !!userProfile,
+        hasUserId: !!userId
+      });
       return;
     }
 
+    console.log('Processing feedback for Firebase User ID:', userId);
     setIsProcessingFeedback(true);
 
-    try {
-      // Create structured feedback for the learning system
-      const outfitMetadata = extractOutfitMetadata(dislikedSuggestion);
-      const feedback: UserFeedback = {
-        user_id: userId,
-        outfit_id: `${dislikedSuggestion.theme}_${Date.now()}`,
-        reason: reason,
-        timestamp: new Date().toISOString(),
-        outfit_metadata: outfitMetadata
-      };
+    const analysis = dislikedSuggestion.analysis ?? currentOutfitAnalysis;
+    if (!analysis) {
+      console.error('No outfit analysis available for feedback processing');
+      setIsProcessingFeedback(false);
+      setError('We could not read the outfit details. Please try again.');
+      return;
+    }
 
-      // Update user profile with the new feedback
-      const updatedProfile = updateProfileFromFeedback(userProfile, feedback);
+    let handledSuccessfully = false;
+
+    try {
+      await PreferenceServiceSupabase.saveFeedback(
+        userId,
+        undefined,
+        dislikedSuggestion.theme,
+        'dislike',
+        analysis,
+        microReasons
+      );
+
+      const updatedProfile = await PreferenceServiceSupabase.updatePreferencesFromFeedback(
+        userProfile,
+        analysis,
+        'dislike',
+        microReasons
+      );
+
       setUserProfile(updatedProfile);
 
-      // Also maintain the legacy disliked styles for backward compatibility
       const newDislikedStyle: DislikedStyle = {
         theme: dislikedSuggestion.theme,
-        reason: reason,
+        reason: microReasons.join(', '),
       };
       const updatedDislikedStyles = [...dislikedStyles, newDislikedStyle];
       setDislikedStyles(updatedDislikedStyles);
 
-      // Use previously detected gender
-      const answersWithGender = { ...answers, gender: detectedGender || 'Male' };
-
-      // Show confirmation message and go back to results
       setShowFeedbackConfirmation(true);
       setAppState(AppState.RESULTS);
 
-      // Hide confirmation after 3 seconds
       setTimeout(() => {
         setShowFeedbackConfirmation(false);
       }, 3000);
 
-      // Generate new suggestions in background (limit to 1 new suggestion to avoid overload)
+      handledSuccessfully = true;
+
       try {
-        // Generate only 1 new suggestion instead of 3 to be faster
+        const constraints = updatedProfile.onboardingConstraints;
+        const contexts = constraints.contexts;
+        const seasons = constraints.seasons;
+
+        const prompts = PromptGenerationService.generateOutfitPrompt(
+          updatedProfile,
+          contexts?.[0],
+          seasons?.[0],
+          1
+        );
+
+        const answersWithGender = { ...answers, gender: detectedGender || 'Male' };
         const result = await generateStyleSuggestions(answersWithGender, userImage, updatedDislikedStyles, updatedProfile, 1);
-        console.log('New suggestions generated:', result.length);
 
-        // Add new suggestions to existing ones (don't replace)
+        const enhancedNewSuggestions = await Promise.all(
+          result.map(suggestion => VisionAnalysisService.enhanceWithAnalysis(suggestion))
+        );
+
+        // A remoção já foi feita imediatamente no handleDislike
+        // Agora só adicionamos novas sugestões
         setSuggestions(currentSuggestions => {
-          if (!currentSuggestions) return result.slice(0, 2); // Take max 2 if no existing
+          if (!currentSuggestions) return enhancedNewSuggestions;
 
-          // Combine existing suggestions with new ones, avoiding duplicates
+          // Adicionar novas sugestões que ainda não existem
           const existingThemes = currentSuggestions.map(s => s.theme);
-          const newSuggestions = result.filter(s => !existingThemes.includes(s.theme)).slice(0, 1); // Take only 1 new
+          const newSuggestions = enhancedNewSuggestions.filter(s => !existingThemes.includes(s.theme));
 
-          // Limit total to 5 suggestions max
+          // Combinar e manter pool de até 7 sugestões
           const combined = [...currentSuggestions, ...newSuggestions];
-          return combined.slice(0, 5);
+          console.log(`Added ${newSuggestions.length} new suggestions. Total: ${combined.length}`);
+          console.log(`After feedback - Existing: [${existingThemes.join(', ')}]`);
+          console.log(`After feedback - New: [${newSuggestions.map(s => s.theme).join(', ')}]`);
+
+          return combined.slice(0, 7);
         });
       } catch (e) {
         console.error('Background regeneration failed:', e);
       }
+    } catch (error) {
+      console.error('Error processing feedback:', error);
+      setError('Failed to process feedback. Please try again.');
     } finally {
+      // Resetar estados independentemente do sucesso
       setIsProcessingFeedback(false);
-      setDislikedSuggestion(null); // Clear the disliked suggestion
+      setDislikedSuggestion(null);
+      setCurrentOutfitAnalysis(null);
+      console.log('Feedback processing completed and states reset');
     }
-  }, [isProcessingFeedback, dislikedSuggestion, userImage, dislikedStyles, answers, userProfile, userId]);
+  }, [isProcessingFeedback, dislikedSuggestion, userProfile, userId, dislikedStyles, answers, detectedGender, currentOutfitAnalysis, userImage]);
 
   const renderContent = () => {
     switch (appState) {
+      case AppState.ONBOARDING:
+        return <Onboarding onComplete={handleQuestionnaireComplete} />;
       case AppState.QUESTIONNAIRE:
         return <Questionnaire onComplete={handleQuestionnaireComplete} />;
       case AppState.IMAGE_UPLOAD:
@@ -217,7 +417,7 @@ const AppContent: React.FC = () => {
       case AppState.RESULTS:
         return suggestions ? <StyleResults suggestions={suggestions} onDislike={handleDislike} showFeedbackConfirmation={showFeedbackConfirmation} /> : null;
       case AppState.FEEDBACK:
-        return <Feedback onFeedbackSubmit={handleFeedbackSubmit} />;
+        return <Feedback onFeedbackSubmit={handleFeedbackSubmit} outfitAnalysis={currentOutfitAnalysis} />;
       case AppState.ERROR:
         return (
             <div className="flex flex-col items-center justify-center h-full text-center p-4">
