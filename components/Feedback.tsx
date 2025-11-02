@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import type { FeedbackReason, OutfitAnalysis } from '../types';
 
 interface FeedbackProps {
@@ -21,6 +21,8 @@ const MICRO_REASON_OPTIONS: { reason: FeedbackReason; label: string; icon: strin
 
 const Feedback: React.FC<FeedbackProps> = ({ onFeedbackSubmit, outfitAnalysis }) => {
     const [selectedReasons, setSelectedReasons] = useState<FeedbackReason[]>([]);
+    const [isDisabled, setIsDisabled] = useState(false);
+    const isSubmitting = useRef(false);
 
     const toggleReason = (reason: FeedbackReason) => {
         const newReasons = selectedReasons.includes(reason)
@@ -30,13 +32,43 @@ const Feedback: React.FC<FeedbackProps> = ({ onFeedbackSubmit, outfitAnalysis })
     };
 
     const handleSubmit = () => {
+        // Prevent multiple submissions
+        if (isSubmitting.current || isDisabled) {
+            console.log('⚠️ Feedback already being submitted or disabled, ignoring duplicate');
+            return;
+        }
+
         if (selectedReasons.length > 0) {
+            isSubmitting.current = true;
+            setIsDisabled(true);
+            console.log('✅ Submitting feedback with reasons:', selectedReasons);
             onFeedbackSubmit(selectedReasons);
+
+            // Reset after a longer delay to allow future submissions
+            setTimeout(() => {
+                isSubmitting.current = false;
+                setIsDisabled(false);
+            }, 2000);
         }
     };
 
     const handleSkip = () => {
+        // Prevent multiple submissions
+        if (isSubmitting.current || isDisabled) {
+            console.log('⚠️ Feedback already being submitted or disabled, ignoring duplicate skip');
+            return;
+        }
+
+        isSubmitting.current = true;
+        setIsDisabled(true);
+        console.log('✅ Skipping feedback submission');
         onFeedbackSubmit([]); // No specific reasons
+
+        // Reset after a delay
+        setTimeout(() => {
+            isSubmitting.current = false;
+            setIsDisabled(false);
+        }, 2000);
     };
 
     // Filter reasons based on outfit analysis if available
@@ -112,20 +144,25 @@ const Feedback: React.FC<FeedbackProps> = ({ onFeedbackSubmit, outfitAnalysis })
                 <div className="flex gap-4">
                     <button
                         onClick={handleSkip}
-                        className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                        disabled={isDisabled}
+                        className={`flex-1 px-6 py-3 font-medium rounded-lg transition-colors ${
+                            isDisabled
+                                ? 'bg-gray-50 text-gray-400 cursor-not-allowed'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
                     >
-                        Skip
+                        {isDisabled ? 'Processing...' : 'Skip'}
                     </button>
                     <button
                         onClick={handleSubmit}
-                        disabled={selectedReasons.length === 0}
+                        disabled={selectedReasons.length === 0 || isDisabled}
                         className={`flex-1 px-6 py-3 font-medium rounded-lg transition-colors ${
-                            selectedReasons.length > 0
+                            selectedReasons.length > 0 && !isDisabled
                                 ? 'bg-red-500 text-white hover:bg-red-600'
                                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                         }`}
                     >
-                        Submit Feedback
+                        {isDisabled ? 'Processing...' : 'Submit Feedback'}
                     </button>
                 </div>
 

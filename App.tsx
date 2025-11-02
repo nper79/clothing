@@ -19,16 +19,21 @@ import { AppState } from './types';
 
 const AppContent: React.FC = () => {
   const { user } = useAuth(); // Obter Firebase user
-  const userId = user?.id || null; // Usar Firebase UID real
+  // Create test user for development if no Firebase user
+  const userId = user?.id || 'test-user-' + Math.random().toString(36).substr(2, 9); // Test ID for development
 
-  const [appState, setAppState] = useState<AppState>(AppState.ONBOARDING);
+  const [appState, setAppState] = useState<AppState>(AppState.IMAGE_UPLOAD); // Skip onboarding for testing
   const [answers, setAnswers] = useState<Answers>({});
   const [userImage, setUserImage] = useState<{ base64: string; mimeType: string } | null>(null);
   const [suggestions, setSuggestions] = useState<StyleSuggestion[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dislikedStyles, setDislikedStyles] = useState<DislikedStyle[]>([]);
   const [dislikedSuggestion, setDislikedSuggestion] = useState<StyleSuggestion | null>(null);
+  const [currentOutfitAnalysis, setCurrentOutfitAnalysis] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
+  // Backup for feedback processing to prevent null issues
+  const [feedbackBackup, setFeedbackBackup] = useState<{suggestion: StyleSuggestion; analysis: any} | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const [isProcessingFeedback, setIsProcessingFeedback] = useState(false);
   const [detectedGender, setDetectedGender] = useState<string | null>(null);
@@ -43,11 +48,28 @@ const AppContent: React.FC = () => {
         let profile = await PreferenceServiceSupabase.loadUserProfile(userId);
 
         if (!profile) {
-          // Initialize with onboarding if no profile exists
-          // The onboarding will create the profile
-          console.log('No existing profile found, user needs to complete onboarding');
-          setProfileLoading(false);
-          return;
+          // Create default profile for testing (skip onboarding)
+          console.log('No existing profile found, creating default profile for testing');
+          const defaultAnswers: Answers = {
+            gender: 'Male',
+            age: '25-34',
+            height: "5'10\" (178cm)",
+            weight: '165 lbs (75kg)',
+            fit: 'Regular',
+            style: ['Smart Casual', 'Casual'],
+            colors: ['Blue', 'White', 'Black', 'Gray'],
+            occasions: ['Work', 'Weekend', 'Going out'],
+            budget: 'Mid-range ($50-100)',
+            brands: ['Uniqlo', 'H&M', 'Zara'],
+            shopping: ['Online', 'In-store'],
+            bodyShape: 'Average',
+            skinTone: 'Medium',
+            constraints: 'Spring, Summer, Fall; Work, Weekend, Going out'
+          };
+
+          profile = await PreferenceServiceSupabase.initializeUserProfile(userId, defaultAnswers);
+          setAnswers(defaultAnswers);
+          console.log('Default profile created for testing');
         }
 
         setUserProfile(profile);
@@ -95,10 +117,37 @@ const AppContent: React.FC = () => {
   }, [userId]);
 
   const handleGenerate = async (image: { base64: string; mimeType: string }) => {
-    if (!userProfile) {
-      setError('Profile not loaded. Please complete onboarding first.');
-      setAppState(AppState.ERROR);
-      return;
+    // Wait for profile to be available (create default if needed)
+    if (!userProfile && userId) {
+      console.log('No profile found, creating default profile for testing...');
+      try {
+        const defaultAnswers: Answers = {
+          gender: 'Male',
+          age: '25-34',
+          height: "5'10\" (178cm)",
+          weight: '165 lbs (75kg)',
+          fit: 'Regular',
+          style: ['Smart Casual', 'Casual'],
+          colors: ['Blue', 'White', 'Black', 'Gray'],
+          occasions: ['Work', 'Weekend', 'Going out'],
+          budget: 'Mid-range ($50-100)',
+          brands: ['Uniqlo', 'H&M', 'Zara'],
+          shopping: ['Online', 'In-store'],
+          bodyShape: 'Average',
+          skinTone: 'Medium',
+          constraints: 'Spring, Summer, Fall; Work, Weekend, Going out'
+        };
+
+        const profile = await PreferenceServiceSupabase.initializeUserProfile(userId, defaultAnswers);
+        setUserProfile(profile);
+        setAnswers(defaultAnswers);
+        console.log('✅ Default profile created successfully');
+      } catch (error) {
+        console.error('Failed to create default profile:', error);
+        setError('Failed to create your profile. Please try again.');
+        setAppState(AppState.ERROR);
+        return;
+      }
     }
 
     setUserImage(image);
@@ -193,6 +242,12 @@ const AppContent: React.FC = () => {
       return filtered;
     });
 
+    // CRITICAL: Create backup BEFORE setting states that might be cleared
+    setFeedbackBackup({
+      suggestion: suggestion,
+      analysis: suggestion.analysis
+    });
+
     // Show feedback modal to capture micro-reasons
     setDislikedSuggestion(suggestion);
     setCurrentOutfitAnalysis(suggestion.analysis);
@@ -253,7 +308,6 @@ const AppContent: React.FC = () => {
   }, [generateMoreInBackground]);
 
   const [showFeedbackConfirmation, setShowFeedbackConfirmation] = useState(false);
-  const [currentOutfitAnalysis, setCurrentOutfitAnalysis] = useState<any>(null);
   const [isGeneratingInBackground, setIsGeneratingInBackground] = useState(false);
 
   // Geração contínua: manter sempre 5+ sugestões disponíveis
@@ -281,22 +335,63 @@ const AppContent: React.FC = () => {
   }, [suggestions, userImage, answers, userProfile, isGeneratingInBackground, generateMoreInBackground]);
 
   const handleFeedbackSubmit = useCallback(async (microReasons: FeedbackReason[]) => {
+    console.log('=== FEEDBACK SUBMIT DEBUG ===');
     console.log('Feedback submitted with micro-reasons:', microReasons);
+    console.log('Initial state:', {
+      isProcessingFeedback,
+      hasDislikedSuggestion: !!dislikedSuggestion,
+      hasUserProfile: !!userProfile,
+      hasUserId: !!userId
+    });
 
-    if (isProcessingFeedback || !dislikedSuggestion || !userProfile || !userId) {
-      console.log('Ignoring duplicate or invalid feedback submission', {
-        isProcessingFeedback,
-        hasDislikedSuggestion: !!dislikedSuggestion,
-        hasUserProfile: !!userProfile,
-        hasUserId: !!userId
-      });
+    // CRITICAL FIX: Force reset if stuck in processing state
+    if (isProcessingFeedback) {
+      console.log('🚨 Forcing reset of stuck processing state');
+      setIsProcessingFeedback(false);
+      setDislikedSuggestion(null);
+      setCurrentOutfitAnalysis(null);
+
+      // Wait a moment for state to update, then continue
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    // CRITICAL FIX: Use backup if dislikedSuggestion was cleared
+    const suggestionToUse = dislikedSuggestion || feedbackBackup?.suggestion;
+    const analysisToUse = currentOutfitAnalysis || feedbackBackup?.analysis;
+
+    if (!suggestionToUse || !userProfile || !userId) {
+      console.log('❌ Invalid feedback submission - missing required data');
+      console.log('isProcessingFeedback:', isProcessingFeedback);
+      console.log('hasDislikedSuggestion:', !!dislikedSuggestion);
+      console.log('hasFeedbackBackup:', !!feedbackBackup);
+      console.log('hasUserProfile:', !!userProfile);
+      console.log('hasUserId:', !!userId);
+
+      // Reset states even on invalid submission to prevent getting stuck
+      setIsProcessingFeedback(false);
+      setDislikedSuggestion(null);
+      setCurrentOutfitAnalysis(null);
+      setFeedbackBackup(null);
       return;
     }
 
-    console.log('Processing feedback for Firebase User ID:', userId);
+    console.log('✅ Processing feedback for Firebase User ID:', userId);
+    console.log('Using suggestion:', suggestionToUse.theme);
+
+    // Set processing state IMMEDIATELY to prevent race conditions
     setIsProcessingFeedback(true);
 
-    const analysis = dislikedSuggestion.analysis ?? currentOutfitAnalysis;
+    // Add safety timeout to prevent infinite processing
+    const safetyTimeout = setTimeout(() => {
+      if (isProcessingFeedback) {
+        console.log('🚨 Safety timeout triggered - forcing feedback processing reset');
+        setIsProcessingFeedback(false);
+        setDislikedSuggestion(null);
+        setCurrentOutfitAnalysis(null);
+      }
+    }, 10000); // 10 second safety timeout
+
+    const analysis = analysisToUse;
     if (!analysis) {
       console.error('No outfit analysis available for feedback processing');
       setIsProcessingFeedback(false);
@@ -307,14 +402,18 @@ const AppContent: React.FC = () => {
     let handledSuccessfully = false;
 
     try {
+      console.log('🔄 Starting feedback processing operations...');
+
       await PreferenceServiceSupabase.saveFeedback(
         userId,
         undefined,
-        dislikedSuggestion.theme,
+        suggestionToUse.theme,
         'dislike',
         analysis,
         microReasons
       );
+
+      console.log('✅ Feedback saved to database');
 
       const updatedProfile = await PreferenceServiceSupabase.updatePreferencesFromFeedback(
         userProfile,
@@ -323,14 +422,17 @@ const AppContent: React.FC = () => {
         microReasons
       );
 
+      console.log('✅ User profile updated');
       setUserProfile(updatedProfile);
 
       const newDislikedStyle: DislikedStyle = {
-        theme: dislikedSuggestion.theme,
+        theme: suggestionToUse.theme,
         reason: microReasons.join(', '),
       };
       const updatedDislikedStyles = [...dislikedStyles, newDislikedStyle];
       setDislikedStyles(updatedDislikedStyles);
+
+      console.log('✅ Disliked styles updated');
 
       setShowFeedbackConfirmation(true);
       setAppState(AppState.RESULTS);
@@ -340,6 +442,7 @@ const AppContent: React.FC = () => {
       }, 3000);
 
       handledSuccessfully = true;
+      console.log('✅ All feedback operations completed successfully');
 
       try {
         const constraints = updatedProfile.onboardingConstraints;
@@ -384,11 +487,24 @@ const AppContent: React.FC = () => {
       console.error('Error processing feedback:', error);
       setError('Failed to process feedback. Please try again.');
     } finally {
-      // Resetar estados independentemente do sucesso
+      // Clear the safety timeout
+      clearTimeout(safetyTimeout);
+
+      // CRITICAL: Reset states IMMEDIATELY and also as backup
+      console.log('🔄 FINALLY BLOCK: Resetting all feedback states');
       setIsProcessingFeedback(false);
       setDislikedSuggestion(null);
       setCurrentOutfitAnalysis(null);
-      console.log('Feedback processing completed and states reset');
+      setFeedbackBackup(null);
+
+      // Backup reset with delay to guarantee states are cleared
+      setTimeout(() => {
+        setIsProcessingFeedback(false);
+        setDislikedSuggestion(null);
+        setCurrentOutfitAnalysis(null);
+        setFeedbackBackup(null);
+        console.log('✅ Feedback processing completed and states reset (backup)');
+      }, 200);
     }
   }, [isProcessingFeedback, dislikedSuggestion, userProfile, userId, dislikedStyles, answers, detectedGender, currentOutfitAnalysis, userImage]);
 

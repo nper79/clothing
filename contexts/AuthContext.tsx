@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { authService, AuthUser } from '../services/authService';
+import React, { createContext, useContext, ReactNode } from 'react';
+
+export interface AuthUser {
+  id: string;
+  email?: string;
+  name?: string;
+  photoURL?: string;
+  anonymous: boolean;
+}
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -23,47 +30,26 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = authService.onAuthStateChanged((user) => {
-      setUser(user);
-      setLoading(false);
-    });
-
-    return unsubscribe;
-  }, []);
+  // Create mock user for testing
+  const mockUser: AuthUser = {
+    id: 'test-user-' + Math.random().toString(36).substr(2, 9),
+    email: 'test@example.com',
+    name: 'Test User',
+    photoURL: undefined,
+    anonymous: false
+  };
 
   const signInWithGoogle = async () => {
-    try {
-      setLoading(true);
-      const user = await authService.signInWithGoogle();
-      setUser(user);
-    } catch (error) {
-      console.error('Failed to sign in with Google:', error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
+    console.log('Mock sign in - no actual authentication');
   };
 
   const signOut = async () => {
-    try {
-      setLoading(true);
-      await authService.signOut();
-      setUser(null);
-    } catch (error) {
-      console.error('Failed to sign out:', error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
+    console.log('Mock sign out - no actual authentication');
   };
 
   const value = {
-    user,
-    loading,
+    user: mockUser,
+    loading: false,
     signInWithGoogle,
     signOut,
   };

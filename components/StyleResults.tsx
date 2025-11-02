@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import type { StyleSuggestion } from '../types';
 
+// Extend Window interface for our click tracking
+declare global {
+  interface Window {
+    lastDislikeClick?: number;
+  }
+}
+
 interface StyleResultsProps {
   suggestions: StyleSuggestion[];
   onDislike: (suggestion: StyleSuggestion) => void;
@@ -63,6 +70,14 @@ const StyleResults: React.FC<StyleResultsProps> = ({ suggestions, onDislike, sho
       console.log('❌ Button already processing, ignoring click');
       return;
     }
+
+    // Additional safeguard: prevent rapid successive clicks
+    const now = Date.now();
+    if (window.lastDislikeClick && (now - window.lastDislikeClick < 500)) {
+      console.log('❌ Rapid click detected, ignoring');
+      return;
+    }
+    window.lastDislikeClick = now;
 
     // IMPORTANT: Always use activeIndex, not the passed index
     const actualIndex = activeIndex;
