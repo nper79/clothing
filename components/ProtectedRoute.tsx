@@ -1,7 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import LandingPage from './LandingPage';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -21,10 +20,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     );
   }
 
-  if (!user) {
-    return <LandingPage />;
-  }
-
+  // Allow access to the app without authentication for demo purposes
+  // The app will handle its own user ID generation and state management
   return <>{children}</>;
 };
 

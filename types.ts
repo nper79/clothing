@@ -143,6 +143,23 @@ export type FeedbackReason =
     | 'Material'
     | 'Overall vibe';
 
+// Visual calibration feedback structure
+export interface LookFeedback {
+  lookId: string;
+  overallRating: number; // 0-10 scale
+  pieceFeedback: {
+    top: number; // -2 to +2
+    bottom: number; // -2 to +2
+    shoes: number; // -2 to +2
+    accessories: number; // -2 to +2
+    fit: number; // -2 to +2
+    colors: number; // -2 to +2
+    style: number; // -2 to +2
+    formality: number; // -2 to +2
+  };
+  timestamp: number;
+}
+
 // Enhanced Style Suggestion with analysis
 export interface StyleSuggestion {
     theme: string;
@@ -155,6 +172,8 @@ export interface StyleSuggestion {
 
 export enum AppState {
     ONBOARDING,
+    ONBOARDING_TRANSITION,
+    VISUAL_CALIBRATION,
     QUESTIONNAIRE,
     IMAGE_UPLOAD,
     LOADING,

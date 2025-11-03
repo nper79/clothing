@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev)",
+      "Bash(curl:*)",
+      "Read(//c/Users/Nuno/Downloads/stitch_look_suggestions_upload (6)/stitch_look_suggestions_upload/personalized_style_result/**)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(findstr:*)",
+      "Bash(start http://localhost:3001)",
+      "Bash(npm run dev:*)",
+      "Bash(start http://127.0.0.1:5173)",
+      "Bash(taskkill:*)",
+      "Bash(netstat:*)",
+      "Bash(cmd:*)",
+      "Bash(timeout:*)",
+      "Bash(cat:*)",
+      "Bash(git pull:*)",
+      "Bash(npx tsc:*)",
+      "Bash(start http://localhost:3002)",
+      "Bash(start http://localhost:3003)",
+      "Bash(start:*)",
+      "Bash(git rm:*)",
+      "Bash(git filter-branch:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -8,12 +8,15 @@ import ImageUploader from './components/ImageUploader';
 import StyleResults from './components/StyleResults';
 import LoadingSpinner from './components/LoadingSpinner';
 import Feedback from './components/Feedback';
-import Onboarding from './components/Onboarding';
+import OnboardingSwipe from './components/OnboardingSwipe';
+import OnboardingTransition from './components/OnboardingTransition';
+import VisualCalibrationSwipe from './components/VisualCalibrationSwipe';
 import { generateStyleSuggestions, extractOutfitMetadata, detectGender } from './services/geminiService';
 import { initializeUserProfile, updateProfileFromFeedback, saveUserProfile, loadUserProfile } from './services/preferenceService';
 import { PreferenceServiceSupabase } from './services/preferenceServiceSupabase';
 import { VisionAnalysisService } from './services/visionAnalysisService';
 import { PromptGenerationService } from './services/promptGenerationService';
+import { PreferenceLearningService } from './services/preferenceLearningService';
 import type { Answers, StyleSuggestion, DislikedStyle, UserProfile, UserFeedback, FeedbackReason } from './types';
 import { AppState } from './types';
 
@@ -22,7 +25,7 @@ const AppContent: React.FC = () => {
   // Create test user for development if no Firebase user
   const userId = user?.id || 'test-user-' + Math.random().toString(36).substr(2, 9); // Test ID for development
 
-  const [appState, setAppState] = useState<AppState>(AppState.IMAGE_UPLOAD); // Skip onboarding for testing
+  const [appState, setAppState] = useState<AppState>(AppState.ONBOARDING); // Start with onboarding
   const [answers, setAnswers] = useState<Answers>({});
   const [userImage, setUserImage] = useState<{ base64: string; mimeType: string } | null>(null);
   const [suggestions, setSuggestions] = useState<StyleSuggestion[] | null>(null);
@@ -37,6 +40,7 @@ const AppContent: React.FC = () => {
   const [profileLoading, setProfileLoading] = useState(true);
   const [isProcessingFeedback, setIsProcessingFeedback] = useState(false);
   const [detectedGender, setDetectedGender] = useState<string | null>(null);
+  const [visualCalibrationFeedback, setVisualCalibrationFeedback] = useState<any[]>([]);
 
   // Load user profile from Supabase when userId is available
   useEffect(() => {
@@ -92,7 +96,7 @@ const AppContent: React.FC = () => {
   }, [userProfile]);
 
 
-  const handleQuestionnaireComplete = useCallback(async (finalAnswers: Answers) => {
+  const handleQuestionnaireComplete = useCallback(async (swipeAnswers: Answers) => {
     if (!userId) {
       console.error('No Firebase user available for profile creation');
       setError('You must be logged in to create a profile. Please try logging in again.');
@@ -100,21 +104,77 @@ const AppContent: React.FC = () => {
       return;
     }
 
-    setAnswers(finalAnswers);
+    // Convert swipe answers to full profile format
+    const fullAnswers: Answers = {
+      ...swipeAnswers,
+      gender: 'Male', // Default for testing
+      age: '25-34',
+      height: "5'10\" (178cm)",
+      weight: '165 lbs (75kg)',
+      fit: 'Regular',
+      style: swipeAnswers.keywords || ['Smart Casual'],
+      colors: ['Blue', 'White', 'Black', 'Gray'],
+      occasions: [swipeAnswers.context || 'Work'],
+      budget: 'Mid-range ($50-100)',
+      brands: ['Uniqlo', 'H&M', 'Zara'],
+      shopping: ['Online', 'In-store'],
+      bodyShape: 'Average',
+      skinTone: 'Medium',
+      constraints: 'Spring, Summer, Fall; ' + (swipeAnswers.context || 'Work')
+    };
+
+    setAnswers(fullAnswers);
     console.log('Creating profile for Firebase User ID:', userId);
+    console.log('Swipe answers converted to full profile:', fullAnswers);
 
     // Create user profile from onboarding answers
     try {
-      const profile = await PreferenceServiceSupabase.initializeUserProfile(userId, finalAnswers);
+      const profile = await PreferenceServiceSupabase.initializeUserProfile(userId, fullAnswers);
       setUserProfile(profile);
       console.log('Profile created successfully');
-      setAppState(AppState.IMAGE_UPLOAD);
+      setAppState(AppState.ONBOARDING_TRANSITION);
     } catch (error) {
       console.error('Error creating user profile:', error);
       setError('Failed to create your profile. Please try again.');
       setAppState(AppState.ERROR);
     }
   }, [userId]);
+
+  const handleTransitionComplete = useCallback(() => {
+    console.log('Transition completed, moving to visual calibration');
+    setAppState(AppState.VISUAL_CALIBRATION);
+  }, []);
+
+  const handleVisualCalibrationComplete = useCallback(async (feedback?: any[]) => {
+    console.log('Visual calibration completed, processing feedback...');
+
+    if (feedback && feedback.length > 0 && userProfile) {
+      try {
+        // Process the visual calibration feedback using the learning service
+        const updatedProfile = PreferenceLearningService.processVisualCalibrationFeedback(
+          userProfile,
+          feedback
+        );
+
+        // Save the updated profile to the database
+        await PreferenceServiceSupabase.saveUserProfile(userId, updatedProfile);
+
+        // Update local state
+        setUserProfile(updatedProfile);
+        setVisualCalibrationFeedback(feedback);
+
+        // Generate style preference summary
+        const summary = PreferenceLearningService.generateStyleProfileSummary(updatedProfile);
+        console.log('Style preference profile:', summary);
+
+        console.log('✅ Visual calibration feedback processed successfully');
+      } catch (error) {
+        console.error('Error processing visual calibration feedback:', error);
+      }
+    }
+
+    setAppState(AppState.IMAGE_UPLOAD);
+  }, [userProfile, userId]);
 
   const handleGenerate = async (image: { base64: string; mimeType: string }) => {
     // Wait for profile to be available (create default if needed)
@@ -511,7 +571,20 @@ const AppContent: React.FC = () => {
   const renderContent = () => {
     switch (appState) {
       case AppState.ONBOARDING:
-        return <Onboarding onComplete={handleQuestionnaireComplete} />;
+        return <OnboardingSwipe onComplete={handleQuestionnaireComplete} />;
+      case AppState.ONBOARDING_TRANSITION:
+        return <OnboardingTransition onComplete={handleTransitionComplete} />;
+      case AppState.VISUAL_CALIBRATION:
+        return userProfile ? (
+          <VisualCalibrationSwipe
+            initialProfile={answers}
+            onComplete={handleVisualCalibrationComplete}
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <LoadingSpinner />
+          </div>
+        );
       case AppState.QUESTIONNAIRE:
         return <Questionnaire onComplete={handleQuestionnaireComplete} />;
       case AppState.IMAGE_UPLOAD:
