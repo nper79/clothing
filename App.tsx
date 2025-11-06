@@ -11,6 +11,8 @@ import Feedback from './components/Feedback';
 import OnboardingSwipe from './components/OnboardingSwipe';
 import OnboardingTransition from './components/OnboardingTransition';
 import VisualCalibrationSwipe from './components/VisualCalibrationSwipe';
+import TestReplicateAPI from './pages/TestReplicateAPI';
+import DirectAPITest from './pages/DirectAPITest';
 import { generateStyleSuggestions, extractOutfitMetadata, detectGender } from './services/geminiService';
 import { initializeUserProfile, updateProfileFromFeedback, saveUserProfile, loadUserProfile } from './services/preferenceService';
 import { PreferenceServiceSupabase } from './services/preferenceServiceSupabase';
@@ -651,6 +653,8 @@ const App: React.FC = () => {
     <Router>
       <AuthProvider>
         <Routes>
+          <Route path="/test-api" element={<TestReplicateAPI />} />
+          <Route path="/test-direct" element={<DirectAPITest />} />
           <Route path="/*" element={
             <ProtectedRoute>
               <AppContent />

@@ -187,10 +187,15 @@ const StyleResults: React.FC<StyleResultsProps> = ({ suggestions, onDislike, sho
             src={activeSuggestion.image}
             alt={activeSuggestion.theme}
             className="max-h-[75vh] max-w-full object-contain shadow-2xl rounded-lg"
+            loading="lazy"
             style={{
               objectFit: 'contain',
               maxHeight: '75vh',
               width: 'auto'
+            }}
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = 'https://via.placeholder.com/512x768?text=Image+Unavailable';
             }}
           />
         </div>

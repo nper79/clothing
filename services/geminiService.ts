@@ -1,13 +1,95 @@
-import { GoogleGenAI, Modality } from "@google/genai";
-import type { Answers, StyleSuggestion, Explanation, DislikedStyle, UserProfile, OutfitMetadata } from '../types';
+import { GoogleGenAI } from "@google/genai";
+import type { Answer, Answers, StyleSuggestion, Explanation, DislikedStyle, UserProfile, OutfitMetadata } from '../types';
 import { generateStyleThemes, cosineSimilarity } from './preferenceService';
+import { ReplicateImageService, StyleCategory } from './replicateImageService';
+
+const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+    const bytes = new Uint8Array(buffer);
+    const chunkSize = 0x8000;
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+        const slice = bytes.subarray(i, i + chunkSize);
+        binary += String.fromCharCode(...slice);
+    }
+    return btoa(binary);
+};
+
+const fetchImageAsBase64 = async (imageUrl: string): Promise<{ base64: string; mimeType: string }> => {
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch image from ${imageUrl}`);
+    }
+    const mimeType = response.headers.get('content-type') || 'image/jpeg';
+    const buffer = await response.arrayBuffer();
+    return {
+        base64: arrayBufferToBase64(buffer),
+        mimeType
+    };
+};
+
+const deriveGenderFromAnswers = (answers: Answers): 'male' | 'female' | 'neutral' => {
+    const value = answers?.gender;
+
+    const extract = (answer: Answer): string | null => {
+        if (typeof answer === 'string') {
+            return answer.toLowerCase();
+        }
+        if (Array.isArray(answer) && answer.length > 0) {
+            const first = answer[0];
+            return typeof first === 'string' ? first.toLowerCase() : null;
+        }
+        return null;
+    };
+
+    const normalized = value !== undefined ? extract(value) : null;
+    if (!normalized) return 'neutral';
+
+    if (normalized.includes('female') || normalized.includes('feminino') || normalized.includes('woman')) {
+        return 'female';
+    }
+    if (normalized.includes('male') || normalized.includes('masculino') || normalized.includes('man')) {
+        return 'male';
+    }
+
+    return 'neutral';
+};
+
+const buildStyleCategory = (theme: string, answers: Answers): StyleCategory => {
+    const baseKeywords = theme
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean);
+
+    const styleAnswer = answers?.style;
+    const extraKeywords: string[] = [];
+    if (typeof styleAnswer === 'string') {
+        extraKeywords.push(...styleAnswer.toLowerCase().split(/[,\s]+/));
+    } else if (Array.isArray(styleAnswer)) {
+        styleAnswer.forEach(item => {
+            if (typeof item === 'string') {
+                extraKeywords.push(...item.toLowerCase().split(/[,\s]+/));
+            }
+        });
+    }
+
+    const keywords = Array.from(new Set([...baseKeywords, ...extraKeywords])).filter(Boolean).slice(0, 12);
+    const targetAudience = deriveGenderFromAnswers(answers);
+
+    return {
+        category: theme,
+        description: `${theme} inspired look generated from questionnaire preferences`,
+        keywords: keywords.length > 0 ? keywords : ['fashion', 'outfit', 'style'],
+        targetAudience
+    };
+};
 
 const fileToGenerativePart = (base64: string, mimeType: string) => {
     return {
-      inlineData: {
-        data: base64,
-        mimeType,
-      },
+        inlineData: {
+            data: base64,
+            mimeType,
+        },
     };
 };
 
@@ -152,7 +234,7 @@ const parseExplanation = (text: string): Explanation => {
 
 export const generateStyleSuggestions = async (
     answers: Answers,
-    userImage: { base64: string; mimeType: string; },
+    _userImage: { base64: string; mimeType: string; },
     dislikedStyles: DislikedStyle[] = [],
     userProfile?: UserProfile,
     maxSuggestions: number = 3
@@ -172,55 +254,48 @@ export const generateStyleSuggestions = async (
           ].slice(0, maxSuggestions);
 
     const generateSingleSuggestion = async (theme: string): Promise<StyleSuggestion> => {
-        // --- Call 1: Generate Image ---
-        const imagePrompt = buildImagePrompt(answers, theme, dislikedStyles, userProfile);
-        const userImagePart = fileToGenerativePart(userImage.base64, userImage.mimeType);
+        const targetGender = deriveGenderFromAnswers(answers);
+        const styleCategory = buildStyleCategory(theme, answers);
 
-        const imageResult = await ai.models.generateContent({
-            model: 'gemini-2.5-flash-image',
-            contents: {
-                parts: [
-                    userImagePart,
-                    { text: imagePrompt }
-                ]
-            },
-            config: {
-                responseModalities: [Modality.IMAGE],
-            },
-        });
+        const imageResult = await ReplicateImageService.generateSingleImage(styleCategory, targetGender);
+        const imageUrl = imageResult.imageData;
 
-        const imageCandidate = imageResult.candidates?.[0];
-
-        if (!imageCandidate || imageCandidate.finishReason !== 'STOP' || !imageCandidate.content?.parts?.[0]?.inlineData?.data) {
-            const blockReason = imageResult.promptFeedback?.blockReason;
-            const reason = blockReason ? `due to safety filters (${blockReason})` : 'because the model could not generate a valid image';
-            throw new Error(`Image generation failed for the "${theme}" look ${reason}.`);
+        if (!imageUrl) {
+            throw new Error(`Image generation failed for the "${theme}" look because no image URL was returned.`);
         }
-        
-        const imagePartResponse = imageCandidate.content.parts[0];
-        const generatedImageBase64 = imagePartResponse.inlineData.data;
-        const mimeType = imagePartResponse.inlineData.mimeType || 'image/jpeg';
 
-        // --- Call 2: Generate Explanation ---
-        const generatedImagePart = fileToGenerativePart(generatedImageBase64, mimeType);
-        const explanationPrompt = buildExplanationPrompt(answers);
+        let structuredExplanation: Explanation;
+        try {
+            const { base64, mimeType } = await fetchImageAsBase64(imageUrl);
+            const generatedImagePart = fileToGenerativePart(base64, mimeType);
+            const explanationPrompt = buildExplanationPrompt(answers);
 
-        const explanationResult = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: {
-                parts: [
-                    generatedImagePart,
-                    { text: explanationPrompt }
-                ]
-            },
-        });
-        
-        const explanationText = explanationResult.text;
-        const structuredExplanation = parseExplanation(explanationText);
+            const explanationResult = await ai.models.generateContent({
+                model: 'gemini-2.5-flash',
+                contents: {
+                    parts: [
+                        generatedImagePart,
+                        { text: explanationPrompt }
+                    ]
+                },
+            });
+
+            const explanationText = explanationResult.text;
+            structuredExplanation = parseExplanation(explanationText);
+        } catch (error) {
+            console.error('Explanation generation failed, using fallback text:', error);
+            structuredExplanation = {
+                title: theme,
+                whyItWorks: `Custom outfit generated for ${targetGender} preferences focusing on ${theme}.`,
+                occasions: 'Everyday wear',
+                preferredFit: 'Standard',
+                constraints: 'None'
+            };
+        }
 
         return {
             theme,
-            image: `data:${mimeType};base64,${generatedImageBase64}`,
+            image: imageUrl,
             explanation: structuredExplanation,
         };
     };
@@ -282,3 +357,10 @@ export const extractOutfitMetadata = (suggestion: StyleSuggestion): OutfitMetada
         minimalism
     };
 };
+
+
+
+
+
+
+

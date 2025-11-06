@@ -24,7 +24,10 @@
       "Bash(start http://localhost:3003)",
       "Bash(start:*)",
       "Bash(git rm:*)",
-      "Bash(git filter-branch:*)"
+      "Bash(git filter-branch:*)",
+      "Bash(tasklist:*)",
+      "Bash(copy:*)",
+      "Bash(del:*)"
     ],
     "deny": [],
     "ask": []

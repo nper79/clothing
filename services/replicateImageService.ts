@@ -1,24 +1,96 @@
 import Replicate from "replicate";
 
+const resolveUrl = (input: string | Request | URL): string => {
+  if (typeof input === 'string') {
+    return input;
+  }
+  if (input instanceof URL) {
+    return input.toString();
+  }
+  if (input && typeof input.url === 'string') {
+    return input.url;
+  }
+  return '';
+};
+
+// Custom fetch implementation that uses our Vite proxy
+const customFetch = async (input: string | Request | URL, options: RequestInit = {}) => {
+  const urlStr = resolveUrl(input);
+
+  if (urlStr.includes('api.replicate.com')) {
+    const proxyUrl = '/api/replicate' + urlStr.replace('https://api.replicate.com', '');
+    console.log('Using Vite proxy for:', urlStr, '->', proxyUrl);
+
+    const sourceHeaders = options.headers ?? (input instanceof Request ? input.headers : undefined);
+    const baseHeaders = new Headers(sourceHeaders || undefined);
+
+    baseHeaders.delete('authorization');
+
+    if (!baseHeaders.has('content-type') && !(options.body instanceof FormData)) {
+      baseHeaders.set('Content-Type', 'application/json');
+    }
+
+    return fetch(proxyUrl, {
+      ...options,
+      headers: Object.fromEntries(baseHeaders.entries())
+    });
+  }
+
+  return fetch(input as RequestInfo, options);
+};
+
+const extractImageUrl = (output: unknown): string => {
+  if (!output) {
+    return '';
+  }
+  if (Array.isArray(output)) {
+    return extractImageUrl(output[0]);
+  }
+  if (typeof output === 'string') {
+    return output;
+  }
+  if (typeof output === 'object') {
+    const candidate = output as Record<string, unknown>;
+    if (typeof candidate.url === 'string') {
+      return candidate.url;
+    }
+    if (Array.isArray(candidate.output)) {
+      return extractImageUrl(candidate.output[0]);
+    }
+    if (typeof candidate.path === 'string') {
+      return candidate.path;
+    }
+  }
+  return '';
+};
+
 export interface CalibrationImage {
   id: string;
-  prompt: string;
+  originalPrompt: string;
+  claudeGeneratedPrompt: string;
   imageData?: string;
   isGenerated: boolean;
   error?: string;
 }
 
-interface StylePrompt {
+export interface StyleCategory {
   category: string;
-  malePrompt: string;
-  femalePrompt: string;
-  neutralPrompt: string;
   description: string;
+  keywords: string[];
+  targetAudience: string;
 }
 
 export class ReplicateImageService {
   private static readonly REPLICATE_API_TOKEN = import.meta.env.VITE_REPLICATE_API_TOKEN;
   private static replicate: Replicate | null = null;
+
+  // Debug: Log token status
+  static debugToken() {
+    console.log('🔑 Debug - Replicate Token Status:');
+    console.log('Token exists:', !!this.REPLICATE_API_TOKEN);
+    console.log('Token length:', this.REPLICATE_API_TOKEN?.length || 0);
+    console.log('Token starts with r8_:', this.REPLICATE_API_TOKEN?.startsWith('r8_') || false);
+  }
 
   // Initialize Replicate client
   private static getClient(): Replicate {
@@ -29,181 +101,230 @@ export class ReplicateImageService {
     if (!this.replicate) {
       this.replicate = new Replicate({
         auth: this.REPLICATE_API_TOKEN,
+        fetch: customFetch, // Use Vite proxy
+        useFileOutput: false
       });
     }
 
     return this.replicate;
   }
 
-  private static readonly STYLE_PROMPTS: StylePrompt[] = [
+  private static readonly STYLE_CATEGORIES: StyleCategory[] = [
     {
       category: 'Minimalista Executivo',
-      malePrompt: 'Full body fashion photograph of a man in minimalist executive outfit. Clean lines, neutral colors (white, gray, navy, black), tailored fit. White button-down shirt, slim-fit trousers, minimalist leather shoes. Professional, sophisticated, timeless style. Studio lighting, neutral background, high fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in minimalist executive outfit. Clean lines, neutral colors (white, gray, navy, black), tailored fit. Crisp white blouse, slim-fit trousers or pencil skirt, minimalist pumps. Professional, sophisticated, timeless style. Studio lighting, neutral background, high fashion photography.',
-      neutralPrompt: 'Full body fashion photograph in minimalist executive outfit. Clean lines, neutral colors (white, gray, navy, black), tailored fit. Professional and sophisticated style with timeless appeal. Studio lighting, neutral background, high fashion photography.',
-      description: 'Look clean e sofisticado para ambiente corporativo'
+      description: 'Look clean e sofisticado para ambiente corporativo',
+      keywords: ['minimalista', 'profissional', 'clean lines', 'neutral colors'],
+      targetAudience: 'professional'
     },
     {
       category: 'Streetwear Urbano',
-      malePrompt: 'Full body fashion photograph of a man in streetwear urban outfit. Hoodie or graphic t-shirt, baggy jeans or cargo pants, trendy sneakers. Modern urban style with contemporary accessories. Urban setting, dynamic lighting, street style photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in streetwear urban outfit. Crop top or oversized hoodie, high-waisted jeans or cargo pants, trendy sneakers. Modern urban style with contemporary accessories. Urban setting, dynamic lighting, street style photography.',
-      neutralPrompt: 'Full body fashion photograph in streetwear urban outfit. Hoodies, graphic tees, baggy jeans, trendy sneakers. Modern urban aesthetic with dynamic accessories. Urban setting, dynamic lighting, street style photography.',
-      description: 'Estilo descontraído com influência urbana'
+      description: 'Estilo descontraído com influência urbana',
+      keywords: ['streetwear', 'casual', 'moderno', 'urbano'],
+      targetAudience: 'urban'
     },
     {
       category: 'Boêmio Artístico',
-      malePrompt: 'Full body fashion photograph of a man in bohemian artistic outfit. Flowy fabrics, earth tones, layered look. Loose-fitting shirt, linen trousers, artisanal accessories. Creative, free-spirited style with organic textures. Natural lighting, artistic background, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in bohemian artistic outfit. Flowy maxi dress or layered separates, earth tones, artisanal jewelry. Creative, free-spirited style with organic textures. Natural lighting, artistic background, fashion photography.',
-      neutralPrompt: 'Full body fashion photograph in bohemian artistic outfit. Flowy fabrics and earth tones, layered look with artisanal accessories. Creative, free-spirited style with organic textures. Natural lighting, artistic background.',
-      description: 'Expressão livre com toques orgânicos'
+      description: 'Expressão livre com toques orgânicos',
+      keywords: ['boêmio', 'artístico', 'criativo', 'orgânico'],
+      targetAudience: 'creative'
     },
     {
       category: 'Punk Rock Attitude',
-      malePrompt: 'Full body fashion photograph of a man in punk rock outfit. Leather jacket, band t-shirt, ripped jeans, combat boots. Edgy, rebellious style with statement accessories. Dark, moody lighting, urban background, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in punk rock outfit. Leather jacket, band t-shirt, ripped jeans or skirt, combat boots. Edgy, rebellious style with statement accessories. Dark, moody lighting, urban background, fashion photography.',
-      neutralPrompt: 'Full body fashion photograph in punk rock outfit. Leather jacket, ripped jeans, combat boots. Edgy, rebellious style with statement accessories. Dark, moody lighting, urban background.',
-      description: 'Rebelde e ousado com peças statement'
+      description: 'Rebelde e ousado com peças statement',
+      keywords: ['punk', 'rock', 'rebelde', 'ousado'],
+      targetAudience: 'alternative'
     },
     {
       category: 'Vintage Charmoso',
-      malePrompt: 'Full body fashion photograph of a man in vintage 1970s inspired outfit. Patterned shirt, flared trousers, vintage-style shoes. Nostalgic, timeless charm with retro accessories. Warm, vintage-toned lighting, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in vintage 1970s inspired outfit. Floral or patterned dress, vintage cardigan, retro shoes. Nostalgic, timeless charm with retro accessories. Warm, vintage-toned lighting, fashion photography.',
-      neutralPrompt: 'Full body fashion photograph in vintage 1970s inspired outfit. Warm colors, patterns, nostalgic silhouettes. Timeless vintage charm with retro accessories. Warm, vintage-toned lighting.',
-      description: 'Clássico atemporal com personalidade'
+      description: 'Clássico atemporal com personalidade',
+      keywords: ['vintage', 'retro', 'nostálgico', 'clássico'],
+      targetAudience: 'vintage'
     },
     {
       category: 'Hip-Hop Urban',
-      malePrompt: 'Full body fashion photograph of a man in hip-hop urban outfit. Baggy pants, oversized hoodie or jersey, trendy sneakers, gold chain accessories. Street-style confidence with hip-hop influences. Urban street setting, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in hip-hop urban outfit. Baggy pants or joggers, oversized hoodie or crop top, trendy sneakers, statement accessories. Street-style confidence with hip-hop influences. Urban street setting, fashion photography.',
-      neutralPrompt: 'Full body fashion photograph in hip-hop urban outfit. Baggy silhouettes and street-style elements. Oversized pieces, trendy sneakers, statement accessories. Urban hip-hop aesthetic, street setting.',
-      description: 'Inspiração urbana com atitude'
+      description: 'Inspiração urbana com atitude',
+      keywords: ['hip-hop', 'urbano', 'baggy', 'street style'],
+      targetAudience: 'street'
     },
     {
       category: 'Skate Punk',
-      malePrompt: 'Full body fashion photograph of a man in skate punk outfit. Graphic t-shirt, ripped jeans, skate shoes, beanie. Casual, functional style with skate culture elements. Skate park background, natural lighting, action photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in skate punk outfit. Graphic t-shirt or tank top, ripped jeans or shorts, skate shoes, beanie. Casual, functional style with skate culture elements. Skate park background, natural lighting.',
-      neutralPrompt: 'Full body fashion photograph in skate punk outfit. Graphic tee, ripped jeans, skate shoes. Casual, functional skate style with street culture elements. Skate park background, natural lighting.',
-      description: 'Descontraído e funcional para skatistas'
+      description: 'Descontraído e funcional para skatistas',
+      keywords: ['skate', 'descontraído', 'funcional', 'skatista'],
+      targetAudience: 'youth'
     },
     {
       category: 'Gótico Dark',
-      malePrompt: 'Full body fashion photograph of a man in gothic dark outfit. All black clothing, dramatic silhouettes. Black shirt, black trousers, dark boots, silver accessories. Mysterious, elegant dark style. Dramatic lighting, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in gothic dark outfit. All black clothing, dramatic silhouettes. Black dress or separates, dark boots, silver accessories. Mysterious, elegant dark style. Dramatic lighting.',
-      neutralPrompt: 'Full body fashion photograph in gothic dark outfit. All-black clothing and dramatic silhouettes. Dark aesthetic with silver accessories. Mysterious, elegant style. Dramatic lighting.',
-      description: 'Mistério e elegância sombria'
+      description: 'Mistério e elegância sombria',
+      keywords: ['gótico', 'dark', 'misterioso', 'elegante'],
+      targetAudience: 'gothic'
     },
     {
       category: 'Preppy Collegiate',
-      malePrompt: 'Full body fashion photograph of a man in preppy collegiate outfit. Polo shirt or button-down, chino trousers, loafers. Classic, polished style with collegiate accessories. Bright, campus-like setting, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in preppy collegiate outfit. Polo shirt or blouse, skirt or chino trousers, loafers or boat shoes. Classic, polished style with collegiate accessories. Bright, campus-like setting.',
-      neutralPrompt: 'Full body fashion photograph in preppy collegiate outfit. Classic polo, chinos, loafers. Polished, traditional style with collegiate accessories. Bright, campus-like setting.',
-      description: 'Clássico americano universitário'
+      description: 'Clássico americano universitário',
+      keywords: ['preppy', 'collegiate', 'clássico', 'universitário'],
+      targetAudience: 'preppy'
     },
     {
       category: 'Business Formal',
-      malePrompt: 'Full body fashion photograph of a man in business formal outfit. Well-tailored suit and tie, dress shoes, professional accessories. Power dressing with sophisticated tailoring. Office environment, professional lighting, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in business formal outfit. Pantsuit or skirt suit, blouse, heels, professional accessories. Power dressing with sophisticated tailoring. Office environment, professional lighting.',
-      neutralPrompt: 'Full body fashion photograph in business formal outfit. Suit, professional shoes, sophisticated tailoring. Power dressing aesthetic. Office environment, professional lighting.',
-      description: 'Poder e profissionalismo máximo'
+      description: 'Poder e profissionalismo máximo',
+      keywords: ['negócios', 'formal', 'profissional', 'corporativo'],
+      targetAudience: 'professional'
     },
     {
       category: 'Artístico Ecletico',
-      malePrompt: 'Full body fashion photograph of a man in artsy eclectic outfit. Mixed patterns, bold colors, unconventional combinations. Artistic freedom with creative styling. Gallery or art studio background, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in artsy eclectic outfit. Mixed patterns, bold colors, unconventional combinations. Artistic freedom with creative styling. Gallery or art studio background.',
-      neutralPrompt: 'Full body fashion photograph in artsy eclectic outfit. Mixed patterns and bold colors. Unconventional combinations showing artistic freedom. Creative styling. Gallery or art studio background.',
-      description: 'Mistura ousada de estilos e texturas'
+      description: 'Mistura ousada de estilos e texturas',
+      keywords: ['artístico', 'ecletico', 'criativo', 'ousado'],
+      targetAudience: 'artistic'
     },
     {
       category: 'Minimalista Casual',
-      malePrompt: 'Full body fashion photograph of a man in minimalist casual outfit. Simple t-shirt, clean jeans, minimalist sneakers. Understated design with maximum comfort and clean lines. Casual, everyday style, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in minimalist casual outfit. Simple top, clean jeans or trousers, minimalist flats. Understated design with maximum comfort and clean lines. Casual, everyday style.',
-      neutralPrompt: 'Full body fashion photograph in minimalist casual outfit. Simple top, clean bottoms, minimalist footwear. Understated design with maximum comfort. Clean, everyday style.',
-      description: 'Simplicidade e conforto no dia a dia'
+      description: 'Simplicidade e conforto no dia a dia',
+      keywords: ['minimalista', 'casual', 'simples', 'confortável'],
+      targetAudience: 'casual'
     },
     {
       category: 'Indie Alternative',
-      malePrompt: 'Full body fashion photograph of a man in indie alternative outfit. Vintage band t-shirt, worn-in jeans, alternative boots. Mix of vintage and modern elements with indie music culture influences. Alternative vibe, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in indie alternative outfit. Vintage band t-shirt, worn-in jeans or skirt, alternative boots. Mix of vintage and modern elements with indie music culture influences. Alternative vibe.',
-      neutralPrompt: 'Full body fashion photograph in indie alternative outfit. Vintage band tee, worn-in jeans, alternative boots. Mix of vintage and modern with indie culture influences. Alternative music vibe.',
-      description: 'Alternativo com toque vintage'
+      description: 'Alternativo com toque vintage',
+      keywords: ['indie', 'alternativo', 'vintage', 'musical'],
+      targetAudience: 'alternative'
     },
     {
       category: 'Luxury Designer',
-      malePrompt: 'Full body fashion photograph of a man in luxury designer outfit. High-end fashion pieces, premium fabrics, sophisticated tailoring. Designer aesthetic with luxury accessories. Elegant, high-fashion styling, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in luxury designer outfit. High-end fashion pieces, premium fabrics, sophisticated tailoring. Designer aesthetic with luxury accessories. Elegant, high-fashion styling.',
-      neutralPrompt: 'Full body fashion photograph in luxury designer outfit. High-end fashion pieces and premium fabrics. Sophisticated tailoring and luxury accessories. Elegant, high-fashion aesthetic.',
-      description: 'Alta moda e sofisticação'
+      description: 'Alta moda e sofisticação',
+      keywords: ['luxo', 'designer', 'sofisticado', 'alta moda'],
+      targetAudience: 'luxury'
     },
     {
       category: 'Techwear Modern',
-      malePrompt: 'Full body fashion photograph of a man in techwear modern outfit. Technical fabrics, functional design, urban aesthetic. Utility jacket, tech pants, modern boots. Futuristic yet practical urban style, fashion photography.',
-      femalePrompt: 'Full body fashion photograph of a woman in techwear modern outfit. Technical fabrics, functional design, urban aesthetic. Utility jacket, tech pants or skirt, modern boots. Futuristic yet practical urban style.',
-      neutralPrompt: 'Full body fashion photograph in techwear modern outfit. Technical fabrics and functional design. Urban utility aesthetic with futuristic elements. Modern, practical style.',
-      description: 'Funcionalidade tecnológica e estética urbana'
+      description: 'Funcionalidade tecnológica e estética urbana',
+      keywords: ['techwear', 'moderno', 'funcional', 'tecnológico'],
+      targetAudience: 'tech'
     }
   ];
 
   /**
-   * Generate calibration images using Replicate API
+   * Generate optimized prompts using Claude 4.5 Sonnet
+   */
+  private static async generatePromptWithClaude(
+    category: StyleCategory,
+    gender: string
+  ): Promise<string> {
+    const client = this.getClient();
+
+    const claudePrompt = `You are a professional fashion photographer and AI image generation expert.
+
+Create a detailed, optimized prompt for Google Nano Banana to generate a full-body fashion photograph.
+
+Style Category: ${category.category}
+Description: ${category.description}
+Keywords: ${category.keywords.join(', ')}
+Target Audience: ${category.targetAudience}
+Gender: ${gender}
+
+Requirements:
+1. Full body shot showing complete outfit from head to toe
+2. Fashion photography quality with professional lighting
+3. 512x768 resolution (portrait orientation)
+4. Natural, realistic appearance
+5. Modern, trendy fashion
+6. Clear focus on clothing and accessories
+7. Appropriate background for fashion photography
+
+Output format:
+Generate ONLY the optimized image prompt (no explanations). The prompt should be detailed but concise, perfect for Google Nano Banana.`;
+
+    try {
+      const output = await client.run("anthropic/claude-4.5-sonnet", {
+        input: {
+          prompt: claudePrompt,
+          max_tokens: 1024,
+          temperature: 0.7
+        }
+      });
+
+      let generatedPrompt = "";
+      if (Array.isArray(output)) {
+        generatedPrompt = output[0] || "";
+      } else if (typeof output === 'string') {
+        generatedPrompt = output;
+      } else if (typeof output === 'object' && output !== null) {
+        generatedPrompt = (output as any)?.text || "";
+      }
+
+      return generatedPrompt.trim();
+    } catch (error) {
+      console.error('Error generating prompt with Claude 4.5:', error);
+
+      // Fallback prompt if Claude fails
+      return `Full body fashion photograph of ${gender} person in ${category.category.toLowerCase()} outfit. ${category.description}. Modern, professional style with high fashion photography quality. Clean lighting, detailed clothing,时尚摄影风格。`;
+    }
+  }
+
+  /**
+   * Generate image using Google Nano Banana with Claude-generated prompt
+   */
+  private static async generateImageWithNanoBanana(prompt: string): Promise<string> {
+    const client = this.getClient();
+    const model = "google/nano-banana";
+
+    const output = await client.run(model, {
+      input: {
+        prompt,
+        aspect_ratio: "2:3", // Portrait orientation similar to 512x768
+        output_format: "jpg"
+      }
+    });
+
+    console.log('Google Nano Banana output:', output);
+
+    const imageUrl = extractImageUrl(output);
+    console.log('Extracted image URL:', imageUrl);
+    return imageUrl;
+  }
+
+  /**
+   * Generate calibration images using Claude 4.5 + Google Nano Banana
    */
   static async generateCalibrationImages(gender: string = 'neutral'): Promise<CalibrationImage[]> {
     const calibrationImages: CalibrationImage[] = [];
-    const client = this.getClient();
 
-    console.log(`Generating ${this.STYLE_PROMPTS.length} calibration images using Replicate for gender: ${gender}`);
+    console.log(`Generating ${this.STYLE_CATEGORIES.length} calibration images using Claude 4.5 + Google Nano Banana for gender: ${gender}`);
 
-    // Using Stable Diffusion XL for high-quality fashion images
-    const model = "stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4";
-
-    for (let i = 0; i < this.STYLE_PROMPTS.length; i++) {
-      const stylePrompt = this.STYLE_PROMPTS[i];
-      const prompt = this.getGenderSpecificPrompt(stylePrompt, gender);
+    for (let i = 0; i < this.STYLE_CATEGORIES.length; i++) {
+      const category = this.STYLE_CATEGORIES[i];
 
       try {
-        console.log(`Generating image ${i + 1}/${this.STYLE_PROMPTS.length}: ${stylePrompt.category}`);
+        console.log(`Generating image ${i + 1}/${this.STYLE_CATEGORIES.length}: ${category.category}`);
 
-        const output = await client.run(model, {
-          input: {
-            prompt: prompt,
-            width: 512,
-            height: 768,
-            num_outputs: 1,
-            num_inference_steps: 25,
-            guidance_scale: 7.5,
-            negative_prompt: "blurry, low quality, distorted, deformed, disfigured, bad anatomy, extra limbs, missing limbs, watermark, text, signature",
-            scheduler: "DPMSolverMultistep"
-          }
-        });
+        // Step 1: Generate optimized prompt with Claude 4.5
+        console.log(`Step 1: Generating prompt with Claude 4.5...`);
+        const claudePrompt = await this.generatePromptWithClaude(category, gender);
+        console.log(`✅ Claude prompt generated: ${claudePrompt.substring(0, 100)}...`);
 
-        // Handle different Replicate response formats
-        let imageUrl = "";
-        if (Array.isArray(output)) {
-          imageUrl = output[0];
-        } else if (typeof output === 'object' && output !== null) {
-          // Check if it's a URL string or has url property
-          imageUrl = (output as any)?.url || (output as any)?.[0] || "";
-        } else if (typeof output === 'string') {
-          imageUrl = output;
-        }
+        // Step 2: Generate image with Google Nano Banana
+        console.log(`Step 2: Generating image with Google Nano Banana...`);
+        const imageUrl = await this.generateImageWithNanoBanana(claudePrompt);
 
         calibrationImages.push({
           id: `calibration_${i + 1}`,
-          prompt: prompt,
+          originalPrompt: `${category.category} - ${gender}`,
+          claudeGeneratedPrompt: claudePrompt,
           imageData: imageUrl,
           isGenerated: !!imageUrl
         });
 
-        console.log(`✅ Generated image for ${stylePrompt.category}`);
+        console.log(`✅ Successfully generated image for ${category.category}`);
 
         // Add delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 3000));
 
       } catch (error) {
-        console.error(`Error generating image for ${stylePrompt.category}:`, error);
+        console.error(`Error generating image for ${category.category}:`, error);
 
         calibrationImages.push({
           id: `calibration_${i + 1}`,
-          prompt: prompt,
+          originalPrompt: `${category.category} - ${gender}`,
+          claudeGeneratedPrompt: '',
           isGenerated: false,
           error: error instanceof Error ? error.message : 'Unknown error'
         });
@@ -215,36 +336,25 @@ export class ReplicateImageService {
   }
 
   /**
-   * Generate a single image on-demand using Replicate
+   * Generate a single image on-demand using Claude 4.5 + Google Nano Banana
    */
-  static async generateSingleImage(prompt: string): Promise<string> {
-    const client = this.getClient();
-    const model = "stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4";
-
+  static async generateSingleImage(category: StyleCategory, gender: string = 'neutral'): Promise<CalibrationImage> {
     try {
-      const output = await client.run(model, {
-        input: {
-          prompt: prompt,
-          width: 512,
-          height: 768,
-          num_outputs: 1,
-          num_inference_steps: 25,
-          guidance_scale: 7.5,
-          negative_prompt: "blurry, low quality, distorted, deformed, disfigured, bad anatomy, extra limbs, missing limbs, watermark, text, signature",
-          scheduler: "DPMSolverMultistep"
-        }
-      });
+      console.log(`Generating single image for ${category.category} (${gender})...`);
 
-      let imageUrl = "";
-      if (Array.isArray(output)) {
-        imageUrl = output[0];
-      } else if (typeof output === 'object' && output !== null) {
-        imageUrl = (output as any)?.url || (output as any)?.[0] || "";
-      } else if (typeof output === 'string') {
-        imageUrl = output;
-      }
+      // Step 1: Generate prompt with Claude 4.5
+      const claudePrompt = await this.generatePromptWithClaude(category, gender);
 
-      return imageUrl;
+      // Step 2: Generate image with Google Nano Banana
+      const imageUrl = await this.generateImageWithNanoBanana(claudePrompt);
+
+      return {
+        id: `single_${Date.now()}`,
+        originalPrompt: `${category.category} - ${gender}`,
+        claudeGeneratedPrompt: claudePrompt,
+        imageData: imageUrl,
+        isGenerated: !!imageUrl
+      };
     } catch (error) {
       console.error('Error generating single image:', error);
       throw error;
@@ -252,46 +362,38 @@ export class ReplicateImageService {
   }
 
   /**
-   * Get gender-specific prompt for a style
+   * Get style categories for manual testing
    */
-  private static getGenderSpecificPrompt(stylePrompt: StylePrompt, gender: string): string {
-    switch (gender.toLowerCase()) {
-      case 'male':
-        return stylePrompt.malePrompt;
-      case 'female':
-        return stylePrompt.femalePrompt;
-      default:
-        return stylePrompt.neutralPrompt;
-    }
-  }
-
-  /**
-   * Get style prompts for manual generation or testing
-   */
-  static getStylePrompts(gender: string = 'neutral'): Array<{id: string, prompt: string, category: string}> {
-    return this.STYLE_PROMPTS.map((style, index) => ({
-      id: `calibration_${index + 1}`,
-      category: style.category,
-      prompt: this.getGenderSpecificPrompt(style, gender)
-    }));
+  static getStyleCategories(gender: string = 'neutral'): StyleCategory[] {
+    return this.STYLE_CATEGORIES;
   }
 
   /**
    * Check if Replicate API is properly configured
    */
   static isConfigured(): boolean {
+    this.debugToken(); // Debug log
     return !!this.REPLICATE_API_TOKEN;
   }
 
   /**
-   * Get current API usage estimate (basic implementation)
+   * Get usage estimate
    */
-  static getUsageEstimate(): { imagesGenerated: number; estimatedCost: number } {
-    // This would need to be implemented with actual usage tracking
-    // Stable Diffusion XL costs approximately $0.018 per image
+  static getUsageEstimate(): {
+    claudeRequests: number;
+    nanoBananaRequests: number;
+    estimatedCost: number
+  } {
+    // Claude 4.5: ~$0.015 per 1K tokens
+    // Google Nano Banana: Check Replicate pricing
     return {
-      imagesGenerated: 0,
+      claudeRequests: 0,
+      nanoBananaRequests: 0,
       estimatedCost: 0
     };
   }
 }
+
+
+
+

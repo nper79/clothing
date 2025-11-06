@@ -8,6 +8,19 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 3000,
         host: '0.0.0.0',
+        proxy: {
+          '/api/replicate': {
+            target: 'https://api.replicate.com',
+            changeOrigin: true,
+            secure: true,
+            rewrite: (path) => path.replace(/^\/api\/replicate/, ''),
+            headers: {
+              'Authorization': `Bearer ${env.VITE_REPLICATE_API_TOKEN}`,
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*'
+            }
+          }
+        }
       },
       plugins: [react()],
       define: {
