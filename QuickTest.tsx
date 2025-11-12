@@ -117,9 +117,9 @@ const QuickTest: React.FC = () => {
       )}
 
       <div style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
-        <p>Token: {import.meta.env.VITE_REPLICATE_API_TOKEN ? '✅ Configurado' : '❌ Não configurado'}</p>
-        <p>Modelo: <strong>reve-ai/reve-fast</strong> - Edição de imagem</p>
-        <p>Teste: Transforma profissional em look casual minimalista</p>
+        <p>Token: {import.meta.env.VITE_REPLICATE_API_TOKEN ? '? Configured' : '? Not configured'}</p>
+        <p>Model: <strong>reve-ai/reve-fast</strong> � Image editing</p>
+        <p>Scenario: Transform a professional outfit into a minimal casual look</p>
       </div>
     </div>
   );

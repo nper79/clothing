@@ -3,6 +3,16 @@ import type { PersonalLook, UserPreferences } from '../types/personalStyling';
 
 export type { PersonalLook, UserPreferences } from '../types/personalStyling';
 
+interface PositiveSignal {
+  lookId: string;
+  name: string;
+  category: string;
+  level: string;
+  editPrompt: string;
+  styledPhotoUrl?: string;
+  timestamp: string;
+}
+
 const PERSONALIZED_LOOKS_ENDPOINT = '/api/personalized-looks';
 
 const getApiEndpoint = (path: string): string => {
@@ -308,6 +318,41 @@ export class PersonalStylingService {
     }
   }
 
+  static getPositiveSignals(): PositiveSignal[] {
+    try {
+      const stored = localStorage.getItem('personal_styling_positive_signals');
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (error) {
+      console.error('Error loading positive signals:', error);
+    }
+    return [];
+  }
+
+  static recordPositiveSignal(look: PersonalLook): void {
+    try {
+      const currentSignals = this.getPositiveSignals();
+      const nextSignal: PositiveSignal = {
+        lookId: look.lookId,
+        name: look.name,
+        category: look.category,
+        level: look.level,
+        editPrompt: look.editPrompt,
+        styledPhotoUrl: look.styledPhotoUrl,
+        timestamp: new Date().toISOString()
+      };
+
+      const updatedSignals = [nextSignal, ...currentSignals].slice(0, 50);
+      localStorage.setItem('personal_styling_positive_signals', JSON.stringify(updatedSignals));
+
+      // Keep existing preference learning in sync
+      this.saveFeedback(look.lookId, true);
+    } catch (error) {
+      console.error('Error recording positive signal:', error);
+    }
+  }
+
   /**
    * Basic readiness check (legacy helper)
    */
@@ -465,7 +510,6 @@ Example format:
   }
 
   }
-
 
 
 
