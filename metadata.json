@@ -1,0 +1,5 @@
+{
+  "name": "Gemini Personal Stylist",
+  "description": "A personal stylist app that uses Gemini to suggest outfits based on your style preferences and a photo you upload.",
+  "requestFramePermissions": []
+}
