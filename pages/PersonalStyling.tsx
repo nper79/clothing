@@ -17,7 +17,7 @@ export const PersonalStylingPage: React.FC = () => {
           className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg hover:bg-white transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Voltar
+          Back
         </button>
       </div>
 

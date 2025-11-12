@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import Replicate from "replicate";
 
 const resolveUrl = (input: string | Request | URL): string => {
@@ -95,7 +95,7 @@ const DirectAPITest: React.FC = () => {
       console.log('? Models list retrieved:', models.length, 'models');
       setResults(prev => [...prev, `? Direct API Success: Found ${models.length} models`]);
 
-      // Mostrar alguns modelos dispon�veis
+      // Mostrar alguns modelos dispon?veis
       const claudeModel = models.find(m => m.name.includes('claude'));
       const nanoModel = models.find(m => m.name.includes('nano-banana'));
 
@@ -276,10 +276,10 @@ const DirectAPITest: React.FC = () => {
         <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <h3 className="font-semibold mb-2">?? About This Test:</h3>
           <ul className="text-sm space-y-1">
-            <li>� This tests the Replicate API directly without proxy</li>
-            <li>� If this works, the issue is with the proxy configuration</li>
-            <li>� If this fails, the issue is with token or network</li>
-            <li>� Check the browser console for detailed error logs</li>
+            <li>? This tests the Replicate API directly without proxy</li>
+            <li>? If this works, the issue is with the proxy configuration</li>
+            <li>? If this fails, the issue is with token or network</li>
+            <li>? Check the browser console for detailed error logs</li>
           </ul>
         </div>
       </div>
@@ -288,6 +288,7 @@ const DirectAPITest: React.FC = () => {
 };
 
 export default DirectAPITest;
+
 
 
 

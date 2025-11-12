@@ -20,8 +20,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     );
   }
 
-  // Allow access to the app without authentication for demo purposes
-  // The app will handle its own user ID generation and state management
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
   return <>{children}</>;
 };
 

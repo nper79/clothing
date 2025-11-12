@@ -2,13 +2,19 @@ import React, { useState } from 'react';
 import { Upload, Sparkles } from 'lucide-react';
 
 interface PersonalStylingUploadProps {
-  onPhotoUploaded: (photoUrl: string) => void;
+  onPhotoUploaded: (photoUrl: string, gender: 'male' | 'female') => void;
 }
 
 export const PersonalStylingUpload: React.FC<PersonalStylingUploadProps> = ({ onPhotoUploaded }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedPhoto, setUploadedPhoto] = useState<string | null>(null);
+  const [selectedGender, setSelectedGender] = useState<'male' | 'female'>(() => {
+    if (typeof window === 'undefined') {
+      return 'female';
+    }
+    return (localStorage.getItem('latest_user_gender') as 'male' | 'female') || 'female';
+  });
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -51,8 +57,11 @@ export const PersonalStylingUpload: React.FC<PersonalStylingUploadProps> = ({ on
       setUploadedPhoto(photoUrl);
       setIsUploading(false);
 
+      localStorage.setItem('latest_user_photo', photoUrl);
+      localStorage.setItem('latest_user_gender', selectedGender);
+
       setTimeout(() => {
-        onPhotoUploaded(photoUrl);
+        onPhotoUploaded(photoUrl, selectedGender);
       }, 1000);
     };
     reader.readAsDataURL(file);
@@ -69,6 +78,25 @@ export const PersonalStylingUpload: React.FC<PersonalStylingUploadProps> = ({ on
           <p className="text-gray-600">
             Upload a full-body photo and we will create amazing outfits tailored just for you.
           </p>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-sm p-4 mb-6">
+          <p className="text-sm text-gray-600 font-medium mb-3">Who should we style?</p>
+          <div className="flex gap-3">
+            {(['female', 'male'] as const).map((option) => (
+              <button
+                key={option}
+                onClick={() => setSelectedGender(option)}
+                className={`flex-1 px-4 py-2 rounded-xl border transition ${
+                  selectedGender === option
+                    ? 'border-purple-500 bg-purple-50 text-purple-700'
+                    : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                }`}
+              >
+                {option === 'female' ? 'Female' : 'Male'}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8">

@@ -12,13 +12,19 @@ interface PersonalStylingFlowProps {
 export const PersonalStylingFlow: React.FC<PersonalStylingFlowProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState<FlowStep>('upload');
   const [userPhotoUrl, setUserPhotoUrl] = useState<string>('');
-  const [userGender, setUserGender] = useState<'male' | 'female'>('female');
+  const [userGender, setUserGender] = useState<'male' | 'female'>(() => {
+    if (typeof window === 'undefined') {
+      return 'female';
+    }
+    return (localStorage.getItem('latest_user_gender') as 'male' | 'female') || 'female';
+  });
   const [latestPreferences, setLatestPreferences] = useState<UserPreferences>(
     PersonalStylingService.getUserPreferences()
   );
 
-  const handlePhotoUploaded = (photoUrl: string) => {
+  const handlePhotoUploaded = (photoUrl: string, gender: 'male' | 'female') => {
     setUserPhotoUrl(photoUrl);
+    setUserGender(gender);
     setCurrentStep('styling');
   };
 

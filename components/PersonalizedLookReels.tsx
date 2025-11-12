@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, MessageSquare, Loader2, CheckCircle2, ChevronUp, ChevronDown } from 'lucide-react';
 import { PersonalLook, UserPreferences, PersonalStylingService } from '../services/personalStylingService';
 
@@ -13,6 +14,7 @@ export const PersonalizedLookReels: React.FC<PersonalizedLookReelsProps> = ({
   gender,
   onComplete
 }) => {
+  const navigate = useNavigate();
   const [looks, setLooks] = useState<PersonalLook[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -215,6 +217,12 @@ export const PersonalizedLookReels: React.FC<PersonalizedLookReelsProps> = ({
         <nav className="flex flex-col gap-4 text-white/70">
           <button className="text-left hover:text-white transition">Looks you liked ({likedCount})</button>
           <button className="text-left hover:text-white transition">Profile</button>
+          <button
+            onClick={() => navigate('/explore')}
+            className="text-left hover:text-white transition underline underline-offset-4 decoration-white/50"
+          >
+            Explore looks feed
+          </button>
         </nav>
 
         <div className="mt-auto">
@@ -277,7 +285,7 @@ export const PersonalizedLookReels: React.FC<PersonalizedLookReelsProps> = ({
           <div className="bg-white text-gray-900 rounded-3xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold">What is off with this look?</h3>
-              <button onClick={() => setShowFeedbackModal(false)}>?</button>
+              <button onClick={() => setShowFeedbackModal(false)} className="text-gray-500 hover:text-gray-800">×</button>
             </div>
 
             <p className="text-sm text-gray-600 mb-6">

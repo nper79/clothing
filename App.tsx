@@ -18,6 +18,10 @@ import BatchGenerationTest from './pages/BatchGenerationTest';
 import ComprehensiveVisualCalibration from './components/ComprehensiveVisualCalibration';
 import CacheDiagnostic from './pages/CacheDiagnostic';
 import PersonalStylingPage from './pages/PersonalStyling';
+import ExplorePage from './pages/Explore';
+import ExploreAdmin from './pages/ExploreAdmin';
+import RemixesPage from './pages/Remixes';
+import HomePage from './pages/HomePage';
 import QuickTest from './QuickTest';
 import { generateStyleSuggestions, extractOutfitMetadata, detectGender } from './services/geminiService';
 import { initializeUserProfile, updateProfileFromFeedback, saveUserProfile, loadUserProfile } from './services/preferenceService';
@@ -664,8 +668,33 @@ const App: React.FC = () => {
           <Route path="/test-direct" element={<DirectAPITest />} />
           <Route path="/test-batch" element={<BatchGenerationTest />} />
           <Route path="/cache-diagnostic" element={<CacheDiagnostic />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/personal-styling" element={<PersonalStylingPage />} />
           <Route path="/quick-test" element={<QuickTest />} />
+          <Route
+            path="/explore"
+            element={
+              <ProtectedRoute>
+                <ExplorePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/remixes"
+            element={
+              <ProtectedRoute>
+                <RemixesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/explore-admin"
+            element={
+              <ProtectedRoute>
+                <ExploreAdmin />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/*" element={
             <ProtectedRoute>
               <AppContent />

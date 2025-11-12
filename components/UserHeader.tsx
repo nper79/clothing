@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const UserHeader: React.FC = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     try {
@@ -16,10 +18,24 @@ const UserHeader: React.FC = () => {
     <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
+          <div className="flex items-center gap-4">
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               StyleAI
             </span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => navigate('/explore')}
+                className="px-3 py-1 text-sm font-medium text-gray-600 dark:text-gray-200 border border-gray-200 rounded-full hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800 transition"
+              >
+                Explore
+              </button>
+              <button
+                onClick={() => navigate('/explore-admin')}
+                className="px-3 py-1 text-sm font-medium text-gray-500 border border-dashed border-gray-300 rounded-full hover:border-gray-500 transition"
+              >
+                Admin
+              </button>
+            </div>
           </div>
 
           {user && (

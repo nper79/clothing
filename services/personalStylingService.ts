@@ -14,6 +14,7 @@ interface PositiveSignal {
 }
 
 const PERSONALIZED_LOOKS_ENDPOINT = '/api/personalized-looks';
+const REMIX_LOOK_ENDPOINT = '/api/remix-look';
 
 const getApiEndpoint = (path: string): string => {
   const base = import.meta.env.VITE_PERSONAL_STYLING_API_URL;
@@ -26,6 +27,10 @@ const getApiEndpoint = (path: string): string => {
 export class PersonalStylingService {
   private static getPersonalizedLooksUrl(): string {
     return getApiEndpoint(PERSONALIZED_LOOKS_ENDPOINT);
+  }
+
+  private static getRemixUrl(): string {
+    return getApiEndpoint(REMIX_LOOK_ENDPOINT);
   }
 
   /**
@@ -49,7 +54,7 @@ export class PersonalStylingService {
     const total = selectedLooks.length;
     const personalLooks: PersonalLook[] = [];
 
-    console.log(`🚀 Generating ${total} personalized looks for ${gender} (LIMITED TO 1 FOR TESTING!)`);
+    console.log(`dYs? Generating ${total} personalized looks for ${gender}`);
 
     for (let i = 0; i < selectedLooks.length; i++) {
       const look = selectedLooks[i];
@@ -353,6 +358,47 @@ export class PersonalStylingService {
     }
   }
 
+  static async remixLook(
+    userPhotoUrl: string,
+    prompt: string,
+    metadata?: Partial<PersonalLook> & { referenceImage?: string }
+  ): Promise<PersonalLook> {
+    const response = await fetch(this.getRemixUrl(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userPhoto: userPhotoUrl,
+        prompt,
+        referenceImage: metadata?.referenceImage,
+        metadata
+      })
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || 'Failed to remix look');
+    }
+
+    const payload = await response.json();
+
+    return {
+      id: payload.id || `remix_${Date.now()}`,
+      lookId: metadata?.lookId || 'explore',
+      name: metadata?.name || 'Explore Remix',
+      category: metadata?.category || 'explore',
+      level: metadata?.level || 'custom',
+      originalPrompt: metadata?.originalPrompt || prompt,
+      editPrompt: prompt,
+      originalPhotoUrl: userPhotoUrl,
+      styledPhotoUrl: payload.styledPhotoUrl,
+      isGenerated: Boolean(payload.styledPhotoUrl),
+      generatedAt: new Date(),
+      error: payload.error
+    };
+  }
+
   /**
    * Basic readiness check (legacy helper)
    */
@@ -510,6 +556,9 @@ Example format:
   }
 
   }
+
+
+
 
 
 
