@@ -2,110 +2,179 @@
   "male": [],
   "female": [
     {
-      "id": "explore_female_1762979220873_0",
+      "id": "explore_female_ref_1763058707386_0",
       "gender": "female",
-      "title": "Linen  Ease ",
-      "description": "Overs ized o atmeal l inen blaz er,  white  rib bed tank, wide -leg san d tr ousers, leather  slides .",
-      "vibe": "minimal  luxe",
-      "prompt": "Full -body vertical  9:16 shot of  a  woman  in  an oversized o atmeal linen double -breasted blazer with rolle d sleeves over  a  white ribbed cotton  tank top tuc ked into high -waisted wide-leg sand l inen trousers, tan  leather slide  san dals visible ,  minimal  gol d h oop earrings, hair  in a low  mes sy bun,  natural de wy  makeup, relax ed standing  pose with  weight  on  one hip , shot inside  a monochrome cyclorama studio  with sculptural light gradients casting  soft  shadows,  entire  body an d shoes  clearly  visible in  frame Scene: sunset rooftop lounge bathed in neon tube lighting with skyline backdrop. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/BbccsY2clwoFOBofJHciJGJrwBTgCOIhSvNHABFTJmCLfpoVA/tmpefm6zv5p.jpeg"
+      "title": "Neon Transit",
+      "description": "Olive bomber, charcoal utility skirt, barrel denim, reflective sneakers, stackedhoods.",
+      "vibe": "streetwear",
+      "prompt": "Full-body 9:16 shot, visible footwear. Full-color, rich, never black-and-white. A cool-weather layered look: slightly oversized olive MA-1 bomber in matte nylon with dropped shoulders and ribbed cuffs; under it a slate ziphoodie with thehood stacked over a crisp white mock-neck long sleeve; a cropped charcoal utility skirt with tonal cargo pockets sits over deep indigo barrel-leg denim with a subtle puddle hem; waffle-knit socks peek above chunky off-white sneakers with reflective piping and vulcanized soles. Accessories: slim black nylon crossbody with matte carabiner, silver huggie hoops, slouchy black beanie, woven web belt with a dropped tail. Hair/makeup: brushed-up brows, dewy skin, diffused rose-taupe lip, smoky gray nails, hair tucked into the beanie with a few wisps out. Environment: foggy riverside boardwalk with glowing lamps and wet pavement reflecting city lights; faint mist curling around railings. Lighting is moody yet crisp, highlighting nylon sheen and denim texture. Scene: nighttime city street with reflective asphalt and blurred headlights. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0-1763058707386.jpg"
     },
     {
-      "id": "explore_female_1762979227445_1",
+      "id": "explore_female_ref_1763058637599_0",
       "gender": "female",
-      "title": "Denim Reset ",
-      "description": " Fitte d char coal t urtleneck, high-rise  straight  leg j eans, cogn ac ankle  boots, ca mel coat .",
-      "vibe": " weeken d chic",
-      "prompt": "Full-body vertical 9: 16 shot of a woman wearing  a fitted charcoal mer ino wool turtleneck swe ater tuc ked into high-rise medium -wash  straight leg  denim j eans with  raw  hem , cogn ac leather pointe d-toe ankle boots, long  camel wool  coat dra ped over shoulders , small  black  leather cross body bag, hair  in sle ek middle  part , subtle  bron z ed makeup, walking  pose  mi d-stride, capture d on  a win dswept Mediterranean pier with terracotta  planters and sea mist in  backgroun d, shoes  an d full  sil houette visible Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/Wut69cOH3lrUIR7qzveX6BapYC0jeyB1o6d5UmPzMh1ceTRrA/tmprzh2jn_3.jpeg"
+      "title": "Neon Nimbus",
+      "description": "Charcoal parka over heatherhoodie, cobalt cargos, chunky runners, sculptural silver earrings.",
+      "vibe": "streetwear",
+      "prompt": "Full-body 9:16, visible footwear, full-color rich render, never black-and-white. A model stands on a foggy riverside boardwalk with mist drifting over water and soft city lights behind. Layering: matte charcoal nylon parka with boxy, dropped-shoulder silhouette and light padding; under it, an oversized heather-gray hoodie with generoushood and thick drawcords; beneath, a crisp white longline tee peeking past the hem. Bottoms: relaxed straight-leg utility cargos in saturated cobalt cotton twill, clean stacked pockets at mid-thigh, hem slightly cropped. Footwear: chunky white-and-gum skate runners with suede toe caps. Accessories: sculptural polished-silver hoop earrings, slim silver curb chain, black sports watch, graphite canvas crossbody worn snug under the parka, subtle moto belt peeking at waistband. Hair/makeup: hair tapered at sides with soft texture on top; skin dewy, brows brushed up, nails short and clean with clear gloss. Small dopamine dressing pop via cobalt pants; quiet luxury in clean lines and restrained palette. Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0-1763058637599.jpg"
     },
     {
-      "id": "explore_female_1762979234185_2",
+      "id": "explore_female_ref_1763054706190_0",
       "gender": "female",
-      "title": " Court  Side ",
-      "description": "White  cro pped hoo die, matching  high -waist  jog gers, tennis  skirt layer , chun ky sneakers.",
-      "prompt": "Full-body vertical  9:16 shot of a  woman in  a white French  terry  cro pped hoodie with draw str ings, lay ered over  a  white  ple ated tennis skirt visible  beneath  ivory  high -waisted ta pered joggers,  chun ky white leather  sneakers with grey  acc ents, white  crew  s ocks, hair in high  ponytail with  fly aways, fresh -faced g low with  t inte d lip  balm, athletic  stance  le aning against wall , photograph ed in a brut alist concrete stairwell washed in  magenta gel  lighting ,  entire  figure  including  foot wear clearly fr amed Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/y35SOUevSV2SIy4ZdXQoFOiYv307ANIcRS3576jvHehjeTRrA/tmpzmbi1yax.jpeg"
+      "title": "Oatmeal Current",
+      "description": "Taupe wrap coat, cobalt scarf, fluid black trousers, sleek ankle boots.",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body 9:16 shot with visible footwear. A modern woman wears a softly structured taupe wrap coat in brushed wool, tied with a slim moto-inspired leather belt; beneath, a charcoal fine-gauge ribbed turtleneck is neatly tucked into high-waisted black wide-leg trousers in fluid suiting wool with a subtle puddle break. A bold cobalt cashmere scarf is generously looped once, long ends draping asymmetrically. Footwear: minimal black leather ankle boots with a low block heel, matte finish. Accessories include sculptural silver hoop earrings, a slim black leather watch, and an oversized black pebble-grain tote. Hair in a sleek low bun; makeup is neutral with soft matte skin, defined brows, and a muted nude lip. Environment: corporate lobby with marble floors and tall glass, cool diffused daylight reflecting off polished stone, providing crisp highlights that emphasize textures and layers. Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0-1763054706190.jpg"
     },
     {
-      "id": "explore_female_1762979241394_3",
+      "id": "explore_female_ref_1763053586285_0",
       "gender": "female",
-      "title": "Midnight  Sh een",
-      "description": " Liqui d black  slip  dress, metallic silver  m oto  jacket, str appy he els, sculpt ural ear rings.",
-      "prompt": "Full-body vertical  9:16 shot of a  woman wearing a bias -cut black  s atin slip dress with cow l neckline hitting  mi d-c alf, metallic silver f aux- leather cro ppe d m oto jacket with asym metric  zip , black  str appy stil etto  heels, overs ized sculpt ural silver  earrings, hair in wet - look sl icked back style , smo ky eye with  gloss y nude  lip , confident  standing  pose with han d in  jacket  pocket, capture d on a rain -soaked neon alley with  puddle reflections and atmospheric  haze, full  body  and shoes visible in  vertical  composition Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/4W5gJ29522p3AZkfNvR7OtIry68FnHRQWN0aGQ1EMwAVfpoVA/tmp71d_xj5x.jpeg"
+      "title": "Cocoa Column",
+      "description": "Belted camel coat, slinky metallic knit, wide trousers, oversized scarf.",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body 9:16 shot with visible footwear. A modern, wearable fall look blending quiet luxury and subtle dopamine shine. Model wears a tailored camel wool coat cinched with a clean leather belt, layered over a fine-gauge metallic-thread ribbed turtleneck in muted champagne. Bottoms are high-waisted, fluid, wide-leg trousers in deep cocoa with a soft drape. An oversized brushed alpaca scarf in tonal caramel is looped once for volume, ends grazing mid-thigh. Footwear: polished chocolate leather square-toe ankle boots with low block heel. Accessories: slim gold hoop earrings, minimal leather top-handle bag in espresso, and a narrow metallic belt peeking at the waist. Hair: sleek low bun with a center part. Makeup: satin skin, soft taupe eyes, brown mascara, nude rose lip. Fabrics emphasize texture contrast—felted wool, brushed alpaca, fluid suiting, and subtle metallic knit. Environment: corporate lobby with marble floors and tall glass, late-morning light casting soft reflections; a few modern sculptures and potted greenery in the background to ground the scene. Scene: mirror-studded desert salt flat at golden hour. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0-1763053586285.jpg"
     },
     {
-      "id": "explore_female_1762978773828_0",
+      "id": "explore_female_ref_1763052108290_0",
       "gender": "female",
-      "title": "Latex Noir  Armor ",
-      "description": "Black  latex tr ench over  sh eer org anza t urt leneck,  chain mail midi  skirt,  patent  boots .",
-      "vibe": "evening  glam our",
-      "prompt": "Full -body vertical  9:16 shot of  a  woman wearing a  gloss y black latex trench coat with ex aggerated shoulders over  a sheer white  organza turtleneck, paire d with a silver  chain mail midi skirt that  catches  light  dynam ically.  Black  patent leather  th igh- high boots with  stil etto heels visible . Sl icked-back wet -look hair,  bol d win ged black  e yeliner, deep  pl um lips .  Confident  power  stance  with arms crossed.  Shot  inside  a monochrome cyclorama studio  with sculptural light gradients creating  dramatic shadows. Shoes  clearly  visible in frame . Scene: windswept Mediterranean pier with terracotta planters and sea mist. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/9CzYQZ2SBbIAPJm1oUqMvWmltQLiYtxSoitEI1rDEjp1dKaF/tmppve6vbqx.jpeg"
+      "title": "Soft ShearlingEdge",
+      "description": "Shearling-collared wool coat over satin slip, chunky runners, sculptural earrings.",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body 9:16 fashion shot with visible footwear. Model wears a long charcoal brushed-wool coat with a creamy shearling collar and tonal belt, layered over a silver-grey satin slip dress that hits mid-calf. Add a fine-rib knit turtleneck in stone under the slip for warmth, sheer black tights, and crisp chunky runners in off-white with gum soles. Accessorize with sculptural silver earrings, a black leather moto belt slung at the waist, and an oversized taupe tote in soft-grain leather. Hair is a sleek low bun with clean side part; makeup is dewy skin, muted taupe eye, soft rose lip. Fabrics emphasize contrast: fuzzy shearling, brushed wool, liquid satin, ribbed knit. Set in a cool-weather urban sidewalk at dawn, soft overcast light, frosted glass storefronts and pale concrete, subtle motion in the coat hem. Scene: shot inside a monochrome cyclorama studio with sculptural light gradients. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0-1763052108291.jpg"
     },
     {
-      "id": "explore_female_1762978726968_1",
+      "id": "explore_female_ref_1763051385444_0",
       "gender": "female",
-      "title": "Vapor  Trail ",
-      "description": " Sh eer organza tr ench,  neon te chwear har ness, cargo  pants,  hol ographic sne akers.",
-      "vibe": "street wear",
-      "prompt": "Full-body vertical 9: 16 shot of a woman in  an  overs ized sheer i ridescent organza trench coat bill owing open ,  electric  lime  te chwear utility  har ness with  multiple  str aps and buck les over  black  sports  b ra, high -waisted char coal technical  cargo  pants with refl ective pi ping, holographic silver  chun ky platform  sne akers with visible  air  bubbles,  shoes  completely  in  frame. T ousled win dswept copper  hair with  face - framing layers, de wy skin with  graphic  n eon green  inner  eye  liner , gloss y clear  lip. Dynamic  walking  pose mi d-stride with coat  flowing .  Rain -soaked neon alley with  puddle reflections and atmospheric  haze,  mag enta an d cyan signs  gl owing. Full  body  an d foot wear visible. Scene: art gallery cube with floating plinths and diffused spotlights. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/HU7vfJmOYem23kOaYlPFzD5Noj0ouuJRJBxSzPpvItfQtTRrA/tmp2ppj13cd.jpeg"
+      "title": "Cloud Barrel",
+      "description": "Cropped wool bomber with barrel jeans and ballet flats.",
+      "vibe": "weekend chic",
+      "prompt": "Full-body 9:16 shot, visible footwear. Model wears a light grey cropped wool bomber over a fine rib ivory knit tank, paired with mid-wash barrel-leg denim with soft pleats and a relaxed puddle hem. Footwear: almond-toe nude leather ballet flats. Accessories: sculptural silver hoop earrings, slim moto belt in black, oversized taupe canvas tote. Hair: soft low bun with face-framing strands. Makeup: clean skin, brushed brows, muted rosy lip. Environment: overcast city sidewalk near concrete planters and pale stone buildings, early spring chill. Scene: stormy coastline boardwalk with matte sky and dramatic waves. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0-1763051385444.jpg"
     },
     {
-      "id": "explore_female_1762977640409_0",
+      "id": "explore_female_ref_1763051393928_1",
       "gender": "female",
-      "title": "Chrome  Mi rage",
-      "description": " Metallic chain mail hal ter dress,  transl ucent organza tr ench ,  sculpt ural silver  c uff  boots.",
-      "vibe": "evening  glamour",
-      "prompt": "Full -body vertical   9:16  shot of  a woman wearing a liqui d silver  chain mail halter mini  dress with asym metric  hemline , overs ized transl ucent white  organza trench coat with ex aggerated lap els bill owing open , knee -high sculpt ural metal lic silver  platform  boots with geometric  heel  architecture , shoes  clearly  visible.  Platinum  blonde hair sl icked back into  low  bun, de wy skin  with chrome  highlight  on  che ekbones, gloss y nude  lip .  Confident  standing  pose with one  hand in  coat  pocket, shot  inside  mirror -stu dded desert  salt flat at golden hour with  warm  amber  light  reflecting  infin itely across mi rrored groun d,  creating  sur real double d horizon  effect. Scene: sunset rooftop lounge bathed in neon tube lighting with skyline backdrop. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/O1ioJ736UKLfP6jYrG4CGUvFPQjVcD3mhQH8MrteleESLTRrA/tmp5hi369xr.jpeg"
+      "title": "Stone Column",
+      "description": "Longline trench over pleated wide-leg denim with chunky runners.",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body 9:16 shot, visible footwear. Model wears a sand longline cotton twill trench layered atop a charcoal jersey turtleneck and light blue pleated wide-leg denim. Footwear: white and grey chunky runners. Accessories: brushed nickel sculptural earrings, slim black moto belt, oversized black leather tote. Hair: sleek low ponytail. Makeup: soft matte base, taupe eyes, clear gloss. Environment: minimalist metro entrance with steel railings and graphic shadow lines, cool-weather overcast. Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1-1763051393928.jpg"
     },
     {
-      "id": "explore_female_1762977647281_1",
+      "id": "explore_female_ref_1763051402147_2",
       "gender": "female",
-      "title": "N eon Armor ",
-      "description": "Black  latex bodysuit lay ered under  mesh  te chwear vest , hol ographic str appy  he els.",
-      "vibe": "street wear",
-      "prompt": "Full-body vertical 9: 16 shot of a woman in  sle ek black latex long -sleeve bodysuit with high  neck , lay ered under overs ized slate  gray techwear utility  vest featuring  multiple  buck le d str aps an d cargo  pockets, wide -leg black pa rachute pants with  reflective pi ping, i ridescent holographic str appy san dal  heels with  clear  ac rylic block  heel,  shoes  visible. Jet  black hair in  high  ponytail with  face -framing pieces , bol d win ged black  eyeliner, m atte berry  lips.  Dynamic  walking  pose mi d-stride with slight  lean  forward, capture d in rain -so aked neon alley with puddle  reflections of  pink  an d blue sign age, atmospheric  h aze rolling  across  wet  pavement. Scene: shot inside a monochrome cyclorama studio with sculptural light gradients. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/iXAb47arkrJIPh1GXVeeMBdnefJ7UmfuSoC1e9o8EiaDcZKaF/tmpuz65h3ps.jpeg"
+      "title": "Oat Matcha",
+      "description": "Boxy knit over slip skirt with puddle-hem denim peeking.",
+      "vibe": "weekend chic",
+      "prompt": "Full-body 9:16 shot, visible footwear. Model wears an oat-colored boxy fisherman knit layered over a pale sage satin slip skirt, with light-wash puddle-hem denim peeking underneath as underlayer. Footwear: cream leather ballet flats with tiny bow. Accessories: irregular silver earrings, canvas-and-leather oversized tote. Hair: air-dried waves. Makeup: dewy skin, soft blush, brown mascara. Environment: café sidewalk seating with terrazzo tables and potted herbs, mild spring afternoon. Scene: stormy coastline boardwalk with matte sky and dramatic waves. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2-1763051402147.jpg"
     },
     {
-      "id": "explore_female_1762977027275_0",
+      "id": "explore_female_ref_1763051410710_3",
       "gender": "female",
-      "title": "Chrome Siren",
-      "description": "Liquid metal corset over sheer catsuit with mirrored heels.",
-      "vibe": "avant-garde",
-      "prompt": "Woman wearing chrome-plated corset bustier over sheer black mesh catsuit, mirrored platform heels, slick ponytail, reflective cuffs. Shot inside a mirror-box runway with dramatic spotlight and smoky haze. Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/mxqZwm4GFULdCt1vyfTy9DeepVwqY7borDjC3BnsdXlI4SRrA/tmpeszxr_pa.jpeg"
+      "title": "Graphite Glide",
+      "description": "Cropped puffer, black wide-leg denim, sculptural earrings, sleek runners.",
+      "vibe": "sporty",
+      "prompt": "Full-body 9:16 shot, visible footwear. Model wears a matte graphite cropped down puffer over a slate long-sleeve technical tee and washed black wide-leg denim. Footwear: two-tone grey chunky running sneakers. Accessories: polished sculptural earrings, nylon crossbody, black moto belt. Hair: high braided pony. Makeup: fresh, subtle highlight, soft liner. Environment: glassy business district plaza with wet pavement reflections, cool misty morning. Scene: windswept Mediterranean pier with terracotta planters and sea mist. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3-1763051410710.jpg"
     },
     {
-      "id": "explore_female_1762977033993_1",
+      "id": "explore_female_ref_1763051418920_4",
       "gender": "female",
-      "title": "Neon Nomad",
-      "description": "Iridescent windbreaker with leather harness skirt and boots.",
-      "vibe": "future street",
-      "prompt": "Full body portrait of a woman in iridescent cropped windbreaker, black patent leather harness skirt over mesh leggings, neon hiking boots, cyberpunk sunglasses. Scene: rainy neon alley with puddle reflections. Scene: sunset rooftop lounge bathed in neon tube lighting with skyline backdrop. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/TBZJQ7DSMKLSJpeXs3OWACPDe95NkX1VXvTYBf3oPlAX4SRrA/tmp7j7v5ue4.jpeg"
+      "title": "Ink Satin",
+      "description": "Oversized blazer with satin skirt and square-toe ballet flats.",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body 9:16 shot, visible footwear. Model wears a charcoal oversized menswear blazer over a silky black camisole and deep navy bias-cut satin midi skirt. Footwear: black square-toe ballet flats. Accessories: sculptural silver drop earrings, slim black moto belt layered over skirt, oversized croc-embossed tote. Hair: tucked straight hair behind ears. Makeup: soft smoky lash, velvet nude lip. Environment: museum steps with limestone walls and long afternoon shadows, crisp air. Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4-1763051418920.jpg"
     },
     {
-      "id": "explore_female_1762977041996_2",
+      "id": "explore_female_ref_1763051426273_5",
       "gender": "female",
-      "title": "Velvet Armor",
-      "description": "Structured velvet blazer dress with thigh-high boots.",
-      "vibe": "evening power",
-      "prompt": "Woman wearing sculpted emerald velvet blazer dress with exaggerated shoulders, latex gloves, thigh-high patent boots, sleek bob. Shot on a moonlit rooftop with city glow. Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/9c4eKCAVL13GSKYo2OMZ45ismdKsFbQxGm8b4mdQ10iJuU0KA/tmpq05oju9m.jpeg"
+      "title": "Cedar Moto",
+      "description": "Shearling-trim moto with pleated wide-leg jeans and lug boots.",
+      "vibe": "streetwear",
+      "prompt": "Full-body 9:16 shot, visible footwear. Model wears a dark cedar suede moto jacket with cream shearling trim over an ecru thermal henley, paired with mid-indigo pleated wide-leg jeans. Footwear: black leather lug-sole ankle boots. Accessories: matte silver ear cuffs, wide black moto belt, olive oversized tote. Hair: tousled collarbone-length. Makeup: lived-in liner, natural flush. Environment: brick alley with painted murals and steam grates, chilly late fall. Scene: shot inside a monochrome cyclorama studio with sculptural light gradients. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5-1763051426273.jpg"
     },
     {
-      "id": "explore_female_1762977058081_4",
+      "id": "explore_female_ref_1763051435443_6",
       "gender": "female",
-      "title": "Prism Runner",
-      "description": "Electric athleisure catsuit with latex bomber.",
-      "vibe": "sport couture",
-      "prompt": "Full body shot of woman wearing electric violet seamless unitard, cropped latex bomber, metallic waist pack, futuristic sneakers. Scene: illuminated tunnel with gradient lights. Scene: windswept Mediterranean pier with terracotta planters and sea mist. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://replicate.delivery/xezq/PMfEDmsKHVzxE6DqArEZPnRHreA5HFA5DrDxaa1PlZmjcpoVA/tmprcd4gism.jpeg"
+      "title": "Chrome Petal",
+      "description": "Metallic windbreaker with petal-hem denim and chunky runners.",
+      "vibe": "sporty",
+      "prompt": "Full-body 9:16 shot, visible footwear. Model wears a light chrome nylon windbreaker with subtle sheen over a white ribbed mock-neck and soft blue petal-hem barrel jeans. Footwear: off-white chunky runners with reflective accents. Accessories: sculptural chrome earrings, technical nylon belt bag, slim black moto belt. Hair: sleek half-up. Makeup: glossy skin, clear balm, groomed brows. Environment: rooftop track with city skyline, golden-hour breeze. Scene: stormy coastline boardwalk with matte sky and dramatic waves. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6-1763051435443.jpg"
+    },
+    {
+      "id": "explore_female_ref_1763051442980_7",
+      "gender": "female",
+      "title": "Molten Slip",
+      "description": "Liquid satin slip under leather trench with ballet flats.",
+      "vibe": "evening glamour",
+      "prompt": "Full-body 9:16 shot, visible footwear. Model wears a deep espresso leather trench draped over a molten champagne satin slip dress. Footwear: cocoa leather ballet flats with slingback strap. Accessories: abstract silver earrings, slender moto belt cinching trench, small oversized tote tucked under arm. Hair: polished chignon. Makeup: luminous skin, soft bronze eye, bitten lip. Environment: dimly lit hotel driveway with marble columns and warm sconces, cool night. Scene: art gallery cube with floating plinths and diffused spotlights. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7-1763051442980.jpg"
+    },
+    {
+      "id": "explore_female_ref_1763051452195_8",
+      "gender": "female",
+      "title": "Slate Cargo",
+      "description": "Wool shacket with denim cargos and sculptural earrings.",
+      "vibe": "streetwear",
+      "prompt": "Full-body 9:16 shot, visible footwear. Model wears a slate wool-blend shacket over a cream jersey tee, paired with dark-wash denim cargo trousers with wide legs and subtle pleats. Footwear: black and white chunky runners. Accessories: bold sculptural earrings, black moto belt, oversized canvas tote. Hair: messy low knot. Makeup: fresh matte, soft taupe lip. Environment: industrial loading dock with corrugated metal and painted numbers, overcast afternoon. Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8-1763051452195.jpg"
+    },
+    {
+      "id": "explore_female_ref_1763051460057_9",
+      "gender": "female",
+      "title": "Seafoam Fringe",
+      "description": "Textured cardigan, puddle denim, sculptural earrings, ballet flats.",
+      "vibe": "boho",
+      "prompt": "Full-body 9:16 shot, visible footwear. Model wears a seafoam boucle fringe cardigan over a white cotton tank, tucked into light-wash puddle-hem denim with soft barrel shape. Footwear: pale pistachio ballet flats. Accessories: hammered silver earrings, braided black moto belt, oversized straw-structured tote. Hair: loose waves with middle part. Makeup: dewy freckles, peachy tint. Environment: sunlit weekend market with linen stalls and eucalyptus bundles, mild spring morning. Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9-1763051460057.jpg"
+    },
+    {
+      "id": "explore_female_1763047952203_0",
+      "gender": "female",
+      "title": "Linen Street Tailor",
+      "description": "Ivory linen vest suit, barrel jeans, utility belt, silver sambas.",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body, vertical 9:16 shot with shoes visible. Model wears an ivory linen waistcoat layered over a ribbed white tank, paired with light-wash barrel-leg denim with a subtle puddle hem, a slim black utility belt, and silver adidas Samba sneakers. Add a cropped nylon bomber draped over the shoulders and thin stacked bangles. Hair in sleek mid-part low bun; makeup clean-girl glow with brushed brows and soft gloss. Pose relaxed, one hand in pocket, weight on back leg. Lighting crisp with sculptural shadows for a contemporary streetwearedge. Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0-1763047952203.jpg",
+      "styleTag": "street"
+    },
+    {
+      "id": "explore_female_1763047959492_1",
+      "gender": "female",
+      "title": "Rooftop Smart Cargo",
+      "description": "Charcoal blazer, slate parachute cargos, kitten-heel mules, vintage shades.",
+      "vibe": "weekend chic",
+      "prompt": "Full-body, vertical 9:16 shot with shoes visible. Outfit blends polished and practical: oversized charcoal wool blazer over a black mesh turtleneck, slate gray parachute cargo pants cinched at the hem, and black leather kitten-heel mules. Accessorize with a slim croc-embossed shoulder bag, vintage oval sunglasses, and a minimal chain necklace. Hair glossy blowout with center part; makeup soft matte with brown liner. Pose confident step-forward, blazer caught in breeze. Environment: sunset rooftop lounge bathed in neon tube lighting with skyline backdrop, shallow depth of field creating city glow bokeh. Emphasize contemporary streetwear via cargos, layered textures, and refined footwear. Scene: windswept Mediterranean pier with terracotta planters and sea mist. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1-1763047959492.jpg",
+      "styleTag": "street"
+    },
+    {
+      "id": "explore_female_1763028319940_0",
+      "gender": "female",
+      "title": "Ivy Varsity Prep",
+      "description": "Cream cable-knit vest, pleated navy mini, white oxford, burgundy loafers.",
+      "vibe": "weekend chic",
+      "prompt": "Full-body vertical 9:16 shotof a womanin a sleeveless cream cable-knit sweater vest layered over a crisp white oxford button-down with collar visible, navy pleated wool mini skirt, and burgundy leather penny loafers with white athletic socks, shoesfully visible. Hairin low ponytail with tortoiseshell headband, minimal makeup with rosy blush. She stands casually with one hand adjusting her collar, shoton manicured university quad with brick library facade and autumn leaves scatteredon cobblestones, soft natural daylight. Scene: stormy coastline boardwalk with matte sky and dramatic waves. Full body portrait, vertical 9:16 composition (tall), cameraat waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0-1763028319940.jpg",
+      "styleTag": "preppy"
+    },
+    {
+      "id": "explore_female_1763028327896_1",
+      "gender": "female",
+      "title": "Courtside Elegance",
+      "description": "Striped knit polo tucked into crisp white tennis skirt, Mary Janes.",
+      "vibe": "sporty",
+      "prompt": "Full-body vertical 9:16 shotof a womanwearing a fitted sage green and ivory striped knit polo with ribbed collar tucked into a crisp white pleated tennis skirt with knife pleats, paired with black patent leather Mary Jane heels with thin ankle strap, shoesfully visible. Hair slicked back into high ponytail, dewy skin with corallip. She holds a vintage tennis racket, standing beside ivy-covered tennis court fence with geometric shadows, shotat golden houron pristine Ivy League athletic grounds with manicured hedgesin background. Scene: mirror-studded desert salt flatat golden hour. Full body portrait, vertical 9:16 composition (tall), cameraat waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1-1763028327896.jpg",
+      "styleTag": "preppy"
     }
   ]
 }

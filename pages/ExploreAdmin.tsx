@@ -3,15 +3,34 @@ import { Loader2, Download } from 'lucide-react';
 import type { ExploreLook } from '../types/explore';
 import { ExploreService } from '../services/exploreService';
 
+const STYLE_OPTIONS = [
+  { id: '', label: 'Balanced mix' },
+  { id: 'preppy', label: 'Preppy classics' },
+  { id: 'work', label: 'Work / office' },
+  { id: 'winter', label: 'Winter layers' },
+  { id: 'street', label: 'Streetwear' },
+] as const;
+
+type ReferenceUpload = {
+  id: string;
+  name: string;
+  dataUrl: string;
+};
+
+const MAX_REFERENCE_UPLOADS = 8;
+
 const ExploreAdmin: React.FC = () => {
   const [gender, setGender] = useState<'male' | 'female'>(ExploreService.getLatestUserGender());
   const [count, setCount] = useState(10);
+  const [styleTag, setStyleTag] = useState<string>('');
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [dataset, setDataset] = useState<ExploreLook[]>([]);
   const [isDatasetLoading, setIsDatasetLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [referenceUploads, setReferenceUploads] = useState<ReferenceUpload[]>([]);
+  const [isReferenceGenerating, setIsReferenceGenerating] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -48,7 +67,7 @@ const ExploreAdmin: React.FC = () => {
     setError(null);
 
     try {
-      const looks = await ExploreService.generateLooks(gender, count);
+      const looks = await ExploreService.generateLooks(gender, count, styleTag || undefined);
       setDataset(looks);
       setStatus(`Dataset updated with ${Math.min(count, looks.length)} looks. Total stored: ${looks.length}.`);
     } catch (err) {
@@ -108,6 +127,70 @@ const ExploreAdmin: React.FC = () => {
     }
   };
 
+  const readFileAsDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  const handleReferenceUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
+    const files = event.target.files;
+    if (!files?.length) return;
+    const remainingSlots = MAX_REFERENCE_UPLOADS - referenceUploads.length;
+    if (remainingSlots <= 0) return;
+
+    const selected = Array.from(files).slice(0, remainingSlots);
+    try {
+      const entries = await Promise.all(
+        selected.map(async (file) => ({
+          id: `${file.name}-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          name: file.name,
+          dataUrl: await readFileAsDataUrl(file),
+        }))
+      );
+      setReferenceUploads((prev) => [...prev, ...entries]);
+    } catch (uploadError) {
+      console.error(uploadError);
+      setError('Failed to read one of the images. Please try again.');
+    } finally {
+      event.target.value = '';
+    }
+  };
+
+  const removeReferenceUpload = (id: string) => {
+    setReferenceUploads((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const handleReferenceGenerate = async () => {
+    if (!referenceUploads.length) {
+      setError('Add at least one reference image.');
+      return;
+    }
+    setStatus(null);
+    setError(null);
+    setIsReferenceGenerating(true);
+    try {
+      const uploadCount = referenceUploads.length;
+      const looks = await ExploreService.generateLooksFromReferences(
+        gender,
+        uploadCount,
+        referenceUploads.map((item) => item.dataUrl),
+        styleTag || undefined
+      );
+      setDataset(looks);
+      setStatus(`Generated ${Math.min(uploadCount, looks.length)} reference-inspired looks.`);
+      setReferenceUploads([]);
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : 'Failed to generate looks from references');
+    } finally {
+      setIsReferenceGenerating(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -134,7 +217,7 @@ const ExploreAdmin: React.FC = () => {
         </header>
 
         <section className="bg-white rounded-2xl shadow p-6 space-y-6 mb-10">
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">How many looks?</label>
               <input
@@ -152,6 +235,21 @@ const ExploreAdmin: React.FC = () => {
               <div className="text-2xl font-semibold text-gray-900">
                 {isDatasetLoading ? '—' : dataset.length}
               </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Style focus</label>
+              <select
+                value={styleTag}
+                onChange={(event) => setStyleTag(event.target.value)}
+                className="w-full border border-gray-300 rounded-xl px-3 py-2"
+              >
+                {STYLE_OPTIONS.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">Optionally bias new looks toward a scene or vibe.</p>
             </div>
             <div className="flex items-end gap-3">
               <button
@@ -183,6 +281,55 @@ const ExploreAdmin: React.FC = () => {
               {error}
             </div>
           )}
+        </section>
+
+        <section className="bg-white rounded-2xl shadow p-6 space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-gray-400">Inspiration upload</p>
+              <h2 className="text-xl font-semibold text-gray-900">Generate from sample looks</h2>
+              <p className="text-sm text-gray-500">Upload up to {MAX_REFERENCE_UPLOADS} looks you like and let GPT-5 extrapolate fresh options.</p>
+            </div>
+            <label className="inline-flex items-center justify-center px-4 py-2 rounded-xl border border-gray-200 text-gray-700 cursor-pointer hover:bg-gray-50">
+              <input type="file" accept="image/*" multiple className="hidden" onChange={handleReferenceUpload} />
+              Upload images
+            </label>
+          </div>
+
+          {referenceUploads.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {referenceUploads.map((upload) => (
+                <div key={upload.id} className="relative border border-gray-100 rounded-xl overflow-hidden">
+                  <img src={upload.dataUrl} alt={upload.name} className="w-full h-28 object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeReferenceUpload(upload.id)}
+                    className="absolute top-2 right-2 bg-white/90 text-gray-700 rounded-full w-7 h-7 text-sm font-semibold shadow"
+                    title="Remove"
+                  >
+                    ×
+                  </button>
+                  <div className="px-2 py-1 text-xs text-gray-600 truncate">{upload.name}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500">No reference images uploaded yet.</p>
+          )}
+
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={handleReferenceGenerate}
+              disabled={referenceUploads.length === 0 || isReferenceGenerating}
+              className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-indigo-600 text-white font-semibold disabled:opacity-50"
+            >
+              {isReferenceGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+              Generate from references
+            </button>
+            <p className="text-xs text-gray-500 flex-1">
+              We store these uploads privately in Supabase and only use them to guide the prompt batch.
+            </p>
+          </div>
         </section>
 
         <section className="bg-white rounded-2xl shadow p-6">
@@ -226,6 +373,9 @@ const ExploreAdmin: React.FC = () => {
                     <div>
                       <p className="text-xs uppercase tracking-[0.3em] text-gray-400">{look.vibe}</p>
                       <h3 className="font-semibold text-gray-900">{look.title}</h3>
+                      {look.styleTag && (
+                        <p className="text-xs text-indigo-500 font-medium">{STYLE_OPTIONS.find(opt => opt.id === look.styleTag)?.label || look.styleTag}</p>
+                      )}
                       <p className="text-gray-500">{look.description}</p>
                     </div>
                     <details className="mt-2 rounded-xl border border-gray-200 bg-gray-50 text-xs text-gray-600">

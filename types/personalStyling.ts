@@ -8,6 +8,7 @@ export interface PersonalLook {
   editPrompt: string;
   originalPhotoUrl: string;
   styledPhotoUrl?: string;
+  storagePath?: string;
   isGenerated: boolean;
   error?: string;
   generatedAt: Date;

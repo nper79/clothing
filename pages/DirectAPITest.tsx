@@ -96,13 +96,13 @@ const DirectAPITest: React.FC = () => {
       setResults(prev => [...prev, `? Direct API Success: Found ${models.length} models`]);
 
       // Mostrar alguns modelos dispon?veis
-      const claudeModel = models.find(m => m.name.includes('claude'));
+      const gptModel = models.find(m => m.name.toLowerCase().includes('gpt-5'));
       const nanoModel = models.find(m => m.name.includes('nano-banana'));
 
-      if (claudeModel) {
-        setResults(prev => [...prev, `? Claude Model Found: ${claudeModel.name}`]);
+      if (gptModel) {
+        setResults(prev => [...prev, `? GPT-5 Model Found: ${gptModel.name}`]);
       } else {
-        setResults(prev => [...prev, `?? Claude Model Not Found in available models`]);
+        setResults(prev => [...prev, `?? GPT-5 Model Not Found in available models`]);
       }
 
       if (nanoModel) {
@@ -119,12 +119,12 @@ const DirectAPITest: React.FC = () => {
     }
   };
 
-  const testClaudeDirect = async () => {
+  const testGptDirect = async () => {
     setIsLoading(true);
     try {
-      console.log('Testing Claude 4.5 directly...');
-      const minTokens = 1024; // Replicate enforces >= 1024 tokens for Claude 4.5
-      const output = await replicate.run("anthropic/claude-4.5-sonnet", {
+      console.log('Testing GPT-5 directly...');
+      const minTokens = 1024; // Replicate enforces >= 1024 tokens for GPT-5
+      const output = await replicate.run("openai/gpt-5", {
         input: {
           prompt: "Create a simple fashion photography prompt for a man in business attire.",
           max_tokens: minTokens,
@@ -132,12 +132,12 @@ const DirectAPITest: React.FC = () => {
         }
       });
 
-      console.log('Claude output:', output);
-      setResults(prev => [...prev, `? Claude 4.5 Direct Success: ${JSON.stringify(output).substring(0, 100)}...`]);
+      console.log('GPT-5 output:', output);
+      setResults(prev => [...prev, `? GPT-5 Direct Success: ${JSON.stringify(output).substring(0, 100)}...`]);
 
     } catch (error) {
-      console.error('Claude Direct Error:', error);
-      setResults(prev => [...prev, `? Claude 4.5 Direct Error: ${error instanceof Error ? error.message : 'Unknown error'}`]);
+      console.error('GPT-5 Direct Error:', error);
+      setResults(prev => [...prev, `? GPT-5 Direct Error: ${error instanceof Error ? error.message : 'Unknown error'}`]);
     } finally {
       setIsLoading(false);
     }
@@ -195,11 +195,11 @@ const DirectAPITest: React.FC = () => {
               ?? Test Direct Connection
             </button>
             <button
-              onClick={testClaudeDirect}
+              onClick={testGptDirect}
               disabled={isLoading}
               className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 disabled:opacity-50"
             >
-              ?? Test Claude Direct
+              ?? Test GPT-5 Direct
             </button>
             <button
               onClick={testNanoBananaDirect}

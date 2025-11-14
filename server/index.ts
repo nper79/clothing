@@ -5,7 +5,10 @@ import {
   remixLookWithPrompt,
   generateExplorePrompts,
   generateExploreLooks,
+  sanitizeExploreLook,
+  generateExploreLooksFromReferences,
 } from './personalStylingWorkflow';
+import { getRemixSignedUrl } from './imageStorage';
 import { readExploreDataset, writeExploreDataset } from './exploreDatasetStore';
 
 const app = express();
@@ -91,7 +94,7 @@ app.post('/api/explore/prompts', async (req, res) => {
     return res.status(400).json({ error: 'gender must be "male" or "female".' });
   }
 
-  const desiredCount = Math.min(Math.max(Number(count) || 10, 1), 50);
+  const desiredCount = normalizedImages.length;
 
   try {
     const looks = await generateExplorePrompts(gender, desiredCount);
@@ -105,7 +108,7 @@ app.post('/api/explore/prompts', async (req, res) => {
 });
 
 app.post('/api/explore/generate', async (req, res) => {
-  const { gender, count } = req.body ?? {};
+  const { gender, count, styleTag } = req.body ?? {};
 
   if (gender !== 'male' && gender !== 'female') {
     return res.status(400).json({ error: 'gender must be "male" or "female".' });
@@ -114,7 +117,7 @@ app.post('/api/explore/generate', async (req, res) => {
   const desiredCount = Math.min(Math.max(Number(count) || 10, 1), 50);
 
   try {
-    const looks = await generateExploreLooks(gender, desiredCount);
+    const looks = await generateExploreLooks(gender, desiredCount, typeof styleTag === 'string' ? styleTag : undefined);
     res.json({ looks });
   } catch (error) {
     console.error('[server] Failed to generate explore looks', error);
@@ -124,16 +127,65 @@ app.post('/api/explore/generate', async (req, res) => {
   }
 });
 
+app.post('/api/explore/inspire', async (req, res) => {
+  const { gender, images, count, styleTag } = req.body ?? {};
+
+  if (gender !== 'male' && gender !== 'female') {
+    return res.status(400).json({ error: 'gender must be "male" or "female".' });
+  }
+
+  if (!Array.isArray(images) || images.length === 0) {
+    return res.status(400).json({ error: 'Provide at least one reference image.' });
+  }
+
+  const normalizedImages = images
+    .filter((value): value is string => typeof value === 'string' && value.startsWith('data:'))
+    .slice(0, 8);
+
+  if (normalizedImages.length === 0) {
+    return res.status(400).json({ error: 'Reference images must be base64 data URLs.' });
+  }
+
+  const desiredCount = Math.min(Math.max(Number(count) || 10, 1), 50);
+
+  try {
+    const looks = await generateExploreLooksFromReferences({
+      gender,
+      referenceImages: normalizedImages,
+      count: desiredCount,
+      styleTag: typeof styleTag === 'string' ? styleTag : undefined,
+    });
+    res.json({ looks });
+  } catch (error) {
+    console.error('[server] Failed to generate reference-inspired looks', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to generate reference-inspired looks'
+    });
+  }
+});
+
 app.get('/api/explore/dataset', async (req, res) => {
   try {
     const dataset = await readExploreDataset();
+    const sanitized = {
+      male: dataset.male.map(sanitizeExploreLook),
+      female: dataset.female.map(sanitizeExploreLook),
+    };
+
+    if (
+      JSON.stringify(dataset.male) !== JSON.stringify(sanitized.male) ||
+      JSON.stringify(dataset.female) !== JSON.stringify(sanitized.female)
+    ) {
+      await writeExploreDataset(sanitized);
+    }
+
     const gender = req.query.gender;
 
     if (gender === 'male' || gender === 'female') {
-      return res.json({ looks: dataset[gender] });
+      return res.json({ looks: sanitized[gender] });
     }
 
-    res.json(dataset);
+    res.json(sanitized);
   } catch (error) {
     console.error('[server] Failed to load explore dataset', error);
     res.status(500).json({
@@ -166,6 +218,22 @@ app.post('/api/explore/clear', async (req, res) => {
     console.error('[server] Failed to clear explore dataset', error);
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Failed to clear explore dataset'
+    });
+  }
+});
+
+app.get('/api/remix-image', async (req, res) => {
+  const path = req.query.path;
+  if (!path || typeof path !== 'string') {
+    return res.status(400).json({ error: 'Missing remix image path' });
+  }
+  try {
+    const url = await getRemixSignedUrl(path);
+    res.json({ url });
+  } catch (error) {
+    console.error('[server] Failed to generate remix signed URL', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to generate signed URL'
     });
   }
 });

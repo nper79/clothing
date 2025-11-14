@@ -5,8 +5,9 @@ export interface SavedRemix {
   id: string;
   lookId: string;
   lookName: string;
-  imageUrl: string;
+  storagePath?: string;
   createdAt: string;
+  imageUrl?: string;
 }
 
 const LIKE_STORAGE_KEY = 'explore_likes';
@@ -64,16 +65,37 @@ export const ExploreService = {
     return payload.looks ?? [];
   },
 
-  async generateLooks(gender: 'male' | 'female', count: number): Promise<ExploreLook[]> {
+  async generateLooks(gender: 'male' | 'female', count: number, styleTag?: string): Promise<ExploreLook[]> {
     const response = await fetch('/api/explore/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ gender, count })
+      body: JSON.stringify({ gender, count, styleTag })
     });
 
     if (!response.ok) {
       const text = await response.text();
       throw new Error(text || 'Failed to generate explore looks');
+    }
+
+    const payload = await response.json();
+    return payload.looks ?? [];
+  },
+
+  async generateLooksFromReferences(
+    gender: 'male' | 'female',
+    count: number,
+    images: string[],
+    styleTag?: string
+  ): Promise<ExploreLook[]> {
+    const response = await fetch('/api/explore/inspire', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gender, count: images.length, images, styleTag })
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || 'Failed to generate reference-inspired looks');
     }
 
     const payload = await response.json();
@@ -152,13 +174,23 @@ export const ExploreService = {
     return readJson<SavedRemix[]>(remixKey(userId), []);
   },
 
-  saveRemix(userId: string, remix: Omit<SavedRemix, 'id' | 'createdAt'> & { imageUrl: string }): SavedRemix[] {
+  async getRemixImageUrl(path: string): Promise<string> {
+    const response = await fetch(`/api/remix-image?path=${encodeURIComponent(path)}`);
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || 'Failed to fetch remix image');
+    }
+    const payload = await response.json();
+    return payload.url;
+  },
+
+  saveRemix(userId: string, remix: Omit<SavedRemix, 'id' | 'createdAt'>): SavedRemix[] {
     const current = readJson<SavedRemix[]>(remixKey(userId), []);
     const entry: SavedRemix = {
       id: `${remix.lookId}_${Date.now()}`,
       lookId: remix.lookId,
       lookName: remix.lookName,
-      imageUrl: remix.imageUrl,
+      storagePath: remix.storagePath,
       createdAt: new Date().toISOString(),
     };
     const updated = [entry, ...current].slice(0, 60);

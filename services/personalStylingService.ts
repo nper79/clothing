@@ -67,7 +67,7 @@ export class PersonalStylingService {
       try {
         console.log(`🎨 Generating personalized look for ${look.name} (${i + 1}/${total})`);
 
-        // Step 1: Generate personalized edit prompt with Claude 4.5
+        // Step 1: Generate personalized edit prompt with GPT-5
         console.log('📝 Step 1: Generating edit prompt...');
         const editPrompt = await this.generatePersonalizedEditPrompt(look.prompt, userPreferences);
         console.log(`✅ Edit prompt generated: ${editPrompt.substring(0, 100)}...`);
@@ -393,6 +393,7 @@ export class PersonalStylingService {
       editPrompt: prompt,
       originalPhotoUrl: userPhotoUrl,
       styledPhotoUrl: payload.styledPhotoUrl,
+      storagePath: payload.storagePath,
       isGenerated: Boolean(payload.styledPhotoUrl),
       generatedAt: new Date(),
       error: payload.error
@@ -418,7 +419,7 @@ export class PersonalStylingService {
   }
 
   /**
-   * Generate personalized edit prompt with Claude 4.5
+  * Generate personalized edit prompt with GPT-5
    */
   private static async generatePersonalizedEditPrompt(
     basePrompt: string,
@@ -446,7 +447,7 @@ User Preferences:
 Consider these preferences when generating the edit prompt. If user has disliked certain items, avoid including them. If they have preferred styles/colors, incorporate them naturally.
 ` : '';
 
-    const claudePrompt = `You need to create a detailed edit prompt for the AI image editing model "reve/edit-fast" to transform a person's uploaded photo into a specific fashion style.
+    const gptPrompt = `You need to create a detailed edit prompt for the AI image editing model "reve/edit-fast" to transform a person's uploaded photo into a specific fashion style.
 
 Base Style Description: ${basePrompt}
 ${preferencesContext}
@@ -474,19 +475,19 @@ Example format:
 "Make the person wear [detailed clothing description] with [specific footwear/shoes]. Transform into [specific style description]. FULL BODY IMAGE from head to toe, INCLUDING FOOTWEAR/SHOES clearly visible. Maintain the person's natural features. Single person only, solo portrait. Complete outfit from head to toe, shoes must be shown."`;
 
     try {
-      const output = await client.run("anthropic/claude-4.5-sonnet", {
+      const output = await client.run("openai/gpt-5", {
         input: {
-          prompt: claudePrompt,
+          prompt: gptPrompt,
           max_tokens: 1024,
           temperature: 0.7
         }
       });
 
       let generatedPrompt = "";
-      console.log('Raw Claude output:', JSON.stringify(output, null, 2));
+      console.log('Raw GPT-5 output:', JSON.stringify(output, null, 2));
 
       if (Array.isArray(output)) {
-        // Join all array elements into a single string - CLAUDE IS RETURNING ARRAY!
+        // Join all array elements into a single string - GPT-5 is returning an array
         generatedPrompt = output.join(' ');
       } else if (typeof output === 'string') {
         generatedPrompt = output;
@@ -497,7 +498,7 @@ Example format:
       console.log('Extracted prompt:', generatedPrompt);
       return generatedPrompt.trim();
     } catch (error) {
-      console.error('Error generating edit prompt with Claude 4.5:', error);
+      console.error('Error generating edit prompt with GPT-5:', error);
 
       // Fallback prompt
       return `Make the person wear ${basePrompt}. FULL BODY IMAGE from head to toe, INCLUDING FOOTWEAR/SHOES clearly visible. Maintain natural features. Single person only, solo portrait. Professional fashion photography style. Complete outfit must be shown including shoes.`;

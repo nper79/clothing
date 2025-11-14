@@ -4,10 +4,13 @@ import type { ExploreLook } from '../types/explore';
 import { ComprehensivePromptLibrary, type ComprehensiveLook } from '../services/comprehensivePromptLibrary';
 import { ExploreLookLibrary } from '../services/exploreLookLibrary';
 import { readExploreDataset, writeExploreDataset } from './exploreDatasetStore';
+import { persistExploreImage, persistRemixImage, getRemixSignedUrl, persistReferenceImage } from './imageStorage';
 
-const CLAUDE_MODEL = 'anthropic/claude-4.5-sonnet';
+const GPT5_MODEL = 'openai/gpt-5';
 const REVE_MODEL = 'reve/edit-fast:f0253eb7b26cc2416ad98c20492fbe4b842e09d808318fdf9e7caeffa9ae78f5';
 const NANO_BANANA_MODEL = 'google/nano-banana';
+const IMAGE_CAPTION_MODEL = 'nateraw/vit-gpt2-image-captioning';
+const VISION_CHAT_MODEL = 'yorickvp/llava-1.5-7b';
 const DEFAULT_LOOK_LIMIT = 1;
 
 const SCENE_PRESETS = {
@@ -44,6 +47,42 @@ const ALL_SCENE_REFERENCES = Array.from(
 const FRAMING_REQUIREMENTS =
   'Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.';
 
+const GLOBAL_TRENDS = [
+  'Reference current runways like Loewe, Ferragamo, The Row, Coperni, Khaite, and Prada for silhouette inspiration.',
+  'Blend quiet luxury tailoring with dopamine dressing pops of color or metallic accents.',
+  'Incorporate trending accessories: sculptural earrings, oversized totes, ballet flats, chunky runners, or moto belts.',
+  'Use modern denim shapes (barrel, pleated wide-leg, puddle hem) instead of skinny cuts.',
+  'Nod to viral TikTok aesthetics (mob wife, clean-girl athleisure, tomato girl summer) without sounding dated.',
+  'Layer technical outerwear with soft tailoring for a high-low mix that feels 2025-ready.',
+] as const;
+
+const STYLE_DIRECTIVES = [
+  {
+    id: 'preppy',
+    label: 'Preppy',
+    instructions:
+      'Channel collegiate heritage: crisp oxford shirts, striped knit polos, pleated minis, tennis sweaters draped over shoulders, loafers or Mary Jane heels, crest embroidery, rugby stripes. Settings should feel like Ivy League campuses, libraries, or manicured town squares.',
+  },
+  {
+    id: 'work',
+    label: 'Work',
+    instructions:
+      'Every look must read as office-appropriate. Think tailored suits, structured blazers, polished knit shells, silk blouses, pencil skirts, pressed trousers, trench or wrap coats, leather pumps or loafers. Accessories stay understated. Place subjects in modern office lobbies, boardrooms, or clean city sidewalks during commute.',
+  },
+  {
+    id: 'winter',
+    label: 'Winter',
+    instructions:
+      'Lean into true cold-weather layering: wool or puffer coats, shearling parkas, chunky scarves, knit beanies, thermal leggings, leather gloves, weatherproof boots. Add visible texture (tweed, cable knits, faux fur) and show frosty breath, snowflakes, or overcast twilight to make it unmistakably winter.',
+  },
+  {
+    id: 'street',
+    label: 'Street',
+    instructions:
+      'Highlight contemporary streetwear: oversized bombers, utility vests, hoodies, cargos, tech shells, statement sneakers, caps, and layered accessories. Backgrounds should feel urban—graffiti alleys, neon districts, subway platforms, or industrial rooftops with depth of field effects.',
+  },
+] as const;
+
 const replicateToken = process.env.VITE_REPLICATE_API_TOKEN || process.env.REPLICATE_API_TOKEN;
 
 if (!replicateToken) {
@@ -56,19 +95,182 @@ const replicate = new Replicate({
   useFileOutput: false,
 });
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function runWithRetry<T>(executor: () => Promise<T>, attempt = 0): Promise<T> {
+  try {
+    return await executor();
+  } catch (error) {
+    const status = (error as any)?.status ?? (error as any)?.response?.status;
+    if (status === 429 && attempt < 4) {
+      const retryAfterSeconds =
+        Number((error as any)?.retry_after) ||
+        Number((error as any)?.response?.headers?.get?.('retry-after')) ||
+        8;
+      const waitMs = Math.max(retryAfterSeconds, 8) * 1000;
+      console.warn(`[server] Replicate rate limit hit. Retrying in ${waitMs}ms (attempt ${attempt + 1})`);
+      await delay(waitMs);
+      return runWithRetry(executor, attempt + 1);
+    }
+    throw error;
+  }
+}
+
+async function runReplicateModel(model: string, input: Record<string, unknown>) {
+  return runWithRetry(() => replicate.run(model, { input }));
+}
 const dataUriRegex = /^data:(?<mime>.+);base64,(?<data>.+)$/;
 
-const sanitizeText = (text: string): string =>
-  text
-    .replace(/\s+/g, ' ')
-    .replace(/\s([?!.,;:])/g, '$1')
-    .replace(/-\s+/g, '-')
+const PROTECTED_SHORT_WORDS = new Set([
+  'a',
+  'i',
+  'of',
+  'to',
+  'in',
+  'on',
+  'at',
+  'by',
+  'an',
+  'or',
+  'is',
+  'it',
+  'be',
+  'me',
+  'we',
+  'us',
+  'am',
+  'do',
+  'go',
+  'no',
+  'so',
+  'up',
+  'as',
+  'he',
+  'she',
+]);
+const SUFFIX_JOINERS = [
+  'ed',
+  'ing',
+  'er',
+  'ers',
+  'ized',
+  'ally',
+  'ation',
+  'ations',
+  'ous',
+  'less',
+  'ness',
+  'ment',
+  'ments',
+  'able',
+  'ible',
+  'hood',
+  'ship',
+  'ful',
+  'tion',
+  'sion',
+];
+
+const isAlpha = (value: string) => /^[a-z]+$/i.test(value);
+
+const splitToken = (token: string) => {
+  const leading = token.match(/^[^\w]+/)?.[0] ?? '';
+  const trailing = token.match(/[^\w]+$/)?.[0] ?? '';
+  const core = token.substring(leading.length, token.length - trailing.length);
+  return { leading, core, trailing };
+};
+
+const shouldJoinWords = (prevWord: string, nextWord: string): boolean => {
+  if (!prevWord || !nextWord) return false;
+  const prevLower = prevWord.toLowerCase();
+  const nextLower = nextWord.toLowerCase();
+  if (!isAlpha(prevLower) || !isAlpha(nextLower)) return false;
+
+  if (!PROTECTED_SHORT_WORDS.has(prevLower) && prevLower.length <= 2) return true;
+
+  if (SUFFIX_JOINERS.some((suffix) => nextLower.startsWith(suffix))) return true;
+
+  return false;
+};
+
+const repairBrokenWords = (input: string): string => {
+  const tokens = input.split(' ').filter(Boolean);
+  if (tokens.length <= 1) return input.trim();
+
+  const result: string[] = [];
+
+  for (const token of tokens) {
+    const prevToken = result[result.length - 1];
+    if (!prevToken) {
+      result.push(token);
+      continue;
+    }
+
+    const prevParts = splitToken(prevToken);
+    const currentParts = splitToken(token);
+
+    if (
+      !prevParts.trailing &&
+      !currentParts.leading &&
+      shouldJoinWords(prevParts.core, currentParts.core)
+    ) {
+      const combinedWord = prevParts.core + currentParts.core;
+      const combinedToken = `${prevParts.leading}${combinedWord}${currentParts.trailing ?? ''}`;
+      result[result.length - 1] = combinedToken;
+    } else {
+      result.push(token);
+    }
+  }
+
+  return result.join(' ');
+};
+
+export const sanitizeText = (text: string): string => {
+  if (!text) return '';
+
+  let normalized = text
+    .replace(/([A-Za-z])[\r\n]+([A-Za-z])/g, '$1 $2')
+    .replace(/[\r\n]+/g, ' ')
+    .replace(/\s+([?!.,;:])/g, '$1')
+    .replace(/\s*-\s*/g, '-')
     .replace(/\(\s+/g, '(')
     .replace(/\s+\)/g, ')')
+    .replace(/\s{2,}/g, ' ')
     .trim();
+
+  normalized = repairBrokenWords(normalized);
+  return normalized.trim();
+};
+
+export const sanitizeExploreLook = (look: ExploreLook): ExploreLook => ({
+  ...look,
+  title: sanitizeText(look.title),
+  description: sanitizeText(look.description),
+  prompt: sanitizeText(look.prompt),
+  vibe: sanitizeText(look.vibe),
+  styleTag: look.styleTag ? sanitizeText(look.styleTag) : undefined,
+});
+
+const uniquenessKey = (look: ExploreLook): string =>
+  sanitizeText(`${look.title} ${look.description}`.toLowerCase()).replace(/\s+/g, '');
+
+const getStyleDirective = (styleTag?: string) =>
+  STYLE_DIRECTIVES.find((style) => style.id === styleTag);
+
+const stripSceneClauses = (value: string): string =>
+  value.replace(/Scene:[^\.!?]*(?:[\.!?])/gi, ' ').replace(/\s+/g, ' ').trim();
 
 function pickRandom<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)];
+}
+
+function pickRandomItems<T>(items: readonly T[], count: number): T[] {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, Math.min(count, copy.length));
 }
 
 function prepareImageInput(source: string): Buffer | string {
@@ -183,13 +385,11 @@ async function normalizeImageInput(value: string): Promise<string | Buffer> {
 async function generateNanoBananaImage(prompt: string, imageInputs: string[] = []): Promise<string> {
   const filteredImages = imageInputs.filter((value): value is string => Boolean(value));
   const preparedImages = await Promise.all(filteredImages.map((value) => normalizeImageInput(value)));
-  const output = await replicate.run(NANO_BANANA_MODEL, {
-    input: {
-      prompt,
-      output_format: 'jpg',
-      aspect_ratio: preparedImages.length > 0 ? 'match_input_image' : '9:16',
-      image_input: preparedImages,
-    },
+  const output = await runReplicateModel(NANO_BANANA_MODEL, {
+    prompt,
+    output_format: 'jpg',
+    aspect_ratio: preparedImages.length > 0 ? 'match_input_image' : '9:16',
+    image_input: preparedImages,
   });
 
   const imageUrl = extractImageUrl(output);
@@ -199,8 +399,66 @@ async function generateNanoBananaImage(prompt: string, imageInputs: string[] = [
   return imageUrl;
 }
 
+async function generateRawCaption(imageData: string): Promise<string> {
+  try {
+    const normalized = await normalizeImageInput(imageData);
+    const output = await runReplicateModel(IMAGE_CAPTION_MODEL, {
+      image: normalized,
+    });
+    const text = extractPromptText(output);
+    return text || 'fashion look with layered outfit';
+  } catch (error) {
+    console.error('[server] Failed to caption reference image', error);
+    return 'fashion look with layered outfit';
+  }
+}
+
+async function generateVisionDescription(imageData: string): Promise<string> {
+  try {
+    const normalized = await normalizeImageInput(imageData);
+    const output = await runReplicateModel(VISION_CHAT_MODEL, {
+      image: normalized,
+      prompt:
+        'Describe every clothing item, fabric, color, fit, accessories, and overall vibe in this outfit photo. Mention footwear and environment cues. Keep under 120 words.',
+    });
+    const text = extractPromptText(output);
+    return text || 'fashion outfit with layered streetwear pieces';
+  } catch (error) {
+    console.error('[server] Failed to run vision description model', error);
+    return 'fashion outfit with layered streetwear pieces';
+  }
+}
+
+async function describeReferenceLook(baseCaption: string): Promise<string> {
+  const prompt = `You are a senior fashion editor.
+
+Here is a short machine caption of an outfit photo:
+"${baseCaption}"
+
+Expand this into a vivid fashion write-up covering:
+- Garment stack from outer layers to shoes (colors, silhouettes, fabrics, fit).
+- Styling details (scarves, belts, accessories, hair/makeup, bags).
+- Mood / vibe / setting cues (city street, café, office, etc.).
+- Who would wear it (demographic / scenario).
+
+Make it precise, full-color, under 180 words.`;
+
+  try {
+  const output = await runReplicateModel(GPT5_MODEL, {
+    prompt,
+    max_tokens: 512,
+    temperature: 0.35,
+  });
+    const text = extractPromptText(output);
+    return text || fallbackCaption;
+  } catch (error) {
+    console.error('[server] Failed to describe reference look with GPT-5', error);
+    return fallbackCaption;
+  }
+}
+
 async function generateEditPrompt(basePrompt: string, preferences?: UserPreferences): Promise<string> {
-  const claudePrompt = `You are a professional fashion stylist and AI image editing expert.
+  const gptPrompt = `You are a professional fashion stylist and AI image editing expert.
 
 You need to create a detailed edit prompt for the AI image editing model "reve/edit-fast" to transform a person's uploaded photo into a specific fashion style.
 
@@ -226,12 +484,10 @@ CRITICAL REQUIREMENTS:
 Output format:
 Generate ONLY the optimized edit prompt (no explanations). The prompt should be direct and clear for image editing.`;
 
-  const output = await replicate.run(CLAUDE_MODEL, {
-    input: {
-      prompt: claudePrompt,
-      max_tokens: 1024,
-      temperature: 0.7,
-    },
+  const output = await runReplicateModel(GPT5_MODEL, {
+    prompt: gptPrompt,
+    max_tokens: 1024,
+    temperature: 0.7,
   });
 
   const extracted = extractPromptText(output).trim();
@@ -243,12 +499,10 @@ Generate ONLY the optimized edit prompt (no explanations). The prompt should be 
 }
 
 async function editPhotoWithReve(userPhoto: string, prompt: string): Promise<string> {
-  const imageInput = prepareImageInput(userPhoto);
-  const output = await replicate.run(REVE_MODEL, {
-    input: {
-      image: imageInput,
-      prompt,
-    },
+  const imageInput = await prepareImageInput(userPhoto);
+  const output = await runReplicateModel(REVE_MODEL, {
+    image: imageInput,
+    prompt,
   });
 
   return extractImageUrl(output);
@@ -320,9 +574,13 @@ export async function generatePersonalizedLooks(options: GenerateLooksOptions): 
   return results;
 }
 
-type ExplorePrompt = { title: string; description: string; vibe: string; prompt: string };
+type ExplorePrompt = { title: string; description: string; vibe: string; prompt: string; styleTag?: string };
 
-function getFallbackExplorePrompts(gender: 'male' | 'female', count: number): ExplorePrompt[] {
+function getFallbackExplorePrompts(
+  gender: 'male' | 'female',
+  count: number,
+  styleTag?: string
+): ExplorePrompt[] {
   const libraryLooks = ExploreLookLibrary.getLooks(gender);
   if (libraryLooks.length === 0) {
     throw new Error('No fallback explore looks available.');
@@ -336,6 +594,7 @@ function getFallbackExplorePrompts(gender: 'male' | 'female', count: number): Ex
       description: sanitizeText(look.description),
       vibe: sanitizeText(look.vibe),
       prompt: sanitizeText(look.prompt),
+      styleTag,
     });
   }
 
@@ -344,22 +603,29 @@ function getFallbackExplorePrompts(gender: 'male' | 'female', count: number): Ex
 
 export async function generateExplorePrompts(
   gender: 'male' | 'female',
-  count: number
+  count: number,
+  styleTag?: string
 ): Promise<ExplorePrompt[]> {
   const vibeList = gender === 'female'
     ? ['weekend chic', 'minimal luxe', 'sporty', 'boho', 'evening glamour', 'streetwear', 'resort']
     : ['smart casual', 'minimal street', 'athleisure', 'tailored', 'utility', 'retro sport', 'creative studio'];
 
   const sceneSample = ALL_SCENE_REFERENCES.slice(0, 8).join('; ');
+  const styleDirective = getStyleDirective(styleTag);
 
-  const claudePrompt = `You are styling an Instagram Explore feed that mixes wearable everyday outfits with occasional statement looks for a ${gender} audience.
+  const trendNotes = pickRandomItems(GLOBAL_TRENDS, 2).join(' ');
+
+  const gptPrompt = `You are styling an Instagram Explore feed that mixes wearable everyday outfits with occasional statement looks for a ${gender} audience.
 Design ${count} unique looks spanning relaxed daywear, polished smart casual, sporty sets, night-out energy, and only a few futuristic moments.
 
 Rules:
 1. At least half of the looks should feel approachable / real-world (linen tailoring, denim, athleisure, elevated basics). The rest can introduce bolder textures or silhouettes, but keep everything tasteful.
 2. "description" stays under 14 words and highlights the standout pieces.
 3. "prompt" must describe clothing layers, fabrics, footwear, hair/makeup, pose energy, and a unique environment (use scenes like: ${sceneSample}). Explicitly mention that the shot is full-body, vertical 9:16, shoes visible.
-4. Avoid repeating settings or garments.
+4. Every look must be meaningfully different from the others. Avoid repeating the same clothing combination or palette; vary silhouettes, footwear, fabrics, and environments. Reference previously mentioned looks in your planning to prevent duplicates.
+${styleDirective ? `5. Apply this specific aesthetic throughout: ${styleDirective.instructions}` : '5. Ensure the set includes realistic seasonal dressing (e.g., outerwear for cold months, breezy fabrics for summer) and believable environments for each look.'}
+
+Trend inspiration to weave into the outfits: ${trendNotes}
 
 Return ONLY a valid JSON array where each entry is:
 {
@@ -370,19 +636,17 @@ Return ONLY a valid JSON array where each entry is:
 }
 Use precise fashion language, highlight footwear, and ensure full-body framing.`;
 
-  const output = await replicate.run(CLAUDE_MODEL, {
-    input: {
-      prompt: claudePrompt,
-      max_tokens: 1024,
-      temperature: 0.7,
-    },
+  const output = await runReplicateModel(GPT5_MODEL, {
+    prompt: gptPrompt,
+    max_tokens: 1024,
+    temperature: 0.7,
   });
 
   const raw = extractPromptText(output);
   const jsonMatch = raw.match(/\[[\s\S]*\]/);
   if (!jsonMatch) {
-    console.warn('[server] Claude explore prompt response was not JSON. Falling back to local library.');
-    return getFallbackExplorePrompts(gender, count);
+    console.warn('[server] GPT-5 explore prompt response was not JSON. Falling back to local library.');
+    return getFallbackExplorePrompts(gender, count, styleTag);
   }
 
   try {
@@ -395,43 +659,266 @@ Use precise fashion language, highlight footwear, and ensure full-body framing.`
       description: sanitizeText(item.description ?? ''),
       vibe: sanitizeText(item.vibe ?? ''),
       prompt: sanitizeText(item.prompt ?? ''),
+      styleTag,
     }));
   } catch (error) {
-    console.error('[server] Failed to parse Claude explore prompts, using fallback library.', error);
-    return getFallbackExplorePrompts(gender, count);
+    console.error('[server] Failed to parse GPT-5 explore prompts, using fallback library.', error);
+    return getFallbackExplorePrompts(gender, count, styleTag);
   }
 }
 
-export async function remixLookWithPrompt(userPhoto: string, prompt: string, referenceImage?: string) {
-  const imageInputs = [userPhoto, referenceImage].filter((value): value is string => Boolean(value));
-  const finalPrompt = `${prompt.trim()} Maintain the same physical traits as the reference person provided (skin tone, hair color, face shape). Use the additional reference image to capture outfit styling cues only. ${FRAMING_REQUIREMENTS}`;
+export async function remixLookWithPrompt(userPhoto: string, prompt: string, _referenceImage?: string) {
+  const imageInputs = [userPhoto];
+  const cleanedPrompt = stripSceneClauses(prompt.trim());
+  const finalPrompt = `${cleanedPrompt} Apply this outfit to the provided person while keeping their exact face, pose, and body proportions unchanged. Do not introduce any new people or backgrounds. ${FRAMING_REQUIREMENTS}`;
   const styledPhotoUrl = await generateNanoBananaImage(finalPrompt, imageInputs);
+  const storagePath = await persistRemixImage(styledPhotoUrl);
+  const signedUrl = await getRemixSignedUrl(storagePath);
   return {
-    styledPhotoUrl
+    styledPhotoUrl: signedUrl,
+    storagePath
   };
 }
 
-export async function generateExploreLooks(gender: 'male' | 'female', count: number): Promise<ExploreLook[]> {
+export async function generateExploreLooks(
+  gender: 'male' | 'female',
+  count: number,
+  styleTag?: string
+): Promise<ExploreLook[]> {
   const dataset = await readExploreDataset();
-  const prompts = await generateExplorePrompts(gender, count);
+  const prompts = await generateExplorePrompts(gender, count * 2, styleTag);
   const generated: ExploreLook[] = [];
   const scenes = SCENE_PRESETS[gender];
+  const seenKeys = new Set<string>(
+    dataset[gender].map((look) => uniquenessKey(sanitizeExploreLook(look)))
+  );
 
-  for (let i = 0; i < prompts.length; i++) {
+  for (let i = 0; i < prompts.length && generated.length < count; i++) {
     const prompt = prompts[i];
     const scene = pickRandom(scenes);
-    const finalPrompt = `${prompt.prompt.trim()} Scene: ${scene}. ${FRAMING_REQUIREMENTS}`;
+    const cleanedPrompt = stripSceneClauses(prompt.prompt.trim());
+    const finalPrompt = `${cleanedPrompt} Scene: ${scene}. ${FRAMING_REQUIREMENTS}`;
     const styledPhotoUrl = await generateNanoBananaImage(finalPrompt);
+    const lookId = `explore_${gender}_${Date.now()}_${i}`;
+    const persistentUrl = await persistExploreImage(styledPhotoUrl, gender, lookId);
 
-    generated.push({
-      id: `explore_${gender}_${Date.now()}_${i}`,
+    const look = sanitizeExploreLook({
+      id: lookId,
       gender,
       title: prompt.title,
       description: prompt.description,
       vibe: prompt.vibe,
       prompt: finalPrompt,
-      imageUrl: styledPhotoUrl
+      imageUrl: persistentUrl,
+      styleTag,
     });
+
+    const key = uniquenessKey(look);
+    if (seenKeys.has(key)) {
+      console.warn('[server] Skipping duplicate explore look', look.title);
+      continue;
+    }
+
+    seenKeys.add(key);
+    generated.push(look);
+  }
+
+  if (generated.length < count) {
+    console.warn(
+      `[server] Only generated ${generated.length}/${count} unique explore looks. Consider increasing prompt diversity.`
+    );
+  }
+
+  const merged = [...generated, ...dataset[gender]].slice(0, 50);
+  dataset[gender] = merged;
+  await writeExploreDataset(dataset);
+  return merged;
+}
+
+interface ReferenceInspiredOptions {
+  gender: 'male' | 'female';
+  referenceImages: string[];
+  count: number;
+  styleTag?: string;
+}
+
+type StoredReference = {
+  url: string;
+  description: string;
+};
+
+async function storeReferenceImages(
+  gender: 'male' | 'female',
+  images: string[]
+): Promise<StoredReference[]> {
+  const stored: StoredReference[] = [];
+  for (let i = 0; i < images.length; i++) {
+    const label = `ref_${i}`;
+    const url = await persistReferenceImage(images[i], gender, label);
+    const [visionDescription, backupCaption] = await Promise.all([
+      generateVisionDescription(images[i]),
+      generateRawCaption(images[i]),
+    ]);
+    const combinedCaption = `${visionDescription}. Backup: ${backupCaption}`;
+    const detailedDescription = await describeReferenceLook(combinedCaption);
+    stored.push({
+      url,
+      description: detailedDescription,
+    });
+  }
+  return stored;
+}
+
+async function generateReferenceInspiredPrompts(
+  gender: 'male' | 'female',
+  referenceDescriptions: string[],
+  count: number,
+  styleTag?: string
+): Promise<ExplorePrompt[]> {
+  const descriptionsBlock = referenceDescriptions
+    .map((description, index) => `Ref ${index + 1}: ${description}`)
+    .join('\n\n');
+
+  const sceneIdeas = [
+    'corner cafe patio with bistro tables',
+    'corporate lobby with marble floors',
+    'tree-lined European street with storefronts',
+    'city rooftop at sunset',
+    'artist loft with canvases and ladders',
+    'weekend farmers market stall',
+    'vintage convertible car on a boulevard',
+    'foggy riverside boardwalk',
+    'library reading room with warm lamps',
+    'fashion show backstage area',
+  ];
+
+  const vibeList = gender === 'female'
+    ? ['weekend chic', 'minimal luxe', 'sporty', 'boho', 'evening glamour', 'streetwear', 'resort']
+    : ['smart casual', 'minimal street', 'athleisure', 'tailored', 'utility', 'retro sport', 'creative studio'];
+
+  const styleDirective = getStyleDirective(styleTag);
+  const trendNotes = pickRandomItems(GLOBAL_TRENDS, 2).join(' ');
+
+  const prompt = `You are a senior fashion editor creating new outfits for an Instagram explore feed targeting ${gender} audiences.
+Study these reference summaries to understand the silhouettes, palettes, fabrics, and vibes the user loves (pay attention to trouser width, scarf volume, layering proportions, etc.):
+${descriptionsBlock}
+
+Design ${count} distinct new looks that feel like they belong to the same mood board while still offering variety. Stay wearable and modern.
+
+Rules:
+1. Pull forward key ideas from the inspiration breakdowns (palettes, textures, layering, silhouette proportions like wide-leg trousers, oversized scarves, belted coats) without copying literally.
+2. Half of the looks should feel realistic for daily wear, half can push into bolder statement territory. Keep them cohesive with the references.
+3. "description" must stay under 14 words, highlight the hero pieces, and read naturally.
+4. "prompt" must describe clothing layers, fabrics, footwear, hair/makeup, and a unique environment. Mention that it is a full-body 9:16 shot with visible footwear. Explicitly state that the render is full-color, rich, and never black-and-white.
+5. Assign a different environment to each look by choosing from or inspired by this list (avoid repeats): ${sceneIdeas.join(', ')}.
+${styleDirective ? `6. Apply this aesthetic focus: ${styleDirective.instructions}` : '6. Balance seasonal practicality with the references (outerwear if the inspiration shows cool weather, etc.).'}
+
+Trend cues to weave in: ${trendNotes}
+
+Return ONLY a valid JSON array where each entry is:
+{
+  "title": "2-4 word name",
+  "description": "max 14 words",
+  "vibe": "choose from: ${vibeList.join(', ')}",
+  "prompt": "detailed image generation prompt"
+}
+Do not mention the image URLs in the output.`;
+
+  const output = await runReplicateModel(GPT5_MODEL, {
+    prompt,
+    max_tokens: 1024,
+    temperature: 0.7,
+  });
+
+  const raw = extractPromptText(output);
+  const jsonMatch = raw.match(/\[[\s\S]*\]/);
+  if (!jsonMatch) {
+    console.warn('[server] GPT-5 reference prompt response was not JSON. Falling back to existing library.');
+    return getFallbackExplorePrompts(gender, count, styleTag);
+  }
+
+  try {
+    const parsed = JSON.parse(jsonMatch[0]) as ExplorePrompt[];
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      throw new Error('Empty array');
+    }
+    return parsed.map((item) => ({
+      title: sanitizeText(item.title ?? ''),
+      description: sanitizeText(item.description ?? ''),
+      vibe: sanitizeText(item.vibe ?? ''),
+      prompt: sanitizeText(item.prompt ?? ''),
+      styleTag,
+    }));
+  } catch (error) {
+    console.error('[server] Failed to parse GPT-5 reference prompts, using fallback library.', error);
+    return getFallbackExplorePrompts(gender, count, styleTag);
+  }
+}
+
+export async function generateExploreLooksFromReferences(options: ReferenceInspiredOptions): Promise<ExploreLook[]> {
+  const { gender, referenceImages, count, styleTag } = options;
+  if (!referenceImages?.length) {
+    throw new Error('At least one reference image is required.');
+  }
+  const limitedImages = referenceImages.slice(0, 8);
+  let storedReferences: StoredReference[];
+  try {
+    storedReferences = await storeReferenceImages(gender, limitedImages);
+  } catch (error) {
+    console.error('[server] Failed to persist or describe reference images, using inline data URIs.', error);
+    storedReferences = limitedImages.map((dataUrl) => ({
+      url: dataUrl,
+      description: 'Reference fashion look (fallback)',
+    }));
+  }
+
+  const referenceDescriptions = storedReferences.map((item) => item.description);
+
+  const dataset = await readExploreDataset();
+  const targetCount = limitedImages.length;
+  const prompts = await generateReferenceInspiredPrompts(
+    gender,
+    referenceDescriptions,
+    targetCount,
+    styleTag
+  );
+  const generated: ExploreLook[] = [];
+  const scenes = SCENE_PRESETS[gender];
+  const seenKeys = new Set<string>(
+    dataset[gender].map((look) => uniquenessKey(sanitizeExploreLook(look)))
+  );
+
+  for (let i = 0; i < prompts.length && generated.length < targetCount; i++) {
+    const prompt = prompts[i];
+    const scene = pickRandom(scenes);
+    const cleanedPrompt = stripSceneClauses(prompt.prompt.trim());
+    const finalPrompt = `${cleanedPrompt} Scene: ${scene}. ${FRAMING_REQUIREMENTS} Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.`;
+    const styledPhotoUrl = await generateNanoBananaImage(finalPrompt);
+    const lookId = `explore_${gender}_ref_${Date.now()}_${i}`;
+    const persistentUrl = await persistExploreImage(styledPhotoUrl, gender, lookId);
+
+    const look = sanitizeExploreLook({
+      id: lookId,
+      gender,
+      title: prompt.title,
+      description: prompt.description,
+      vibe: prompt.vibe,
+      prompt: finalPrompt,
+      imageUrl: persistentUrl,
+      styleTag,
+    });
+
+    const key = uniquenessKey(look);
+    if (seenKeys.has(key)) {
+      console.warn('[server] Skipping duplicate reference-inspired look', look.title);
+      continue;
+    }
+    seenKeys.add(key);
+    generated.push(look);
+  }
+
+  if (generated.length < targetCount) {
+    console.warn(`[server] Only generated ${generated.length}/${targetCount} reference-inspired looks.`);
   }
 
   const merged = [...generated, ...dataset[gender]].slice(0, 50);

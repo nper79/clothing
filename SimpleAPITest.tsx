@@ -12,7 +12,7 @@ const SimpleAPITest: React.FC = () => {
 
     try {
       // Test direct API call with a simple prompt
-      const response = await fetch('/api/replicate/v1/models/anthropic/claude-4.5-sonnet/predictions', {
+      const response = await fetch('/api/replicate/v1/models/openai/gpt-5/predictions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const SimpleAPITest: React.FC = () => {
           cursor: loading ? 'not-allowed' : 'pointer'
         }}
       >
-        {loading ? 'Testing...' : 'Test Claude API'}
+        {loading ? 'Testing...' : 'Test GPT-5 API'}
       </button>
 
       {error && (

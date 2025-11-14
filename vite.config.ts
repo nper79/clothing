@@ -96,11 +96,45 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
           res,
           async (body) => {
             const { remixLookWithPrompt } = await import('./server/personalStylingWorkflow');
-            const result = await remixLookWithPrompt(body.userPhoto, body.prompt);
+            const referenceImage = typeof body.referenceImage === 'string' ? body.referenceImage : undefined;
+            const result = await remixLookWithPrompt(body.userPhoto, body.prompt, referenceImage);
             return result;
           },
           '/api/remix-look'
         );
+      });
+
+      server.middlewares.use('/api/remix-image', async (req: IncomingMessage, res: ServerResponse) => {
+        if (req.method !== 'GET') {
+          res.statusCode = 405;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+          return;
+        }
+
+        try {
+          const requestUrl = new URL(req.url ?? '', 'http://localhost');
+          const pathParam = requestUrl.searchParams.get('path');
+          if (!pathParam) {
+            res.statusCode = 400;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: 'Missing remix image path' }));
+            return;
+          }
+
+          const { getRemixSignedUrl } = await import('./server/imageStorage');
+          const url = await getRemixSignedUrl(pathParam);
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ url }));
+        } catch (error) {
+          console.error('[vite dev backend] Failed to generate remix signed URL', error);
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({
+            error: error instanceof Error ? error.message : 'Failed to generate signed URL'
+          }));
+        }
       });
 
       server.middlewares.use('/api/explore/prompts', async (req: IncomingMessage, res: ServerResponse) => {
@@ -122,10 +156,28 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
           res,
           async (body) => {
             const { generateExploreLooks } = await import('./server/personalStylingWorkflow');
-            const looks = await generateExploreLooks(body.gender, body.count);
+            const looks = await generateExploreLooks(body.gender, body.count, body.styleTag);
             return { looks };
           },
           '/api/explore/generate'
+        );
+      });
+
+      server.middlewares.use('/api/explore/inspire', async (req: IncomingMessage, res: ServerResponse) => {
+        await handleJsonPost(
+          req,
+          res,
+          async (body) => {
+            const { generateExploreLooksFromReferences } = await import('./server/personalStylingWorkflow');
+            const looks = await generateExploreLooksFromReferences({
+              gender: body.gender,
+              referenceImages: Array.isArray(body.images) ? body.images : [],
+              count: body.count,
+              styleTag: body.styleTag,
+            });
+            return { looks };
+          },
+          '/api/explore/inspire'
         );
       });
 
@@ -227,6 +279,18 @@ export default defineConfig(({ mode, command }) => {
   // Ensure server-side code can access the Replicate token when running via Vite
   if (!process.env.REPLICATE_API_TOKEN && env.REPLICATE_API_TOKEN) {
     process.env.REPLICATE_API_TOKEN = env.REPLICATE_API_TOKEN;
+  }
+  if (!process.env.SUPABASE_URL && env.SUPABASE_URL) {
+    process.env.SUPABASE_URL = env.SUPABASE_URL;
+  }
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY && env.SUPABASE_SERVICE_ROLE_KEY) {
+    process.env.SUPABASE_SERVICE_ROLE_KEY = env.SUPABASE_SERVICE_ROLE_KEY;
+  }
+  if (!process.env.SUPABASE_EXPLORE_BUCKET && env.SUPABASE_EXPLORE_BUCKET) {
+    process.env.SUPABASE_EXPLORE_BUCKET = env.SUPABASE_EXPLORE_BUCKET;
+  }
+  if (!process.env.SUPABASE_REMIX_BUCKET && env.SUPABASE_REMIX_BUCKET) {
+    process.env.SUPABASE_REMIX_BUCKET = env.SUPABASE_REMIX_BUCKET;
   }
 
   const backendTarget = env.VITE_PERSONAL_STYLING_API_URL || 'http://localhost:4000';

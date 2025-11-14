@@ -50,7 +50,7 @@ const HomePage: React.FC = () => {
             Upload your photo, let AI craft full looks you can remix instantly.
           </h2>
           <p className="text-white/70 text-lg">
-            Our Claude-powered stylist plans outfits, Nano Banana renders photoreal images, and your feedback keeps teaching the wardrobe graph.
+            Our GPT-5-powered stylist plans outfits, Nano Banana renders photoreal images, and your feedback keeps teaching the wardrobe graph.
           </p>
           <ul className="space-y-4 text-white/80">
             <li>• Explore curated looks per gender.</li>

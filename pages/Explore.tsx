@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, RefreshCw, Loader2, Sparkles } from 'lucide-react';
 import type { ExploreLook } from '../types/explore';
@@ -22,6 +22,16 @@ const ExplorePage: React.FC = () => {
   const [pendingLook, setPendingLook] = useState<ExploreLook | null>(null);
   const [uploadPreview, setUploadPreview] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'explore' | 'liked'>('explore');
+
+  const shuffleLooks = (items: ExploreLook[]) => {
+    const copy = [...items];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -31,7 +41,7 @@ const ExplorePage: React.FC = () => {
     ExploreService.getLooks(gender)
       .then((dataset) => {
         if (!cancelled) {
-          setLooks(dataset);
+          setLooks(shuffleLooks(dataset));
         }
       })
       .catch((error) => {
@@ -69,11 +79,11 @@ const ExplorePage: React.FC = () => {
 
     try {
       const remix = await ExploreService.remixLook(photo, look);
-      if (remix.styledPhotoUrl) {
+      if (remix.storagePath) {
         ExploreService.saveRemix(userId, {
           lookId: look.id,
           lookName: look.title,
-          imageUrl: remix.styledPhotoUrl
+          storagePath: remix.storagePath
         });
       }
       setRemixResult({ imageUrl: remix.styledPhotoUrl, name: look.title });
@@ -93,6 +103,7 @@ const ExplorePage: React.FC = () => {
     }
     executeRemix(look, userPhoto);
   };
+
 
   const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setUploadError(null);
@@ -136,17 +147,34 @@ const ExplorePage: React.FC = () => {
     }
   };
 
+  const likedLookIds = Object.entries(likes)
+    .filter(([, liked]) => liked)
+    .map(([id]) => id);
+
+  const likedLooks = looks.filter((look) => likedLookIds.includes(look.id));
+  const displayLooks = viewMode === 'explore' ? looks : likedLooks;
+
   return (
     <div className="min-h-screen bg-black text-white flex">
-      <aside className="hidden md:flex flex-col w-72 border-r border-white/10 p-8 gap-8">
+      <aside className="hidden md:flex flex-col w-72 border-r border-white/10 p-8 gap-8 sticky top-0 h-screen bg-black">
         <div>
           <p className="text-sm uppercase tracking-[0.4em] text-white/50">Wardrobe AI</p>
           <h1 className="text-3xl font-bold mt-2">Explore</h1>
         </div>
 
         <nav className="flex flex-col gap-4 text-white/70">
-          <button className="text-left hover:text-white transition">Explore feed</button>
-          <button className="text-left hover:text-white transition">Looks you liked ({Object.values(likes).filter(Boolean).length})</button>
+          <button
+            className={`text-left hover:text-white transition ${viewMode === 'explore' ? 'text-white' : ''}`}
+            onClick={() => setViewMode('explore')}
+          >
+            Explore feed
+          </button>
+          <button
+            className={`text-left hover:text-white transition ${viewMode === 'liked' ? 'text-white' : ''}`}
+            onClick={() => setViewMode('liked')}
+          >
+            Looks you liked ({likedLookIds.length})
+          </button>
           <button className="text-left hover:text-white transition" onClick={() => navigate('/remixes')}>
             Your remixes
           </button>
@@ -172,15 +200,25 @@ const ExplorePage: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-auto text-sm text-white/60 space-y-2">
-          <p>Tip: Click "Remix" to apply the outfit to your latest photo.</p>
-          <button
-            onClick={() => navigate('/explore-admin')}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 text-white/70 hover:text-white"
-          >
-            <Sparkles className="w-4 h-4" />
-            Generate more looks
-          </button>
+        <div className="mt-auto space-y-4 text-sm text-white/60">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 flex items-center gap-3">
+            <img
+              src={userPhoto || 'https://placehold.co/80x80?text=Upload'}
+              alt="Profile"
+              className="w-16 h-16 object-cover rounded-2xl border border-white/20"
+            />
+            <div className="flex-1">
+              <p className="text-xs uppercase tracking-[0.3em] text-white/40">Your base photo</p>
+              <p className="font-semibold text-white">{user ? user.name ?? 'Wardrobe user' : 'Guest user'}</p>
+              <button
+                onClick={() => setIsPhotoModalOpen(true)}
+                className="mt-1 text-xs text-black bg-white px-3 py-1 rounded-full font-semibold"
+              >
+                Update photo
+              </button>
+            </div>
+          </div>
+          <p>Tip: Click "Try on" to apply the outfit to your latest photo.</p>
         </div>
       </aside>
 
@@ -200,9 +238,14 @@ const ExplorePage: React.FC = () => {
           <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
             {loadError}
           </div>
+        ) : viewMode === 'liked' && likedLooks.length === 0 ? (
+          <div className="text-white/60 text-center py-20">
+            <p className="text-xl font-semibold">No liked looks yet</p>
+            <p className="text-white/50 mt-2">Tap the heart icon on any explore card to save it here.</p>
+          </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {looks.map((look) => (
+            {displayLooks.map((look) => (
               <article
                 key={look.id}
                 className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-xl group h-full flex flex-col"
@@ -221,7 +264,7 @@ const ExplorePage: React.FC = () => {
                     <p className="text-white/70 text-xs">{look.description}</p>
                   </div>
                 </div>
-                <div className="p-3 flex items-center justify-between text-sm border-t border-white/10 mt-auto">
+                <div className="p-3 flex items-center justify-between text-sm border-t border-white/10 mt-auto gap-2 flex-wrap">
                   <button
                     className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${
                       likes[look.id] ? 'bg-green-500 text-white' : 'bg-white text-black'
@@ -236,7 +279,7 @@ const ExplorePage: React.FC = () => {
                     className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/30 text-white/80 hover:text-white"
                   >
                     <RefreshCw className="w-4 h-4" />
-                    Remix
+                    Try on
                   </button>
                 </div>
               </article>
@@ -289,7 +332,7 @@ const ExplorePage: React.FC = () => {
 
       {isPhotoModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 text-gray-900 space-y-4">
+          <div className="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6 text-gray-900 space-y-4 flex flex-col">
             <h3 className="text-xl font-semibold">Upload your photo</h3>
             <p className="text-sm text-gray-600">
               We use this photo privately to render outfits on you. Files never leave this device except for the AI edit.
@@ -297,7 +340,7 @@ const ExplorePage: React.FC = () => {
             <label className="block border border-dashed border-gray-300 rounded-2xl p-4 text-center cursor-pointer hover:border-gray-400">
               <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
               {uploadPreview ? (
-                <img src={uploadPreview} alt="Preview" className="w-full rounded-2xl" />
+                <img src={uploadPreview} alt="Preview" className="w-full rounded-2xl max-h-[55vh] object-contain" />
               ) : (
                 <span className="text-gray-500">Click to select an image</span>
               )}
@@ -325,8 +368,10 @@ const ExplorePage: React.FC = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
 
 export default ExplorePage;
+

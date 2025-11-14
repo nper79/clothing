@@ -67,7 +67,7 @@ export const extractImageUrl = (output: unknown): string => {
 export interface CalibrationImage {
   id: string;
   originalPrompt: string;
-  claudeGeneratedPrompt: string;
+  llmGeneratedPrompt: string;
   imageData?: string;
   isGenerated: boolean;
   error?: string;
@@ -203,15 +203,15 @@ export class ReplicateImageService {
   ];
 
   /**
-   * Generate optimized prompts using Claude 4.5 Sonnet
-   */
-  private static async generatePromptWithClaude(
+  * Generate optimized prompts using GPT-5 on Replicate
+  */
+  private static async generatePromptWithGpt5(
     category: StyleCategory,
     gender: string
   ): Promise<string> {
     const client = this.getClient();
 
-    const claudePrompt = `You are a professional fashion photographer and AI image generation expert.
+    const gptPrompt = `You are a professional fashion photographer and AI image generation expert.
 
 Create a detailed, optimized prompt for Google Nano Banana to generate a full-body fashion photograph.
 
@@ -234,9 +234,9 @@ Output format:
 Generate ONLY the optimized image prompt (no explanations). The prompt should be detailed but concise, perfect for Google Nano Banana.`;
 
     try {
-      const output = await client.run("anthropic/claude-4.5-sonnet", {
+      const output = await client.run("openai/gpt-5", {
         input: {
-          prompt: claudePrompt,
+          prompt: gptPrompt,
           max_tokens: 1024,
           temperature: 0.7
         }
@@ -253,15 +253,15 @@ Generate ONLY the optimized image prompt (no explanations). The prompt should be
 
       return generatedPrompt.trim();
     } catch (error) {
-      console.error('Error generating prompt with Claude 4.5:', error);
+      console.error('Error generating prompt with GPT-5:', error);
 
-      // Fallback prompt if Claude fails
+      // Fallback prompt if GPT-5 fails
       return `Full body fashion photograph of ${gender} person in ${category.category.toLowerCase()} outfit. ${category.description}. Modern, professional style with high fashion photography quality. Clean lighting, detailed clothing,时尚摄影风格。`;
     }
   }
 
   /**
-   * Generate image using Google Nano Banana with Claude-generated prompt
+  * Generate image using Google Nano Banana with GPT-5 prompt
    */
   private static async generateImageWithNanoBanana(prompt: string): Promise<string> {
     const client = this.getClient();
@@ -283,12 +283,12 @@ Generate ONLY the optimized image prompt (no explanations). The prompt should be
   }
 
   /**
-   * Generate calibration images using Claude 4.5 + Google Nano Banana
+  * Generate calibration images using GPT-5 + Google Nano Banana
    */
   static async generateCalibrationImages(gender: string = 'neutral'): Promise<CalibrationImage[]> {
     const calibrationImages: CalibrationImage[] = [];
 
-    console.log(`Generating ${this.STYLE_CATEGORIES.length} calibration images using Claude 4.5 + Google Nano Banana for gender: ${gender}`);
+    console.log(`Generating ${this.STYLE_CATEGORIES.length} calibration images using GPT-5 + Google Nano Banana for gender: ${gender}`);
 
     for (let i = 0; i < this.STYLE_CATEGORIES.length; i++) {
       const category = this.STYLE_CATEGORIES[i];
@@ -296,19 +296,19 @@ Generate ONLY the optimized image prompt (no explanations). The prompt should be
       try {
         console.log(`Generating image ${i + 1}/${this.STYLE_CATEGORIES.length}: ${category.category}`);
 
-        // Step 1: Generate optimized prompt with Claude 4.5
-        console.log(`Step 1: Generating prompt with Claude 4.5...`);
-        const claudePrompt = await this.generatePromptWithClaude(category, gender);
-        console.log(`✅ Claude prompt generated: ${claudePrompt.substring(0, 100)}...`);
+        // Step 1: Generate optimized prompt with GPT-5
+        console.log(`Step 1: Generating prompt with GPT-5...`);
+        const gptPrompt = await this.generatePromptWithGpt5(category, gender);
+        console.log(`✅ GPT-5 prompt generated: ${gptPrompt.substring(0, 100)}...`);
 
         // Step 2: Generate image with Google Nano Banana
         console.log(`Step 2: Generating image with Google Nano Banana...`);
-        const imageUrl = await this.generateImageWithNanoBanana(claudePrompt);
+        const imageUrl = await this.generateImageWithNanoBanana(gptPrompt);
 
         calibrationImages.push({
           id: `calibration_${i + 1}`,
           originalPrompt: `${category.category} - ${gender}`,
-          claudeGeneratedPrompt: claudePrompt,
+          llmGeneratedPrompt: gptPrompt,
           imageData: imageUrl,
           isGenerated: !!imageUrl
         });
@@ -324,7 +324,7 @@ Generate ONLY the optimized image prompt (no explanations). The prompt should be
         calibrationImages.push({
           id: `calibration_${i + 1}`,
           originalPrompt: `${category.category} - ${gender}`,
-          claudeGeneratedPrompt: '',
+          llmGeneratedPrompt: '',
           isGenerated: false,
           error: error instanceof Error ? error.message : 'Unknown error'
         });
@@ -336,22 +336,22 @@ Generate ONLY the optimized image prompt (no explanations). The prompt should be
   }
 
   /**
-   * Generate a single image on-demand using Claude 4.5 + Google Nano Banana
+  * Generate a single image on-demand using GPT-5 + Google Nano Banana
    */
   static async generateSingleImage(category: StyleCategory, gender: string = 'neutral'): Promise<CalibrationImage> {
     try {
       console.log(`Generating single image for ${category.category} (${gender})...`);
 
-      // Step 1: Generate prompt with Claude 4.5
-      const claudePrompt = await this.generatePromptWithClaude(category, gender);
+      // Step 1: Generate prompt with GPT-5
+      const gptPrompt = await this.generatePromptWithGpt5(category, gender);
 
       // Step 2: Generate image with Google Nano Banana
-      const imageUrl = await this.generateImageWithNanoBanana(claudePrompt);
+      const imageUrl = await this.generateImageWithNanoBanana(gptPrompt);
 
       return {
         id: `single_${Date.now()}`,
         originalPrompt: `${category.category} - ${gender}`,
-        claudeGeneratedPrompt: claudePrompt,
+        llmGeneratedPrompt: gptPrompt,
         imageData: imageUrl,
         isGenerated: !!imageUrl
       };
@@ -380,14 +380,14 @@ Generate ONLY the optimized image prompt (no explanations). The prompt should be
    * Get usage estimate
    */
   static getUsageEstimate(): {
-    claudeRequests: number;
+    gptRequests: number;
     nanoBananaRequests: number;
     estimatedCost: number
   } {
-    // Claude 4.5: ~$0.015 per 1K tokens
+    // GPT-5: cost depends on OpenAI pricing via Replicate
     // Google Nano Banana: Check Replicate pricing
     return {
-      claudeRequests: 0,
+      gptRequests: 0,
       nanoBananaRequests: 0,
       estimatedCost: 0
     };

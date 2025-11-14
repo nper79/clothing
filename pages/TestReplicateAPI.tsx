@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import Replicate from "replicate";
 
 const resolveUrl = (input: string | Request | URL): string => {
@@ -69,7 +69,7 @@ const extractImageUrl = (output: unknown): string => {
 const TestReplicateAPI: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<string[]>([]);
-  const [claudeResult, setClaudeResult] = useState<string>('');
+  const [gptResult, setGptResult] = useState<string>('');
   const [nanoBananaResult, setNanoBananaResult] = useState<string>('');
 
   const replicate = new Replicate({
@@ -78,12 +78,12 @@ const TestReplicateAPI: React.FC = () => {
     useFileOutput: false
   });
 
-  const testClaude45 = async () => {
+  const testGpt5 = async () => {
     setIsLoading(true);
     try {
-      console.log('Testing Claude 4.5...');
-      const minTokens = 1024; // Claude 4.5 on Replicate requires >= 1024 tokens
-      const output = await replicate.run("anthropic/claude-4.5-sonnet", {
+      console.log('Testing GPT-5...');
+      const minTokens = 1024; // GPT-5 on Replicate requires >= 1024 tokens
+      const output = await replicate.run("openai/gpt-5", {
         input: {
           prompt: "Create a detailed fashion photography prompt for a man in minimalist business attire. Keep it concise and professional.",
           max_tokens: minTokens,
@@ -91,7 +91,7 @@ const TestReplicateAPI: React.FC = () => {
         }
       });
 
-      console.log('Claude 4.5 output:', output);
+      console.log('GPT-5 output:', output);
 
       let result = '';
       if (Array.isArray(output)) {
@@ -102,12 +102,12 @@ const TestReplicateAPI: React.FC = () => {
         result = (output as any)?.text || (output as any)?.output || JSON.stringify(output);
       }
 
-      setClaudeResult(result);
-      setResults(prev => [...prev, `? Claude 4.5: ${result.substring(0, 100)}...`]);
+      setGptResult(result);
+      setResults(prev => [...prev, `? GPT-5: ${result.substring(0, 100)}...`]);
     } catch (error) {
-      console.error('Claude 4.5 error:', error);
-      setClaudeResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      setResults(prev => [...prev, `? Claude 4.5 Error: ${error instanceof Error ? error.message : 'Unknown error'}`]);
+      console.error('GPT-5 error:', error);
+      setGptResult(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setResults(prev => [...prev, `? GPT-5 Error: ${error instanceof Error ? error.message : 'Unknown error'}`]);
     } finally {
       setIsLoading(false);
     }
@@ -148,10 +148,10 @@ const TestReplicateAPI: React.FC = () => {
     try {
       setResults(prev => [...prev, '?? Starting full workflow test...']);
 
-      // Step 1: Test Claude 4.5
-      setResults(prev => [...prev, 'Step 1: Testing Claude 4.5...']);
+      // Step 1: Test GPT-5
+      setResults(prev => [...prev, 'Step 1: Testing GPT-5...']);
       const minTokens = 1024;
-      const claudeOutput = await replicate.run("anthropic/claude-4.5-sonnet", {
+      const gptOutput = await replicate.run("openai/gpt-5", {
         input: {
           prompt: "Create a detailed fashion photography prompt for a man in minimalist business attire. Keep it concise and professional.",
           max_tokens: minTokens,
@@ -159,22 +159,22 @@ const TestReplicateAPI: React.FC = () => {
         }
       });
 
-      let claudePrompt = '';
-      if (Array.isArray(claudeOutput)) {
-        claudePrompt = claudeOutput[0] || '';
-      } else if (typeof claudeOutput === 'string') {
-        claudePrompt = claudeOutput;
-      } else if (typeof claudeOutput === 'object' && claudeOutput !== null) {
-        claudePrompt = (claudeOutput as any)?.text || (claudeOutput as any)?.output || '';
+      let gptPrompt = '';
+      if (Array.isArray(gptOutput)) {
+        gptPrompt = gptOutput[0] || '';
+      } else if (typeof gptOutput === 'string') {
+        gptPrompt = gptOutput;
+      } else if (typeof gptOutput === 'object' && gptOutput !== null) {
+        gptPrompt = (gptOutput as any)?.text || (gptOutput as any)?.output || '';
       }
 
-      setResults(prev => [...prev, `? Claude generated: ${claudePrompt.substring(0, 100)}...`]);
+      setResults(prev => [...prev, `? GPT-5 generated: ${gptPrompt.substring(0, 100)}...`]);
 
-      // Step 2: Test Nano Banana with Claude's prompt
-      setResults(prev => [...prev, 'Step 2: Testing Nano Banana with Claude prompt...']);
+      // Step 2: Test Nano Banana with GPT-5's prompt
+      setResults(prev => [...prev, 'Step 2: Testing Nano Banana with GPT-5 prompt...']);
       const nanoOutput = await replicate.run("google/nano-banana", {
         input: {
-          prompt: claudePrompt,
+          prompt: gptPrompt,
           aspect_ratio: "2:3",
           output_format: "jpg"
         }
@@ -222,11 +222,11 @@ const TestReplicateAPI: React.FC = () => {
               ?? Check Token
             </button>
             <button
-              onClick={testClaude45}
+              onClick={testGpt5}
               disabled={isLoading}
               className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 disabled:opacity-50"
             >
-              ?? Test Claude 4.5
+              ?? Test GPT-5
             </button>
             <button
               onClick={testNanoBanana}
@@ -267,11 +267,11 @@ const TestReplicateAPI: React.FC = () => {
           </div>
         </div>
 
-        {claudeResult && (
+        {gptResult && (
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-semibold mb-4">?? Claude 4.5 Result</h2>
+            <h2 className="text-xl font-semibold mb-4">?? GPT-5 Result</h2>
             <div className="bg-purple-50 rounded p-4">
-              <p className="whitespace-pre-wrap">{claudeResult}</p>
+              <p className="whitespace-pre-wrap">{gptResult}</p>
             </div>
           </div>
         )}

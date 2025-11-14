@@ -6,4 +6,5 @@ export interface ExploreLook {
   prompt: string;
   imageUrl: string;
   vibe: string;
+  styleTag?: string;
 }

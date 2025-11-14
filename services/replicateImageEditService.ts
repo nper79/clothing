@@ -137,15 +137,15 @@ export class ReplicateImageEditService {
   }
 
   /**
-   * Generate optimized edit prompts using Claude 4.5 Sonnet
-   */
-  private static async generateEditPromptWithClaude(
+  * Generate optimized edit prompts using GPT-5 on Replicate
+  */
+  private static async generateEditPromptWithGpt5(
     originalPrompt: string,
     gender: 'male' | 'female'
   ): Promise<string> {
     const client = this.getClient();
 
-    const claudePrompt = `You are a professional fashion stylist and AI image editing expert.
+    const gptPrompt = `You are a professional fashion stylist and AI image editing expert.
 
 You need to create an edit prompt for the AI image editing model "reve/edit-fast" to transform a casual outfit image into a specific fashion style.
 
@@ -167,9 +167,9 @@ Example format:
 "Make the person wear [detailed clothing description] with [specific footwear/shoes]. Transform into [specific style description]. FULL BODY IMAGE from head to toe, INCLUDING FOOTWEAR/SHOES clearly visible. Single person only, solo portrait. Complete outfit must be shown including shoes."`;
 
     try {
-      const output = await client.run("anthropic/claude-4.5-sonnet", {
+      const output = await client.run("openai/gpt-5", {
         input: {
-          prompt: claudePrompt,
+          prompt: gptPrompt,
           max_tokens: 1024,
           temperature: 0.7
         }
@@ -186,15 +186,15 @@ Example format:
 
       return generatedPrompt.trim();
     } catch (error) {
-      console.error('Error generating edit prompt with Claude 4.5:', error);
+      console.error('Error generating edit prompt with GPT-5:', error);
 
-      // Fallback prompt if Claude fails
+      // Fallback prompt if GPT-5 fails
       return `Make the person wear ${originalPrompt}. FULL BODY IMAGE from head to toe, INCLUDING FOOTWEAR/SHOES clearly visible. Single person only, solo portrait. Professional fashion photography style. Complete outfit must be shown including shoes.`;
     }
   }
 
   /**
-   * Edit a single image using Claude 4.5 + reve/edit-fast
+  * Edit a single image using GPT-5 + reve/edit-fast
    */
   static async editSingleImage(
     originalPrompt: string,
@@ -209,9 +209,9 @@ Example format:
         throw new Error(`No base image available for gender: ${gender}`);
       }
 
-      // Step 1: Generate edit prompt with Claude 4.5
-      console.log(`Step 1: Generating edit prompt with Claude 4.5...`);
-      const editPrompt = await this.generateEditPromptWithClaude(originalPrompt, gender);
+      // Step 1: Generate edit prompt with GPT-5
+      console.log(`Step 1: Generating edit prompt with GPT-5...`);
+      const editPrompt = await this.generateEditPromptWithGpt5(originalPrompt, gender);
       console.log(`✅ Edit prompt generated: ${editPrompt.substring(0, 100)}...`);
 
       // Step 2: Edit image with reve/edit-fast
@@ -244,14 +244,14 @@ Example format:
    * Get usage estimate
    */
   static getUsageEstimate(): {
-    claudeRequests: number;
+    gptRequests: number;
     reveEditRequests: number;
     estimatedCost: number
   } {
-    // Claude 4.5: ~$0.015 per 1K tokens
+    // GPT-5: cost depends on OpenAI pricing via Replicate
     // Reve edit-fast: Check Replicate pricing
     return {
-      claudeRequests: 0,
+      gptRequests: 0,
       reveEditRequests: 0,
       estimatedCost: 0
     };
