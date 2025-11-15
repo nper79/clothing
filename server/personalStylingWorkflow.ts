@@ -1,6 +1,6 @@
 import Replicate from 'replicate';
 import type { PersonalLook, UserPreferences } from '../types/personalStyling';
-import type { ExploreLook } from '../types/explore';
+import type { ExploreLook, ShopItem } from '../types/explore';
 import { ComprehensivePromptLibrary, type ComprehensiveLook } from '../services/comprehensivePromptLibrary';
 import { ExploreLookLibrary } from '../services/exploreLookLibrary';
 import { readExploreDataset, writeExploreDataset } from './exploreDatasetStore';
@@ -242,11 +242,21 @@ export const sanitizeText = (text: string): string => {
   return normalized.trim();
 };
 
+const sanitizeShopItem = (item: ShopItem): ShopItem => ({
+  id: sanitizeText(item.id),
+  label: sanitizeText(item.label),
+  searchQuery: sanitizeText(item.searchQuery),
+  category: sanitizeText(item.category),
+  gender: item.gender === 'male' ? 'male' : 'female',
+});
+
 export const sanitizeExploreLook = (look: ExploreLook): ExploreLook => ({
   ...look,
   title: sanitizeText(look.title),
   description: sanitizeText(look.description),
   prompt: sanitizeText(look.prompt),
+  imagePrompt: look.imagePrompt ? sanitizeText(look.imagePrompt) : undefined,
+  items: Array.isArray(look.items) ? look.items.map(sanitizeShopItem) : undefined,
   vibe: sanitizeText(look.vibe),
   styleTag: look.styleTag ? sanitizeText(look.styleTag) : undefined,
 });
@@ -574,7 +584,69 @@ export async function generatePersonalizedLooks(options: GenerateLooksOptions): 
   return results;
 }
 
-type ExplorePrompt = { title: string; description: string; vibe: string; prompt: string; styleTag?: string };
+type ExplorePrompt = {
+  title: string;
+  description: string;
+  vibe: string;
+  prompt: string;
+  imagePrompt?: string;
+  items?: ShopItem[];
+  styleTag?: string;
+};
+
+const normalizeShopItems = (
+  rawItems: unknown,
+  defaultGender: 'male' | 'female'
+): ShopItem[] | undefined => {
+  if (!Array.isArray(rawItems)) return undefined;
+  const normalized: ShopItem[] = rawItems
+    .map((raw, index) => {
+      if (!raw || typeof raw !== 'object') return null;
+      const candidate = raw as Record<string, unknown>;
+      const idSource = candidate.id ?? candidate.category ?? `item_${index}`;
+      const labelSource = candidate.label ?? candidate.name ?? candidate.title;
+      const searchSource = candidate.search_query ?? candidate.searchQuery ?? candidate.query;
+      const categorySource = candidate.category ?? candidate.type ?? `item_${index}`;
+      if (typeof labelSource !== 'string' || typeof searchSource !== 'string') {
+        return null;
+      }
+      const genderSource = candidate.gender === 'male' || candidate.gender === 'female'
+        ? candidate.gender
+        : defaultGender;
+      return {
+        id: sanitizeText(String(idSource)),
+        label: sanitizeText(labelSource),
+        searchQuery: sanitizeText(searchSource),
+        category: sanitizeText(String(categorySource)),
+        gender: genderSource,
+      };
+    })
+    .filter((value): value is ShopItem => Boolean(value));
+  return normalized.length ? normalized : undefined;
+};
+
+const normalizePromptSpec = (
+  spec: any,
+  gender: 'male' | 'female',
+  styleTag?: string
+): ExplorePrompt => {
+  const basePrompt =
+    typeof spec?.image_prompt === 'string'
+      ? spec.image_prompt
+      : typeof spec?.prompt === 'string'
+        ? spec.prompt
+        : '';
+
+  return {
+    title: sanitizeText(spec?.title ?? 'Untitled Look'),
+    description: sanitizeText(spec?.description ?? ''),
+    vibe: sanitizeText(spec?.vibe ?? 'concept'),
+    prompt: sanitizeText(basePrompt || spec?.prompt || ''),
+    imagePrompt: basePrompt ? sanitizeText(basePrompt) : undefined,
+    items: normalizeShopItems(spec?.items, gender),
+    styleTag,
+  };
+};
 
 function getFallbackExplorePrompts(
   gender: 'male' | 'female',
@@ -594,6 +666,7 @@ function getFallbackExplorePrompts(
       description: sanitizeText(look.description),
       vibe: sanitizeText(look.vibe),
       prompt: sanitizeText(look.prompt),
+      imagePrompt: sanitizeText(look.prompt),
       styleTag,
     });
   }
@@ -627,13 +700,24 @@ ${styleDirective ? `5. Apply this specific aesthetic throughout: ${styleDirectiv
 
 Trend inspiration to weave into the outfits: ${trendNotes}
 
-Return ONLY a valid JSON array where each entry is:
+Return ONLY a valid JSON array (no surrounding prose). The response MUST begin with "[" and end with "]". Each entry must follow this shape:
 {
   "title": "2-4 word catchy name",
   "description": "max 14 words describing outfit pieces",
   "vibe": "one of these: ${vibeList.join(', ')}",
-  "prompt": "detailed description suitable for an AI image edit model"
+  "image_prompt": "text we will send to an image model (include silhouette, colors, lighting, setting)",
+  "items": [
+    {
+      "id": "jacket",
+      "label": "Olive MA-1 bomber jacket",
+      "search_query": "women's olive MA-1 bomber jacket matte nylon ribbed cuffs",
+      "category": "jacket",
+      "gender": "${gender}"
+    },
+    ...
+  ]
 }
+Guidelines for items: include 4-6 entries covering the full outfit (tops, bottoms, footwear, outer layers, hero accessories). Make "search_query" 6-10 words, describing gender, color, fabric, and vibe so we can plug it into shopping search.
 Use precise fashion language, highlight footwear, and ensure full-body framing.`;
 
   const output = await runReplicateModel(GPT5_MODEL, {
@@ -650,17 +734,11 @@ Use precise fashion language, highlight footwear, and ensure full-body framing.`
   }
 
   try {
-    const parsed = JSON.parse(jsonMatch[0]) as ExplorePrompt[];
+    const parsed = JSON.parse(jsonMatch[0]) as unknown[];
     if (!Array.isArray(parsed) || parsed.length === 0) {
       throw new Error('Empty array');
     }
-    return parsed.map((item) => ({
-      title: sanitizeText(item.title ?? ''),
-      description: sanitizeText(item.description ?? ''),
-      vibe: sanitizeText(item.vibe ?? ''),
-      prompt: sanitizeText(item.prompt ?? ''),
-      styleTag,
-    }));
+    return parsed.map((spec) => normalizePromptSpec(spec, gender, styleTag));
   } catch (error) {
     console.error('[server] Failed to parse GPT-5 explore prompts, using fallback library.', error);
     return getFallbackExplorePrompts(gender, count, styleTag);
@@ -696,7 +774,8 @@ export async function generateExploreLooks(
   for (let i = 0; i < prompts.length && generated.length < count; i++) {
     const prompt = prompts[i];
     const scene = pickRandom(scenes);
-    const cleanedPrompt = stripSceneClauses(prompt.prompt.trim());
+    const baseImagePrompt = prompt.imagePrompt ?? prompt.prompt;
+    const cleanedPrompt = stripSceneClauses(baseImagePrompt.trim());
     const finalPrompt = `${cleanedPrompt} Scene: ${scene}. ${FRAMING_REQUIREMENTS}`;
     const styledPhotoUrl = await generateNanoBananaImage(finalPrompt);
     const lookId = `explore_${gender}_${Date.now()}_${i}`;
@@ -708,7 +787,9 @@ export async function generateExploreLooks(
       title: prompt.title,
       description: prompt.description,
       vibe: prompt.vibe,
-      prompt: finalPrompt,
+      prompt: prompt.prompt,
+      imagePrompt: finalPrompt,
+      items: prompt.items,
       imageUrl: persistentUrl,
       styleTag,
     });
@@ -815,13 +896,23 @@ ${styleDirective ? `6. Apply this aesthetic focus: ${styleDirective.instructions
 
 Trend cues to weave in: ${trendNotes}
 
-Return ONLY a valid JSON array where each entry is:
+Return ONLY a valid JSON array (no commentary). Response MUST begin with "[" and end with "]". Each entry must look like:
 {
   "title": "2-4 word name",
   "description": "max 14 words",
   "vibe": "choose from: ${vibeList.join(', ')}",
-  "prompt": "detailed image generation prompt"
+  "image_prompt": "detailed image generation prompt",
+  "items": [
+    {
+      "id": "jacket",
+      "label": "Olive MA-1 bomber jacket",
+      "search_query": "women's olive MA-1 bomber jacket matte nylon ribbed cuffs",
+      "category": "jacket",
+      "gender": "${gender}"
+    }
+  ]
 }
+Make items 4-6 entries, covering tops, bottoms, footwear, outerwear, accessories, each with descriptive search queries.
 Do not mention the image URLs in the output.`;
 
   const output = await runReplicateModel(GPT5_MODEL, {
@@ -838,17 +929,11 @@ Do not mention the image URLs in the output.`;
   }
 
   try {
-    const parsed = JSON.parse(jsonMatch[0]) as ExplorePrompt[];
+    const parsed = JSON.parse(jsonMatch[0]) as unknown[];
     if (!Array.isArray(parsed) || parsed.length === 0) {
       throw new Error('Empty array');
     }
-    return parsed.map((item) => ({
-      title: sanitizeText(item.title ?? ''),
-      description: sanitizeText(item.description ?? ''),
-      vibe: sanitizeText(item.vibe ?? ''),
-      prompt: sanitizeText(item.prompt ?? ''),
-      styleTag,
-    }));
+    return parsed.map((spec) => normalizePromptSpec(spec, gender, styleTag));
   } catch (error) {
     console.error('[server] Failed to parse GPT-5 reference prompts, using fallback library.', error);
     return getFallbackExplorePrompts(gender, count, styleTag);
@@ -891,7 +976,8 @@ export async function generateExploreLooksFromReferences(options: ReferenceInspi
   for (let i = 0; i < prompts.length && generated.length < targetCount; i++) {
     const prompt = prompts[i];
     const scene = pickRandom(scenes);
-    const cleanedPrompt = stripSceneClauses(prompt.prompt.trim());
+    const baseImagePrompt = prompt.imagePrompt ?? prompt.prompt;
+    const cleanedPrompt = stripSceneClauses(baseImagePrompt.trim());
     const finalPrompt = `${cleanedPrompt} Scene: ${scene}. ${FRAMING_REQUIREMENTS} Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.`;
     const styledPhotoUrl = await generateNanoBananaImage(finalPrompt);
     const lookId = `explore_${gender}_ref_${Date.now()}_${i}`;
@@ -903,7 +989,9 @@ export async function generateExploreLooksFromReferences(options: ReferenceInspi
       title: prompt.title,
       description: prompt.description,
       vibe: prompt.vibe,
-      prompt: finalPrompt,
+      prompt: prompt.prompt,
+      imagePrompt: finalPrompt,
+      items: prompt.items,
       imageUrl: persistentUrl,
       styleTag,
     });
@@ -925,4 +1013,81 @@ export async function generateExploreLooksFromReferences(options: ReferenceInspi
   dataset[gender] = merged;
   await writeExploreDataset(dataset);
   return merged;
+}
+
+async function generateSingleLookSpec(
+  look: ExploreLook,
+  styleTag?: string
+): Promise<ExplorePrompt> {
+  const prompt = `You are a fashion stylist turning a single look summary into structured data.
+Return ONLY a JSON object with this shape:
+{
+  "title": "...",
+  "description": "...",
+  "vibe": "...",
+  "image_prompt": "...",
+  "items": [
+    {
+      "id": "top",
+      "label": "Camel cashmere turtleneck",
+      "search_query": "women's camel cashmere turtleneck relaxed fit",
+      "category": "top",
+      "gender": "${look.gender}"
+    }
+  ]
+}
+
+Guidelines:
+- Use the information below (title, description, existing prompt) to infer silhouette, colors, fabrics, footwear, and environment.
+- "image_prompt" should be ready for an image model (full body, color, setting).
+- Create 4-6 items covering tops, bottoms, footwear, outer layers, statement accessories. Each search_query should be 6-10 words with gender, fabric, color, vibe.
+- Keep the JSON minified (no comments).
+
+Look data:
+Title: ${look.title}
+Description: ${look.description}
+Vibe: ${look.vibe}
+Prompt: ${look.imagePrompt || look.prompt}
+${styleTag ? `Style tag focus: ${styleTag}` : ''}`;
+
+  const output = await runReplicateModel(GPT5_MODEL, {
+    prompt,
+    max_tokens: 900,
+    temperature: 0.5,
+  });
+
+  const raw = extractPromptText(output);
+  const jsonMatch = raw.match(/\{[\s\S]+\}/);
+  if (!jsonMatch) {
+    throw new Error('GPT-5 single look response was not JSON.');
+  }
+  const parsed = JSON.parse(jsonMatch[0]);
+  return normalizePromptSpec(parsed, look.gender, styleTag);
+}
+
+export async function enrichLookItems(lookId: string): Promise<ExploreLook> {
+  const dataset = await readExploreDataset();
+  const genders: Array<'male' | 'female'> = ['male', 'female'];
+
+  for (const gender of genders) {
+    const index = dataset[gender].findIndex((look) => look.id === lookId);
+    if (index === -1) continue;
+
+    const look = dataset[gender][index];
+    if (look.items?.length && look.imagePrompt) {
+      return look;
+    }
+
+    const spec = await generateSingleLookSpec(look, look.styleTag);
+    const updated = sanitizeExploreLook({
+      ...look,
+      imagePrompt: spec.imagePrompt ?? look.imagePrompt ?? look.prompt,
+      items: spec.items ?? look.items,
+    });
+    dataset[gender][index] = updated;
+    await writeExploreDataset(dataset);
+    return updated;
+  }
+
+  throw new Error('Look not found for enrichment.');
 }

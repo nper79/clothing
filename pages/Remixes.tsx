@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Loader2 } from 'lucide-react';
+import { Trash2, Loader2, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { ExploreService, type SavedRemix } from '../services/exploreService';
+import { ShopService, type ShopImageSearchResult } from '../services/shopService';
+import type { ExploreLook } from '../types/explore';
 
 const RemixesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -11,6 +13,11 @@ const RemixesPage: React.FC = () => {
   const [remixes, setRemixes] = useState<SavedRemix[]>([]);
   const [isClearing, setIsClearing] = useState(false);
   const [isLoadingGallery, setIsLoadingGallery] = useState(true);
+  const [selectedRemix, setSelectedRemix] = useState<SavedRemix | null>(null);
+  const [selectedLook, setSelectedLook] = useState<ExploreLook | null>(null);
+  const [shopResults, setShopResults] = useState<ShopImageSearchResult | null>(null);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -69,6 +76,45 @@ const RemixesPage: React.FC = () => {
     }
   };
 
+  const openRemixDetail = async (remix: SavedRemix) => {
+    setSelectedRemix(remix);
+    setSelectedLook(null);
+    setShopResults(null);
+    setDetailError(null);
+    setIsDetailLoading(true);
+    try {
+      const look = await ExploreService.getLookWithItems(remix.lookId);
+      setSelectedLook(look);
+      const imageSource = look.imageUrl || remix.imageUrl;
+      if (!imageSource) {
+        setDetailError('Missing reference image for shopping search.');
+      } else {
+        const derivedQuery =
+          look.items?.[0]?.searchQuery ||
+          remix.lookName ||
+          look.title ||
+          undefined;
+        const result = await ShopService.searchByImage(imageSource, derivedQuery);
+        setShopResults(result);
+        if (!result.shopping || result.shopping.length === 0) {
+          setDetailError('No matching listings found yet. Try again shortly.');
+        }
+      }
+    } catch (error) {
+      setDetailError(error instanceof Error ? error.message : 'Failed to load remix details');
+    } finally {
+      setIsDetailLoading(false);
+    }
+  };
+
+  const closeRemixDetail = () => {
+    setSelectedRemix(null);
+    setSelectedLook(null);
+    setShopResults(null);
+    setDetailError(null);
+    setIsDetailLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-black text-white flex">
       <aside className="hidden md:flex flex-col w-72 border-r border-white/10 p-8 gap-8">
@@ -102,7 +148,7 @@ const RemixesPage: React.FC = () => {
         {isLoadingGallery ? (
           <div className="flex flex-col items-center justify-center gap-3 text-white/60 py-24">
             <Loader2 className="w-6 h-6 animate-spin" />
-            <p>Loading your remixes�</p>
+            <p>Loading your remixes…</p>
           </div>
         ) : remixes.length === 0 ? (
           <div className="text-center text-white/60 py-20">
@@ -120,7 +166,8 @@ const RemixesPage: React.FC = () => {
             {remixes.map((remix) => (
               <article
                 key={remix.id}
-                className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-xl flex flex-col"
+                className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-xl flex flex-col cursor-pointer hover:border-white/30 transition"
+                onClick={() => openRemixDetail(remix)}
               >
                 <div className="w-full" style={{ aspectRatio: '9 / 16' }}>
                   {remix.imageUrl ? (
@@ -135,12 +182,152 @@ const RemixesPage: React.FC = () => {
                   <p className="text-xs uppercase tracking-[0.3em] text-white/50">Remix</p>
                   <h3 className="font-semibold">{remix.lookName}</h3>
                   <p className="text-white/60 text-xs">{new Date(remix.createdAt).toLocaleString()}</p>
+                  <p className="text-xs text-emerald-300 inline-flex items-center gap-1">
+                    <Sparkles className="w-3 h-3" />
+                    Tap for shopping links
+                  </p>
                 </div>
               </article>
             ))}
           </div>
         )}
       </main>
+
+      {selectedRemix && (
+        <div className="fixed inset-0 z-40 bg-black/80 backdrop-blur-xl">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-white/50">Remix detail</p>
+                <h2 className="text-2xl font-semibold mt-1">{selectedRemix.lookName}</h2>
+                <p className="text-sm text-white/60">{new Date(selectedRemix.createdAt).toLocaleString()}</p>
+              </div>
+              <button
+                onClick={closeRemixDetail}
+                className="rounded-full border border-white/20 px-4 py-2 text-sm text-white/70 hover:text-white"
+              >
+                Close
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              {isDetailLoading ? (
+                <div className="flex flex-col items-center justify-center gap-4 text-white/60 py-20">
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                  <p>Fetching shopping links…</p>
+                </div>
+              ) : (
+                <div className="grid gap-6 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)]">
+                  <div className="space-y-4">
+                    <div className="rounded-3xl border border-white/10 bg-white/5 overflow-hidden">
+                      {selectedRemix.imageUrl ? (
+                        <img
+                          src={selectedRemix.imageUrl}
+                          alt={selectedRemix.lookName}
+                          className="w-full h-full object-cover"
+                          style={{ aspectRatio: '9 / 16' }}
+                        />
+                      ) : (
+                        <div className="aspect-[9/16] flex items-center justify-center text-white/50 text-sm px-6 text-center">
+                          Image preview unavailable. Re-run the remix to refresh it.
+                        </div>
+                      )}
+                    </div>
+                    {selectedLook?.items && selectedLook.items.length > 0 && (
+                      <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                        <p className="text-xs uppercase tracking-[0.3em] text-white/50 mb-3">Items detected</p>
+                        <ul className="space-y-2 text-sm text-white/80">
+                          {selectedLook.items.map((item) => (
+                            <li key={item.id}>
+                              <span className="font-semibold">{item.label}</span>
+                              <span className="text-white/50"> - {item.searchQuery}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-4">
+                    {detailError && (
+                      <div className="rounded-3xl border border-yellow-500/30 bg-yellow-500/10 text-yellow-100 text-sm p-4">
+                        {detailError}
+                      </div>
+                    )}
+                    {shopResults && shopResults.shopping.length > 0 ? (
+                      <div className="rounded-3xl border border-white/10 bg-black/40 p-4 space-y-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-[11px] uppercase tracking-[0.3em] text-white/50">Google Shopping</p>
+                            <p className="text-base font-semibold">
+                              {shopResults.searchParameters?.q ?? 'Similar pieces'}
+                            </p>
+                            <p className="text-xs text-white/50 mt-1">Image-based search via serper.dev</p>
+                          </div>
+                          {shopResults.searchParameters?.q && (
+                            <a
+                              href={`https://www.google.com/search?tbm=shop&q=${encodeURIComponent(
+                                shopResults.searchParameters.q
+                              )}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-xs text-amber-300 hover:text-amber-200"
+                            >
+                              Open search
+                            </a>
+                          )}
+                        </div>
+                        <div className="space-y-3">
+                          {shopResults.shopping.slice(0, 8).map((product, idx) => (
+                            <a
+                              key={`${product.productId ?? product.link}_${idx}`}
+                              href={product.link}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="flex items-center gap-3 rounded-2xl border border-white/10 p-3 hover:bg-white/5 transition"
+                            >
+                              <div className="w-16 h-16 rounded-xl overflow-hidden bg-white/5 flex-shrink-0">
+                                {product.imageUrl ? (
+                                  <img
+                                    src={product.imageUrl}
+                                    alt={product.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-[10px] text-white/50">
+                                    No image
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium leading-tight line-clamp-2">{product.title}</p>
+                                <p className="text-xs text-white/50">
+                                  {product.source ?? 'Google Shopping'}
+                                  {typeof product.rating === 'number' && (
+                                    <span className="ml-2">
+                                      {product.rating.toFixed(1)}★
+                                      {product.ratingCount ? ` (${product.ratingCount})` : ''}
+                                    </span>
+                                  )}
+                                </p>
+                              </div>
+                              <span className="text-sm font-semibold text-white/80">{product.price ?? 'View'}</span>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      !detailError && (
+                        <div className="rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+                          Shopping links are warming up. Try again in a few seconds.
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

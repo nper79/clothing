@@ -181,6 +181,37 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
         );
       });
 
+      server.middlewares.use('/api/shop-search', async (req: IncomingMessage, res: ServerResponse) => {
+        await handleJsonPost(
+          req,
+          res,
+          async (body) => {
+            const { searchShoppingByImage } = await import('./server/serperClient');
+            const result = await searchShoppingByImage({
+              imageUrl: body.imageUrl,
+              query: body.query,
+              country: body.country,
+              language: body.language,
+            });
+            return { result };
+          },
+          '/api/shop-search'
+        );
+      });
+
+      server.middlewares.use('/api/explore/itemize', async (req: IncomingMessage, res: ServerResponse) => {
+        await handleJsonPost(
+          req,
+          res,
+          async (body) => {
+            const { enrichLookItems, sanitizeExploreLook } = await import('./server/personalStylingWorkflow');
+            const look = await enrichLookItems(body.lookId);
+            return { look: sanitizeExploreLook(look) };
+          },
+          '/api/explore/itemize'
+        );
+      });
+
       server.middlewares.use('/api/explore/clear', async (req: IncomingMessage, res: ServerResponse) => {
         await handleJsonPost(
           req,
@@ -291,6 +322,9 @@ export default defineConfig(({ mode, command }) => {
   }
   if (!process.env.SUPABASE_REMIX_BUCKET && env.SUPABASE_REMIX_BUCKET) {
     process.env.SUPABASE_REMIX_BUCKET = env.SUPABASE_REMIX_BUCKET;
+  }
+  if (!process.env.SERPER_API_KEY && env.SERPER_API_KEY) {
+    process.env.SERPER_API_KEY = env.SERPER_API_KEY;
   }
 
   const backendTarget = env.VITE_PERSONAL_STYLING_API_URL || 'http://localhost:4000';

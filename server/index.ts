@@ -7,9 +7,11 @@ import {
   generateExploreLooks,
   sanitizeExploreLook,
   generateExploreLooksFromReferences,
+  enrichLookItems,
 } from './personalStylingWorkflow';
 import { getRemixSignedUrl } from './imageStorage';
 import { readExploreDataset, writeExploreDataset } from './exploreDatasetStore';
+import { searchShoppingByImage } from './serperClient';
 
 const app = express();
 const port = Number(process.env.PORT || 4000);
@@ -160,6 +162,39 @@ app.post('/api/explore/inspire', async (req, res) => {
     console.error('[server] Failed to generate reference-inspired looks', error);
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Failed to generate reference-inspired looks'
+    });
+  }
+});
+
+app.post('/api/shop-search', async (req, res) => {
+  const { imageUrl, query, country = 'us', language = 'en' } = req.body ?? {};
+  if (!imageUrl || typeof imageUrl !== 'string') {
+    return res.status(400).json({ error: 'Missing image URL.' });
+  }
+
+  try {
+    const result = await searchShoppingByImage({ imageUrl, query, country, language });
+    res.json({ result });
+  } catch (error) {
+    console.error('[server] Failed to query Serper lens', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to search shopping items',
+    });
+  }
+});
+
+app.post('/api/explore/itemize', async (req, res) => {
+  const { lookId } = req.body ?? {};
+  if (!lookId || typeof lookId !== 'string') {
+    return res.status(400).json({ error: 'Missing look id.' });
+  }
+  try {
+    const look = await enrichLookItems(lookId);
+    res.json({ look: sanitizeExploreLook(look) });
+  } catch (error) {
+    console.error('[server] Failed to enrich look items', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to enrich look items',
     });
   }
 });

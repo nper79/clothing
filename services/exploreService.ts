@@ -1,10 +1,11 @@
-import type { ExploreLook } from '../types/explore';
+import type { ExploreLook, ShopItem } from '../types/explore';
 import { PersonalStylingService } from './personalStylingService';
 
 export interface SavedRemix {
   id: string;
   lookId: string;
   lookName: string;
+  gender?: 'male' | 'female';
   storagePath?: string;
   createdAt: string;
   imageUrl?: string;
@@ -134,6 +135,45 @@ export const ExploreService = {
     return payload.looks ?? [];
   },
 
+  async ensureLookItems(look: ExploreLook): Promise<ExploreLook> {
+    if (look.imagePrompt && look.items?.length) {
+      return look;
+    }
+
+    const response = await fetch('/api/explore/itemize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lookId: look.id }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || 'Failed to enrich look items');
+    }
+
+    const payload = await response.json();
+    return payload.look ?? look;
+  },
+
+  async getLookWithItems(lookId: string): Promise<ExploreLook> {
+    const response = await fetch('/api/explore/itemize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lookId }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || 'Failed to load look details');
+    }
+
+    const payload = await response.json();
+    if (!payload.look) {
+      throw new Error('Look not found');
+    }
+    return payload.look as ExploreLook;
+  },
+
   getLikes(): LikeMap {
     return loadLikes();
   },
@@ -146,12 +186,13 @@ export const ExploreService = {
   },
 
   async remixLook(userPhotoUrl: string, look: ExploreLook) {
-    return PersonalStylingService.remixLook(userPhotoUrl, look.prompt, {
+    const imagePrompt = look.imagePrompt || look.prompt;
+    return PersonalStylingService.remixLook(userPhotoUrl, imagePrompt, {
       lookId: look.id,
       name: look.title,
       category: look.vibe,
       level: 'explore',
-      originalPrompt: look.prompt,
+      originalPrompt: imagePrompt,
       referenceImage: look.imageUrl
     });
   },
@@ -190,7 +231,9 @@ export const ExploreService = {
       id: `${remix.lookId}_${Date.now()}`,
       lookId: remix.lookId,
       lookName: remix.lookName,
+      gender: remix.gender,
       storagePath: remix.storagePath,
+      imageUrl: remix.imageUrl,
       createdAt: new Date().toISOString(),
     };
     const updated = [entry, ...current].slice(0, 60);
