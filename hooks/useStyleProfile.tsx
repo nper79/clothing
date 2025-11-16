@@ -35,12 +35,19 @@ export const useStyleProfile = () => {
       // Check if user has completed the style quiz
       const response = await fetch(`/api/style-profile/${user.id}`);
       if (response.ok) {
-        const data = await response.json();
-        if (data.success && data.profile) {
-          setProfile(data.profile);
-          setHasProfile(true);
-          // Set the profile in the StyleAnalysisService
-          StyleAnalysisService.setUserProfile(data.profile);
+        const text = await response.text();
+        // Handle both JSON and HTML responses
+        if (text.startsWith('{')) {
+          const data = JSON.parse(text);
+          if (data.success && data.profile) {
+            setProfile(data.profile);
+            setHasProfile(true);
+            // Set the profile in the StyleAnalysisService
+            StyleAnalysisService.setUserProfile(data.profile);
+          }
+        } else {
+          // Got HTML instead of JSON (404 page)
+          setHasProfile(false);
         }
       } else {
         setHasProfile(false);

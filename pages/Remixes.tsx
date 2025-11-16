@@ -20,6 +20,8 @@ const RemixesPage: React.FC = () => {
   const [isLoadingGallery, setIsLoadingGallery] = useState(true);
   const [selectedRemix, setSelectedRemix] = useState<SavedRemix | null>(null);
   const [selectedLook, setSelectedLook] = useState<ExploreLook | null>(null);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState<string | null>(null);
   const autoSelectHandled = useRef(false);
 
   useEffect(() => {

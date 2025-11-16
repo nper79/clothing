@@ -317,6 +317,70 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
           }));
         }
       });
+
+      // Style profile endpoints
+      server.middlewares.use('/api/style-profile', async (req: IncomingMessage, res: ServerResponse) => {
+        if (req.method === 'POST') {
+          await handleJsonPost(
+            req,
+            res,
+            async (body) => {
+              const profileId = Date.now().toString();
+              const savedProfile = {
+                id: profileId,
+                ...body,
+                createdAt: new Date().toISOString()
+              };
+
+              console.log('[vite dev backend] Style profile submitted:', body);
+
+              return {
+                success: true,
+                message: 'Style profile saved successfully',
+                profileId: profileId,
+                profile: savedProfile
+              };
+            },
+            '/api/style-profile'
+          );
+        } else if (req.method === 'GET') {
+          try {
+            const requestUrl = new URL(req.url ?? '', 'http://localhost');
+            const userId = requestUrl.pathname.split('/').pop();
+
+            // Mock profile for testing
+            const mockProfile = {
+              perceptionStyle: ['Modern', 'Confident', 'Elegant'],
+              wearPlaces: ['Work', 'Dates', 'Nights out'],
+              currentStyle: ['Basic casual'],
+              desiredStyle: ['Clean girl / clean fit', 'Modern chic'],
+              outfitGoals: ['Make me look more put-together', 'Make me look more confident'],
+              colorPreferences: ['Neutral tones', 'Monochrome'],
+              dislikedColors: 'Orange, Brown',
+              outfitComplexity: 'I like balanced but interesting outfits',
+              neverWearItems: ['Crop tops', 'Leather']
+            };
+
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({
+              success: true,
+              profile: mockProfile
+            }));
+          } catch (error) {
+            console.error('[vite dev backend] Failed to fetch style profile', error);
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({
+              error: error instanceof Error ? error.message : 'Failed to fetch style profile'
+            }));
+          }
+        } else {
+          res.statusCode = 405;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+        }
+      });
     }
   };
 };
