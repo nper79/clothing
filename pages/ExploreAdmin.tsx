@@ -31,6 +31,8 @@ const ExploreAdmin: React.FC = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [referenceUploads, setReferenceUploads] = useState<ReferenceUpload[]>([]);
   const [isReferenceGenerating, setIsReferenceGenerating] = useState(false);
+  const [gridRegeneratingId, setGridRegeneratingId] = useState<string | null>(null);
+  const [isGridBatching, setIsGridBatching] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -124,6 +126,38 @@ const ExploreAdmin: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to delete look');
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleRegenerateGrid = async (lookId: string) => {
+    setError(null);
+    setStatus(null);
+    setGridRegeneratingId(lookId);
+    try {
+      const updated = await ExploreService.regenerateGrid(gender, lookId);
+      setDataset((prev) => prev.map((look) => (look.id === lookId ? updated : look)));
+      setStatus('Grid rebuilt for selected look.');
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : 'Failed to regenerate grid');
+    } finally {
+      setGridRegeneratingId(null);
+    }
+  };
+
+  const handleRegenerateAllGrids = async () => {
+    setError(null);
+    setStatus(null);
+    setIsGridBatching(true);
+    try {
+      const looks = await ExploreService.regenerateAllGrids(gender);
+      setDataset(looks);
+      setStatus('All grid overlays rebuilt for this gender.');
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : 'Failed to regenerate grids');
+    } finally {
+      setIsGridBatching(false);
     }
   };
 
@@ -333,15 +367,25 @@ const ExploreAdmin: React.FC = () => {
         </section>
 
         <section className="bg-white rounded-2xl shadow p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
             <h2 className="text-xl font-semibold text-gray-900">Dataset Preview</h2>
-            <button
-              onClick={handleExport}
-              className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-xl border border-gray-200 text-gray-700"
-            >
-              <Download className="w-4 h-4" />
-              Export JSON
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleRegenerateAllGrids}
+                disabled={isGridBatching || isProcessing || isDatasetLoading}
+                className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-xl border border-gray-200 text-gray-700 disabled:opacity-50"
+              >
+                {isGridBatching ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                Rebuild grids
+              </button>
+              <button
+                onClick={handleExport}
+                className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-xl border border-gray-200 text-gray-700"
+              >
+                <Download className="w-4 h-4" />
+                Export JSON
+              </button>
+            </div>
           </div>
 
           {isDatasetLoading ? (
@@ -355,20 +399,42 @@ const ExploreAdmin: React.FC = () => {
             <div className="grid md:grid-cols-3 gap-4">
               {dataset.map((look) => (
                 <article key={look.id} className="relative border border-gray-100 rounded-2xl overflow-hidden flex flex-col">
-                  <button
-                    onClick={() => handleDelete(look.id)}
-                    disabled={isProcessing || deletingId === look.id}
-                    className="absolute top-3 right-3 inline-flex items-center justify-center rounded-full bg-white/90 border border-gray-200 text-gray-700 w-8 h-8 text-sm font-semibold shadow-sm disabled:opacity-50"
-                    title="Delete look"
-                  >
-                    {deletingId === look.id ? <Loader2 className="w-4 h-4 animate-spin" /> : '×'}
-                  </button>
+                  <div className="absolute top-3 right-3 flex items-center gap-2">
+                    <button
+                      onClick={() => handleRegenerateGrid(look.id)}
+                      disabled={gridRegeneratingId === look.id || isProcessing}
+                      className="inline-flex items-center justify-center rounded-full bg-white/90 border border-gray-200 text-gray-700 w-8 h-8 text-xs font-semibold shadow-sm disabled:opacity-50"
+                      title="Rebuild grid"
+                    >
+                      {gridRegeneratingId === look.id ? <Loader2 className="w-4 h-4 animate-spin" /> : '↺'}
+                    </button>
+                    <button
+                      onClick={() => handleDelete(look.id)}
+                      disabled={isProcessing || deletingId === look.id}
+                      className="inline-flex items-center justify-center rounded-full bg-white/90 border border-gray-200 text-gray-700 w-8 h-8 text-sm font-semibold shadow-sm disabled:opacity-50"
+                      title="Delete look"
+                    >
+                      {deletingId === look.id ? <Loader2 className="w-4 h-4 animate-spin" /> : '×'}
+                    </button>
+                  </div>
                   <img
                     src={look.imageUrl}
                     alt={look.title}
                     className="w-full object-cover"
                     style={{ aspectRatio: '9 / 16' }}
                   />
+                  {look.gridImageUrl ? (
+                    <img
+                      src={look.gridImageUrl}
+                      alt={`${look.title} grid`}
+                      className="w-full object-cover border-t border-gray-100"
+                      style={{ aspectRatio: '2 / 3' }}
+                    />
+                  ) : (
+                    <div className="p-3 text-xs text-gray-500 border-t border-gray-100 text-center">
+                      Grid not generated yet
+                    </div>
+                  )}
                   <div className="p-4 space-y-2 text-sm flex-1 flex flex-col">
                     <div>
                       <p className="text-xs uppercase tracking-[0.3em] text-gray-400">{look.vibe}</p>

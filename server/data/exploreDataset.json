@@ -2,6 +2,667 @@
   "male": [],
   "female": [
     {
+      "id": "explore_female_1763305159168_0",
+      "gender": "female",
+      "title": "Pier Wool Layers",
+      "description": "Charcoal tweed coat, oat cable turtleneck, barrel jeans, lug boots, chunky scarf.",
+      "vibe": "weekend chic",
+      "prompt": "Full-body vertical 9:16 shot, shoes visible. A windswept Mediterranean pier with terracotta planters and sea mist under overcast twilight. Model wears a long charcoal tweed overcoat over an oat cable-knit wool turtleneck and pale indigo barrel-leg denim with a puddle hem. Layered with a heather gray chunky wool scarf, black leather gloves, and a moss knit beanie. Footwear is black weatherproof lug-sole leather Chelsea boots. Fabrics read textured: tweed, cable knit, dense denim. Frosty breath visible; light snowflakes catching soft diffused shoreline light. Pose energy: relaxed stride, hand in pocket, collar popped against wind.",
+      "imagePrompt": "Full-body vertical 9:16 shot, shoes visible. A windswept Mediterranean pier with terracotta planters and sea mist under overcast twilight. Model wears a long charcoal tweed overcoat over an oat cable-knit wool turtleneck and pale indigo barrel-leg denim with a puddle hem. Layered with a heather gray chunky wool scarf, black leather gloves, and a moss knit beanie. Footwear is black weatherproof lug-sole leather Chelsea boots. Fabrics read textured: tweed, cable knit, dense denim. Frosty breath visible; light snowflakes catching soft diffused shoreline light. Pose energy: relaxed stride, hand in pocket, collar popped against wind. Scene: brutalist concrete stairwell washed in magenta gels. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "coat",
+          "label": "Charcoal tweed overcoat",
+          "searchQuery": "women charcoal tweed wool overcoat tailored winter",
+          "category": "coat",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-1-1763305400691.jpg"
+        },
+        {
+          "id": "knit",
+          "label": "Oat cable-knit wool turtleneck",
+          "searchQuery": "women oat cable knit wool turtleneck cozy",
+          "category": "sweater",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-2-1763305400941.jpg"
+        },
+        {
+          "id": "jeans",
+          "label": "Pale indigo barrel-leg denim",
+          "searchQuery": "women pale indigo barrel leg denim puddle hem",
+          "category": "jeans",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-3-1763305401160.jpg"
+        },
+        {
+          "id": "boots",
+          "label": "Black lug-sole leather Chelsea boots",
+          "searchQuery": "women black leather lug sole Chelsea boots weatherproof",
+          "category": "footwear",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-4-1763305401360.jpg"
+        },
+        {
+          "id": "scarf",
+          "label": "Heather gray chunky wool scarf",
+          "searchQuery": "women heather gray chunky wool scarf oversized",
+          "category": "accessories",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-5-1763305401543.jpg"
+        },
+        {
+          "id": "hat_gloves",
+          "label": "Moss knit beanie and black leather gloves",
+          "searchQuery": "women moss knit beanie black leather gloves winter",
+          "category": "accessories",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-6-1763305401737.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0-1763305159169.jpg",
+      "styleTag": "winter",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-1763305400151.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-1-1763305400691.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-2-1763305400941.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-3-1763305401160.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-4-1763305401360.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-5-1763305401543.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-6-1763305401737.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-7-1763305401958.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763305159168_0/grid-cell-8-1763305402134.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763304385019_0",
+      "gender": "female",
+      "title": "Neon Rooftop Ease",
+      "description": "Olive bomber, cream barrel jeans, cobalthoodie, chrome sneakers pop",
+      "vibe": "streetwear",
+      "prompt": "Full-body, vertical 9:16 shot of a woman in an olive matte-nylon MA-1 bomber layered over a cobalt blue heavyweight cottonhoodie, paired with cream barrel-leg denim and a black utility nylon crossbody; silver-chrome leather statement sneakers visible. Hair in sleek low charcoal-brown bun, soft taupe makeup with cobalt liner highlight. Pose energy: relaxed contrapposto, hands in bomber pockets, slight lean against neon-lit railing. Environment: sunset rooftop lounge bathed in neon tube lighting with skyline backdrop, urban depth of field, reflective glass, shoes clearly in frame, sculptural gradients on the bomber, subtle city haze.",
+      "imagePrompt": "Full-body, vertical 9:16 shot of a woman in an olive matte-nylon MA-1 bomber layered over a cobalt blue heavyweight cottonhoodie, paired with cream barrel-leg denim and a black utility nylon crossbody; silver-chrome leather statement sneakers visible. Hair in sleek low charcoal-brown bun, soft taupe makeup with cobalt liner highlight. Pose energy: relaxed contrapposto, hands in bomber pockets, slight lean against neon-lit railing. Environment: sunset rooftop lounge bathed in neon tube lighting with skyline backdrop, urban depth of field, reflective glass, shoes clearly in frame, sculptural gradients on the bomber, subtle city haze. Scene: windswept Mediterranean pier with terracotta planters and sea mist. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "jacket",
+          "label": "Olive MA-1 bomber jacket",
+          "searchQuery": "women's olive nylon MA-1 bomber matte ribbed cuffs streetwear",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-1-1763304399852.jpg",
+          "cachedProducts": [
+            {
+              "title": "Alpha Industries Women's Knit Rib MA-1 Flight Jacket",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's olive nylon MA-1 bomber matte ribbed cuffs streetwear&prds=localAnnotatedOfferId:1,catalogid:9604597870982909496,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$250.00",
+              "source": "Macy's",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTDHBQT20jXseu0utbz_HzywiHETe0QEJ6ujDLvwk3QuSXvpe2C_hrYMvzmZKbR9EFI5lGJEWqYR_KjFuit74mXgWn8kZUNNq5k7gSEAUHbSgkngpHOsMtQOwg",
+              "rating": 5,
+              "ratingCount": 1,
+              "position": 5
+            },
+            {
+              "title": "Bombers Women's MA1 Bomber Jacket",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's olive nylon MA-1 bomber matte ribbed cuffs streetwear&prds=localAnnotatedOfferId:1,catalogid:5508147890719286213,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$130.00",
+              "source": "Macy's",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR14QLP4L3eYwW_1WBltBge1CFb0P2I9rWUEJ4oBaeogWuKPlMYyl3cQrRyn-VP6QwmqQx2f3Jsx9t2OY_-VxrlJMpTfLDYIY7mN5i_x7pNRkdhuB10ViOjMq8",
+              "rating": 5,
+              "ratingCount": 1,
+              "position": 14
+            },
+            {
+              "title": "Alpha Industries Women's L-2b Cropped Gen IiFlight Jacket W",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's olive nylon MA-1 bomber matte ribbed cuffs streetwear&prds=localAnnotatedOfferId:1,catalogid:3591934373301983089,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$180.00",
+              "source": "Macy's",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSZfljVbyX-L502NLytZTrBq7WAaoUl7PCfuF68iu7Mb3-AoU98JF-JCoFU-t0GDP4SFdOhOc8iicyMwku0v7MOyYrub-pcBMbV0_US6-qbaVOSjQ5CWaaMsoE",
+              "rating": 4.9,
+              "ratingCount": 22,
+              "position": 25
+            },
+            {
+              "title": "Alpha Industries Men's MA-1 Oxford Flight Jacket",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's olive nylon MA-1 bomber matte ribbed cuffs streetwear&prds=localAnnotatedOfferId:1,catalogid:8128533619014167551,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$125.00",
+              "source": "Urban Outfitters",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQ4AD9CbHFnLN0M0rCU4dJoAgjB6IejtR28oc5wEvkojqkc9tMyECKhxaeCpVRT5aYmpPS75_SOdlbob5VWwHDelkgNXunVUh8IEN-B5OKNwYHZLsSDGRejeQ",
+              "position": 27
+            },
+            {
+              "title": "Lolë Women's Momentum Tech Bomber Jacket",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's olive nylon MA-1 bomber matte ribbed cuffs streetwear&prds=localAnnotatedOfferId:1,catalogid:17973459312050326888,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$124.00",
+              "source": "Nordstrom",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRIHPYijZW6JVH2z-tBh6HKhft8XXsMbibWh-Whg_IPKL9N3hUU8SAl6AmG_rYVfwBVLYOIv2zLbxcUimLDt_kgmpmk2fnsVTD5rclLdRstcvSg3wEoAT2u0Q",
+              "position": 34
+            },
+            {
+              "title": "Levi's Women's Jackets & Coats-Nwt Levi's Bomber Jacket",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's olive nylon MA-1 bomber matte ribbed cuffs streetwear&prds=localAnnotatedOfferId:1,catalogid:7246170528393193329,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$59.97",
+              "source": "Nordstrom Rack",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSRPrtuOYFnpnn6f8zC6IThfB9eunomf5-YBh_fmF8ZwgaICWDdocp9U3t2Wjfxz_6JKYzP6OVOL_7lshcfJB9_wGGFBBrpq-_FqgAucG86ph1c4xFwvC9C",
+              "rating": 4.3,
+              "ratingCount": 64,
+              "position": 36
+            }
+          ],
+          "cachedAt": "2025-11-16T14:46:45.375Z"
+        },
+        {
+          "id": "top",
+          "label": "Cobalt blue heavyweighthoodie",
+          "searchQuery": "women's cobalt cottonhoodie oversized heavyweight streetwear",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-2-1763304400065.jpg",
+          "cachedProducts": [
+            {
+              "title": "H&M Ladies OversizedHoodie",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cobalt cottonhoodie oversized heavyweight streetwear&prds=localAnnotatedOfferId:1,catalogid:11573589679538141789,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$24.99",
+              "source": "H&M",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSGnQ0nbMYRCSJM_cXlcwFXisy0uEfa3ER16MDD0kyoBMD0S8ycvUin3YiMR9FaXqOxlFDi9PkiI34lB0x0FUto0Cn4meONL8uGJzsExw0",
+              "rating": 4.4,
+              "ratingCount": 1700,
+              "position": 6
+            },
+            {
+              "title": "UNIQLO Oversized SweatHoodie",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cobalt cottonhoodie oversized heavyweight streetwear&prds=localAnnotatedOfferId:1,catalogid:6054378670978215074,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$49.90",
+              "source": "Uniqlo",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQLq0oC-fOMjRXuIQ5FCmUuBBL4Js9Rm9-a-iLF_yueqpqxMELqLq3IDu6z9Q4KggfmULbor57Z2kKhmNuv5G8JVVk0FKi8xOyqwrJLh9EtodTCfUq1LmCG",
+              "rating": 5,
+              "ratingCount": 1,
+              "position": 12
+            },
+            {
+              "title": "Cotton On Women's Premium OversizedHoodie",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cobalt cottonhoodie oversized heavyweight streetwear&prds=localAnnotatedOfferId:1,catalogid:1554371036156115582,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$59.99",
+              "source": "Nordstrom",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTOhYfYAL5ycShnbABzMkbTkviUUGXee2VNS5B3MGS7oZQL9i_cFn7u2XzH2AVfxp0JkRoRBqU9MnqGVl_mEJjVxuUbKFAMWRgdttDa71zhp7q5FGP6W9Q7jA",
+              "position": 14
+            },
+            {
+              "title": "Gap Heavyweight Oversized ZipHoodie",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cobalt cottonhoodie oversized heavyweight streetwear&prds=localAnnotatedOfferId:1,catalogid:9828617605931956869,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$71.00",
+              "source": "Gap",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQ6Y_vcGcKpdlGvih8evzZWfGTmSQiP5crEbPCays42L-OKSV4yxK6YEpaz0F2_6RddQuqB8wNIaebQsr_G-BeZX9A5EKyuq19Vt5XLChweZwz-aU-_GqT0",
+              "rating": 4.9,
+              "ratingCount": 17,
+              "position": 16
+            },
+            {
+              "title": "Elwood Men's Core Oversize Organic Cotton Brushed TerryHoodie",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cobalt cottonhoodie oversized heavyweight streetwear&prds=localAnnotatedOfferId:1,catalogid:16600092007212249306,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$75.00",
+              "source": "Nordstrom",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcS2kkB3336hfZoiav_VQhpiQp4yoSlDvFp4M2pnMlvoftJAoCNpyZFeUJz6-bate6nknyQayY8v5_1YrxMrKYCiJU8JmMPJJsOlOwFuR2iSavzNDtKIWSihyw",
+              "rating": 3,
+              "ratingCount": 16,
+              "position": 23
+            },
+            {
+              "title": "Gap Women's Relaxed CashsoftHoodie",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cobalt cottonhoodie oversized heavyweight streetwear&prds=localAnnotatedOfferId:1,catalogid:10653436816413427016,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$28.00",
+              "source": "Gap Factory",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTIWknXdcXjotGxIwtDT7dM2JrZngXzxN3E-0j8M70SN4zmPBuskA-QepM4sv5AN5C6BX9_4QfrlfutLvAEtwCdQ4rBRK403yG1npki7fGKktcezFo5xTD1Ow",
+              "rating": 4.6,
+              "ratingCount": 58,
+              "position": 38
+            }
+          ],
+          "cachedAt": "2025-11-16T14:46:48.736Z"
+        },
+        {
+          "id": "bottom",
+          "label": "Cream barrel-leg denim jeans",
+          "searchQuery": "women's cream barrel leg denim relaxed cotton",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-3-1763304400310.jpg",
+          "cachedProducts": [
+            {
+              "title": "Gap Women's High Rise Barrel Carpenter Jeans",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cream barrel leg denim relaxed cotton&prds=localAnnotatedOfferId:1,catalogid:12069642675940630694,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$53.00",
+              "source": "Gap",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTi76lgUlBt24LikeweziI876Bgu7mnYCQiLvryOCIt-QyT0dz7JIdgCFqRytqwzM6s1UQm0Ha0O9tgjzXWHURiJ9DGG5ADsE1yyqfgPQtqHz7uO_NcozESiBg",
+              "rating": 4.6,
+              "ratingCount": 33,
+              "position": 1
+            },
+            {
+              "title": "Hint of Blu Women's Relaxed Barrel Straight Jeans",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cream barrel leg denim relaxed cotton&prds=localAnnotatedOfferId:1,catalogid:9688790700119299525,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$89.00",
+              "source": "Nordstrom",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQy33pminyg9Hr0zKj4aIzlfzql6CVsoMYbXsidGnYNWDeyaSRKxCN5mH6CRdkB__AtCXXQXq7DzHAFEcy6mmSi8kYhfFjN7cAIjPsfFZv0ov_LpHnYSujt",
+              "position": 3
+            },
+            {
+              "title": "J.Crew Women's Relaxed Barrel-leg Jeans",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cream barrel leg denim relaxed cotton&prds=localAnnotatedOfferId:1,catalogid:1542406376761946455,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$39.99",
+              "source": "J.Crew",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR8KWgbsH0jecBPZqLCP0a3Ji-Yv9Q0BOJDsPly8thHz3w17FHVN0CsIhu9qpfcdpQ_zbQsN24EKaZM5cuN5aLDwBUuFbdtreqoQFF1iKY61o9QUkkJw8G0I98",
+              "position": 4
+            },
+            {
+              "title": "Madewell Women's Darted Barrel Leg Jeans",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cream barrel leg denim relaxed cotton&prds=localAnnotatedOfferId:1,catalogid:18073395288816997127,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$53.97",
+              "source": "Nordstrom Rack",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTq-JpVE5i5habEwFNCetOqnjlcXQz6AAlCMIv_0Xg7m8Ppi8itlyQL8c1TkOQou9MPcAa0rH4CnwY8rlZ8AngsUXK8o-OPl6CFh603JwzweomYMRDFfRUv",
+              "position": 7
+            },
+            {
+              "title": "Banana Republic Women's Mid-Rise Loose Pleated Ankle Jeans",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cream barrel leg denim relaxed cotton&prds=localAnnotatedOfferId:1,catalogid:15786736248961091066,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$140.00",
+              "source": "Banana Republic",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQUSo1iR5t4IKaZ4RRG3s2ZkF-FxQwp8CETFJ1o9q9J7ZrVHwu_aLDh7DUVAArs9F7CY164yuXp-fQ9xgrMqRilAR88bNwcnYy9viC_UgPR9Fdzu7_TkgML3Q",
+              "rating": 4.6,
+              "ratingCount": 17,
+              "position": 12
+            },
+            {
+              "title": "City Blues Women's High Waist Ankle Barrel Jeans",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's cream barrel leg denim relaxed cotton&prds=localAnnotatedOfferId:1,catalogid:18299004342609603487,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$69.50",
+              "source": "Nordstrom",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRh11ESOBc_DSNwcJqvbzu521t6yuRZyWyyt72t1mpkavOdI8ydBX_oQDN5dhm8zIJXPJ7GLRzErxopAYAiaRdWTx7NYtJOinNYClxqEk9qvRxuNQrtHZo_",
+              "position": 13
+            }
+          ],
+          "cachedAt": "2025-11-16T14:46:52.102Z"
+        },
+        {
+          "id": "shoes",
+          "label": "Silver chrome leather sneakers",
+          "searchQuery": "women's silver metallic leather sneakers statement streetwear",
+          "category": "footwear",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-4-1763304400541.jpg"
+        },
+        {
+          "id": "accessory",
+          "label": "Black utility nylon crossbody bag",
+          "searchQuery": "women's black nylon utility crossbody urban streetwear",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-5-1763304400759.jpg",
+          "cachedProducts": [
+            {
+              "title": "Gap Women's Gapfit Nylon Cross-Body Bag",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's black nylon utility crossbody urban streetwear&prds=localAnnotatedOfferId:1,catalogid:17955414063519723588,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$16.00",
+              "source": "Gap Factory",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSAoCyqRPW8nNip4_nyh_wxuXwhFjHonPlQlS6zHg1xHZ-dodAPb7Yx8jC7GwaQNt39DuNNHC5cf82CxiEWAMmw2SENAkzewsryWyYIKLc0szlRRrVaHmbZ2_E",
+              "rating": 4.7,
+              "ratingCount": 177,
+              "position": 4
+            },
+            {
+              "title": "DKNY Women's Mack Nylon Crossbody Bag",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's black nylon utility crossbody urban streetwear&prds=localAnnotatedOfferId:1,catalogid:2023121934418242228,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$88.00",
+              "source": "Nordstrom",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTvLs81L4SMn_cv3BQBXlyOM4xWNmxoWqahMTXKhCuak9AszvB3RrrudjCxNqekdAiQzrVXN7sGHZkNYXIPOajpFg43UERUTT36OhNe6nY5Ikz6SXynVi2ZvQ",
+              "rating": 3.8,
+              "ratingCount": 14,
+              "position": 8
+            },
+            {
+              "title": "Marc Jacobs Preppy Nylon Mini Natasha Crossbody Bag Women's",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's black nylon utility crossbody urban streetwear&prds=localAnnotatedOfferId:1,catalogid:6008592339826544904,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$89.97",
+              "source": "Nordstrom Rack",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTT4yD_vxOra_fdU6HBM6OX792ABH8Yo7-UmqEpDtuN8vz12MNmV9mWNsYrTbRac99F14YwzuzQOmJQNush6UmKFXwNM0zy9NY8it279OI",
+              "rating": 4.9,
+              "ratingCount": 188,
+              "position": 13
+            },
+            {
+              "title": "Modern Pocket Crossbody",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's black nylon utility crossbody urban streetwear&prds=localAnnotatedOfferId:1,catalogid:2216643792114802546,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$75.00",
+              "source": "Macy's",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTXQQz27kzLIcJ00n99rPIjpdsW_g8HDZuTc7YK4UcGFdwYxg2hRuh2MpO6l5xRz5JdTNTSGD2iHSzuAP4Y_AYvWP8IS2C1Os3oYTwxGQE7",
+              "rating": 4.6,
+              "ratingCount": 159,
+              "position": 18
+            },
+            {
+              "title": "Longchamp LePliage Energy XsBag",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's black nylon utility crossbody urban streetwear&prds=localAnnotatedOfferId:1,catalogid:16227291146604386092,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$265.00",
+              "source": "Nordstrom",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRz6jRIvI2S_-uydMZryMQUzb0NGJo8F7GFZWW6xVavil3SzxN_9a7Dst7wNpxx4y26UT-O4tuIukJEGrJGN4KTktVLDwStoXeuRVoYTwNf",
+              "rating": 4.7,
+              "ratingCount": 241,
+              "position": 20
+            },
+            {
+              "title": "Kurt Geiger London Women's Rainbow Quilted Nylon Crossbody Bag",
+              "link": "https://www.google.com/search?ibp=oshop&q=women's black nylon utility crossbody urban streetwear&prds=localAnnotatedOfferId:1,catalogid:17741669882190596397,pvo:2,pvt:hg,rds:PC_6027158597472037202%7CPROD_PC_6027158597472037202&gl=us&udm=28&pvorigin=2",
+              "price": "$79.97",
+              "source": "Nordstrom Rack",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQUfxeTlhZuAmDrVMK1PHjM7M9McxyedkNdLRaMqKgQQNg8Wh5oj_HEkp1bkwAaDNpCQcd0P9vWhQRsDGZV3UAJCmlyJ64Cuvs586LR-mLp98DZFhiQ9-mAQw",
+              "rating": 4.5,
+              "ratingCount": 42,
+              "position": 23
+            }
+          ],
+          "cachedAt": "2025-11-16T14:47:31.074Z"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0-1763304385019.jpg",
+      "styleTag": "street",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-1763304399172.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-1-1763304399852.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-2-1763304400065.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-3-1763304400310.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-4-1763304400541.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-5-1763304400759.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-6-1763304400961.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-7-1763304401163.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763304385019_0/grid-cell-8-1763304401360.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763289525535_0",
+      "gender": "female",
+      "title": "Frosted Linen-Tailor",
+      "description": "Taupe wool coat, cream cable knit, charcoal linen trousers, black lug boots.",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body vertical 9:16 fashion photo, shoes visible. Model in a taupe wool overcoat layered over a cream cable-knit turtleneck and charcoal linen-pressed trousers with black leather moto belt, styled with black leather gloves, charcoal ribbed knit beanie, and silver sculptural earrings. Footwear is black weatherproof lug-sole ankle boots. Fabrics read wool, cable knit, and textured linen; silhouette nods to The Row and Khaite with relaxed straight trouser line and elongated coat. Hair tucked under beanie with loose strands; makeup is soft matte skin, muted berry lip, brushed brows. Pose calm and grounded, hands in pockets with visible frosty breath and drifting snowflakes. Shot inside a brutalist concrete stairwell washed in magenta gels, cold overcast ambience, subtle steam haze, crisp directional shadows, winter grit on floor.",
+      "imagePrompt": "Full-body vertical 9:16 fashion photo, shoes visible. Model in a taupe wool overcoat layered over a cream cable-knit turtleneck and charcoal linen-pressed trousers with black leather moto belt, styled with black leather gloves, charcoal ribbed knit beanie, and silver sculptural earrings. Footwear is black weatherproof lug-sole ankle boots. Fabrics read wool, cable knit, and textured linen; silhouette nods to The Row and Khaite with relaxed straight trouser line and elongated coat. Hair tucked under beanie with loose strands; makeup is soft matte skin, muted berry lip, brushed brows. Pose calm and grounded, hands in pockets with visible frosty breath and drifting snowflakes. Shot inside a brutalist concrete stairwell washed in magenta gels, cold overcast ambience, subtle steam haze, crisp directional shadows, winter grit on floor. Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "coat",
+          "label": "Taupe double-face wool overcoat",
+          "searchQuery": "women taupe wool overcoat double face minimal long tailored",
+          "category": "coat",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-1-1763289541510.jpg"
+        },
+        {
+          "id": "knit",
+          "label": "Cream cable-knit turtleneck sweater",
+          "searchQuery": "women cream cable knit turtleneck wool cozy",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-2-1763289541737.jpg"
+        },
+        {
+          "id": "trouser",
+          "label": "Charcoal linen-pressed straight trousers",
+          "searchQuery": "women charcoal linen trousers straight leg tailored winter",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-3-1763289542072.jpg"
+        },
+        {
+          "id": "boots",
+          "label": "Black weatherproof lug-sole ankle boots",
+          "searchQuery": "women black lug sole ankle boots waterproof leather",
+          "category": "footwear",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-4-1763289542306.jpg"
+        },
+        {
+          "id": "accessory1",
+          "label": "Black leather moto belt",
+          "searchQuery": "women black leather moto belt minimal hardware",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-5-1763289542516.jpg"
+        },
+        {
+          "id": "accessory2",
+          "label": "Silver sculptural hoop earrings",
+          "searchQuery": "women silver sculptural hoop earrings modern Loewe vibe",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-6-1763289543258.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0-1763289525535.jpg",
+      "styleTag": "winter",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-1763289540814.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-1-1763289541510.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-2-1763289541737.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-3-1763289542072.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-4-1763289542306.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-5-1763289542516.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-6-1763289543258.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-7-1763289543475.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763289525535_0/grid-cell-8-1763289543715.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763284973653_0",
+      "gender": "female",
+      "title": "Clean-Girl Transit",
+      "description": "Ivory tech trench over slatehoodie, taupe cargos, white dad sneakers.",
+      "vibe": "streetwear",
+      "prompt": "Full-body, vertical 9:16. Model in an ivory technical trench layered over a slate-grey cottonhoodie and pale taupe cargo pants, paired with crisp white leather dad sneakers. Add a charcoal nylon baseball cap and silver hoop earrings. Fabrics mix matte nylon, soft fleece, and ripstop. Hair in sleek low bun; makeup minimal dewy skin with brown liner. Pose: casual stride, one hand adjusting cap, confident but approachable. Environment: nighttime city street with reflective asphalt and blurred headlights, subtle steam vents, depth-of-field bokeh. Lighting cool sodium with hints of cyan; shoes clearly visible in frame.",
+      "imagePrompt": "Full-body, vertical 9:16. Model in an ivory technical trench layered over a slate-grey cottonhoodie and pale taupe cargo pants, paired with crisp white leather dad sneakers. Add a charcoal nylon baseball cap and silver hoop earrings. Fabrics mix matte nylon, soft fleece, and ripstop. Hair in sleek low bun; makeup minimal dewy skin with brown liner. Pose: casual stride, one hand adjusting cap, confident but approachable. Environment: nighttime city street with reflective asphalt and blurred headlights, subtle steam vents, depth-of-field bokeh. Lighting cool sodium with hints of cyan; shoes clearly visible in frame. Scene: sunset rooftop lounge bathed in neon tube lighting with skyline backdrop. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "outerwear",
+          "label": "Ivory technical trench coat",
+          "searchQuery": "women's ivory tech trench coat waterproof minimalist streetwear",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-1-1763284990560.jpg"
+        },
+        {
+          "id": "top",
+          "label": "Slate-grey fleecehoodie",
+          "searchQuery": "women's slate grey fleecehoodie oversized clean girl",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-2-1763284991188.jpg"
+        },
+        {
+          "id": "bottom",
+          "label": "Pale taupe ripstop cargo pants",
+          "searchQuery": "women's taupe ripstop cargo pants relaxed fit streetwear",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-3-1763284991509.jpg"
+        },
+        {
+          "id": "footwear",
+          "label": "White leather dad sneakers",
+          "searchQuery": "women's white leather dad sneakers chunky sole",
+          "category": "shoes",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-4-1763284991778.jpg"
+        },
+        {
+          "id": "accessory1",
+          "label": "Charcoal nylon baseball cap",
+          "searchQuery": "women's charcoal nylon baseball cap minimalist street",
+          "category": "accessories",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-5-1763284991977.jpg"
+        },
+        {
+          "id": "accessory2",
+          "label": "Polished silver hoop earrings",
+          "searchQuery": "women's silver hoop earrings medium polished minimal",
+          "category": "accessories",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-6-1763284992168.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0-1763284973653.jpg",
+      "styleTag": "street",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-1763284989648.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-1-1763284990560.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-2-1763284991188.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-3-1763284991509.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-4-1763284991778.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-5-1763284991977.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-6-1763284992168.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-7-1763284992358.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763284973653_0/grid-cell-8-1763284993280.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763251354060_0",
+      "gender": "female",
+      "title": "Sunlit Barrel Denim",
+      "description": "Cream blazer, cornflower shirt, indigo barrel jeans, tan sandals, straw tote.",
+      "vibe": "weekend chic",
+      "prompt": "Full-body vertical 9:16 shot, shoes visible. Model in a cream linen blazer over a cornflower blue poplin button-up, tucked into high-waisted indigo barrel-leg jeans with a soft puddle hem, paired with tan leather minimal slide sandals. Accessories include a natural straw oversized tote and slim gold hoop earrings. Hair is loose brushed waves; makeup is dewy skin with peach blush and soft brown liner. Pose is relaxed mid-stride with one hand in pocket. Shot at a windswept Mediterranean pier with terracotta planters and sea mist; warm sun with gentle backlight and crisp shadows; airy color palette and organic textures.",
+      "imagePrompt": "Full-body vertical 9:16 shot, shoes visible. Model in a cream linen blazer over a cornflower blue poplin button-up, tucked into high-waisted indigo barrel-leg jeans with a soft puddle hem, paired with tan leather minimal slide sandals. Accessories include a natural straw oversized tote and slim gold hoop earrings. Hair is loose brushed waves; makeup is dewy skin with peach blush and soft brown liner. Pose is relaxed mid-stride with one hand in pocket. Shot at a windswept Mediterranean pier with terracotta planters and sea mist; warm sun with gentle backlight and crisp shadows; airy color palette and organic textures. Scene: stormy coastline boardwalk with matte sky and dramatic waves. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "blazer",
+          "label": "Cream linen tailored blazer",
+          "searchQuery": "women cream linen blazer relaxed tailoring summer",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-1-1763253813592.jpg"
+        },
+        {
+          "id": "shirt",
+          "label": "Cornflower blue poplin button-up shirt",
+          "searchQuery": "women cornflower blue poplin shirt crisp office",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-2-1763253813790.jpg"
+        },
+        {
+          "id": "jeans",
+          "label": "Indigo barrel-leg denim jeans",
+          "searchQuery": "women indigo barrel leg jeans modern denim",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-3-1763253814011.jpg"
+        },
+        {
+          "id": "sandals",
+          "label": "Tan leather minimal slide sandals",
+          "searchQuery": "women tan leather slide sandals minimal flat",
+          "category": "footwear",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-4-1763253814180.jpg"
+        },
+        {
+          "id": "bag",
+          "label": "Natural straw oversized tote bag",
+          "searchQuery": "women natural straw tote bag summer beach",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-5-1763253814354.jpg"
+        },
+        {
+          "id": "earrings",
+          "label": "Gold slim hoop earrings",
+          "searchQuery": "women gold slim hoop earrings minimal",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-6-1763253814556.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0-1763251354060.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-1763253812923.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-1-1763253813592.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-2-1763253813790.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-3-1763253814011.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-4-1763253814180.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-5-1763253814354.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-6-1763253814556.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-7-1763253814727.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763251354060_0/grid-cell-8-1763253814891.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763247033558_0",
+      "gender": "female",
+      "title": "Linen Power Commute",
+      "description": "Stone linen blazer, sky silk shell, navy trousers, caramel loafers, minimalist tote.",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body vertical 9:16 shot, shoes visible. Office-appropriate, approachable tailoring with quiet luxury. Model wears a stone linen single-breasted blazer over a sky-blue silk knit shell, paired with midnight-navy pressed straight trousers and caramel leather penny loafers; carries a taupe structured leather tote and a thin gold watch. Hair in sleek chestnut low bun, clean-girl makeup with dewy skin and soft peach lip. Pose: confident mid-stride, commuter energy. Shot in a modern glass-and-steel office lobby with polished concrete floor and soft morning sun flares; sculptural light gradients reflect on walls. Lighting crisp, natural; color palette restrained with a subtle dopamine pop from the sky-blue shell.",
+      "imagePrompt": "Full-body vertical 9:16 shot, shoes visible. Office-appropriate, approachable tailoring with quiet luxury. Model wears a stone linen single-breasted blazer over a sky-blue silk knit shell, paired with midnight-navy pressed straight trousers and caramel leather penny loafers; carries a taupe structured leather tote and a thin gold watch. Hair in sleek chestnut low bun, clean-girl makeup with dewy skin and soft peach lip. Pose: confident mid-stride, commuter energy. Shot in a modern glass-and-steel office lobby with polished concrete floor and soft morning sun flares; sculptural light gradients reflect on walls. Lighting crisp, natural; color palette restrained with a subtle dopamine pop from the sky-blue shell. Scene: windswept Mediterranean pier with terracotta planters and sea mist. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "blazer",
+          "label": "Stone linen single-breasted blazer",
+          "searchQuery": "women stone linen blazer single breasted office minimal luxe",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-1-1763253829467.jpg"
+        },
+        {
+          "id": "top",
+          "label": "Sky-blue silk knit shell",
+          "searchQuery": "women sky blue silk knit shell sleeveless refined",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-2-1763253829628.jpg"
+        },
+        {
+          "id": "pants",
+          "label": "Midnight-navy pressed straight trousers",
+          "searchQuery": "women navy pressed trousers straight leg wool office",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-3-1763253829801.jpg"
+        },
+        {
+          "id": "shoes",
+          "label": "Caramel leather penny loafers",
+          "searchQuery": "women caramel leather penny loafers polished stacked heel",
+          "category": "shoes",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-4-1763253829988.jpg"
+        },
+        {
+          "id": "bag",
+          "label": "Taupe structured leather tote",
+          "searchQuery": "women taupe leather structured tote minimal work",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-5-1763253830173.jpg"
+        },
+        {
+          "id": "watch",
+          "label": "Gold slim bracelet watch",
+          "searchQuery": "women gold slim bracelet watch minimal office",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-6-1763253830365.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0-1763247033558.jpg",
+      "styleTag": "work",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-1763253829106.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-1-1763253829467.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-2-1763253829628.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-3-1763253829801.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-4-1763253829988.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-5-1763253830173.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-6-1763253830365.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-7-1763253830545.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763247033558_0/grid-cell-8-1763253830718.jpg"
+      ]
+    },
+    {
       "id": "explore_female_1763125809234_0",
       "gender": "female",
       "title": "Citrus Power Suit",
@@ -15,46 +676,63 @@
           "label": "Mandarin-orange single-breasted blazer",
           "searchQuery": "women's orange tailored blazer wool blend quiet luxury office",
           "category": "jacket",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-1-1763253843257.jpg"
         },
         {
           "id": "top",
           "label": "Ivory silk knit shell",
           "searchQuery": "women's ivory silk knit shell sleeveless polished work",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-2-1763253843458.jpg"
         },
         {
           "id": "trousers",
           "label": "Pressed straight-leg trousers in matching orange",
           "searchQuery": "women's orange tailored trousers straight leg pressed crease",
           "category": "pants",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-3-1763253843605.jpg"
         },
         {
           "id": "shoes",
           "label": "Soft silver leather pointed pumps",
           "searchQuery": "women's silver leather pointed pumps metallic office",
           "category": "shoes",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-4-1763253843764.jpg"
         },
         {
           "id": "bag",
           "label": "Taupe oversized structured tote",
           "searchQuery": "women's taupe oversized tote structured leather minimal",
           "category": "bag",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-5-1763253843930.jpg"
         },
         {
           "id": "jewelry",
           "label": "Gold sculptural drop earrings",
           "searchQuery": "women's gold sculptural drop earrings modern minimal",
           "category": "accessory",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-6-1763253844099.jpg"
         }
       ],
       "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0-1763125809234.jpg",
-      "styleTag": "work"
+      "styleTag": "work",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-1763253842885.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-1-1763253843257.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-2-1763253843458.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-3-1763253843605.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-4-1763253843764.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-5-1763253843930.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-6-1763253844099.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-7-1763253844258.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763125809234_0/grid-cell-8-1763253844454.jpg"
+      ]
     },
     {
       "id": "explore_female_1763124989671_0",
@@ -70,46 +748,63 @@
           "label": "Stone linen tailored blazer",
           "searchQuery": "women's stone linen blazer tailored single-breasted office",
           "category": "jacket",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-1-1763253856590.jpg"
         },
         {
           "id": "top",
           "label": "Ivory silk crewneck shell",
           "searchQuery": "women's ivory silk shell sleeveless minimalist office",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-2-1763253856750.jpg"
         },
         {
           "id": "trouser",
           "label": "Stone linen straight-leg trousers",
           "searchQuery": "women's stone linen trousers straight leg pressed crease",
           "category": "bottom",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-3-1763253856922.jpg"
         },
         {
           "id": "shoes",
           "label": "Tan leather almond-toe pumps",
           "searchQuery": "women's tan leather pumps almond toe mid heel",
           "category": "shoes",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-4-1763253857078.jpg"
         },
         {
           "id": "belt",
           "label": "Tan slim leather belt",
           "searchQuery": "women's tan slim leather belt minimal buckle",
           "category": "accessory",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-5-1763253857252.jpg"
         },
         {
           "id": "bag",
           "label": "Chocolate structured leather tote",
           "searchQuery": "women's chocolate leather tote structured work bag",
           "category": "accessory",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-6-1763253857453.jpg"
         }
       ],
       "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0-1763124989671.jpg",
-      "styleTag": "work"
+      "styleTag": "work",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-1763253856217.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-1-1763253856590.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-2-1763253856750.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-3-1763253856922.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-4-1763253857078.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-5-1763253857252.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-6-1763253857453.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-7-1763253857629.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763124989671_0/grid-cell-8-1763253857778.jpg"
+      ]
     },
     {
       "id": "explore_female_ref_1763058707386_0",
@@ -126,57 +821,76 @@
           "label": "Olive matte nylon MA-1 bomber",
           "searchQuery": "women olive matte nylon MA-1 bomber oversized",
           "category": "outerwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-1-1763253871154.jpg"
         },
         {
           "id": "midlayer",
           "label": "Slate gray ziphoodie",
           "searchQuery": "women slate fleece ziphoodie relaxed streetwear",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-2-1763253871343.jpg"
         },
         {
           "id": "base",
           "label": "White mock-neck long sleeve tee",
           "searchQuery": "women white mock neck long sleeve cotton",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-3-1763253871532.jpg"
         },
         {
           "id": "bottoms",
           "label": "Charcoal utility mini skirt",
           "searchQuery": "women charcoal utility cargo mini skirt",
           "category": "bottom",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-4-1763253871689.jpg"
         },
         {
           "id": "denim",
           "label": "Deep indigo barrel-leg jeans",
           "searchQuery": "women deep indigo barrel leg denim puddle",
           "category": "bottom",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-5-1763253871905.jpg"
         },
         {
           "id": "footwear",
           "label": "Chunky off-white reflective sneakers",
           "searchQuery": "women off white chunky reflective sneakers street",
           "category": "shoes",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-6-1763253872122.jpg"
         },
         {
           "id": "accessory_bag",
           "label": "Black nylon crossbody with carabiner",
           "searchQuery": "women black nylon crossbody bag matte carabiner",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-7-1763253872292.jpg"
         },
         {
           "id": "accessory_headwear",
           "label": "Slouchy black beanie",
           "searchQuery": "women black slouchy knit beanie minimalist",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-8-1763253872500.jpg"
         }
+      ],
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-1763253870666.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-1-1763253871154.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-2-1763253871343.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-3-1763253871532.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-4-1763253871689.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-5-1763253871905.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-6-1763253872122.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-7-1763253872292.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058707386_0/grid-cell-8-1763253872500.jpg"
       ]
     },
     {
@@ -186,7 +900,18 @@
       "description": "Charcoal parka over heatherhoodie, cobalt cargos, chunky runners, sculptural silver earrings.",
       "vibe": "streetwear",
       "prompt": "Full-body 9:16, visible footwear, full-color rich render, never black-and-white. A model stands on a foggy riverside boardwalk with mist drifting over water and soft city lights behind. Layering: matte charcoal nylon parka with boxy, dropped-shoulder silhouette and light padding; under it, an oversized heather-gray hoodie with generoushood and thick drawcords; beneath, a crisp white longline tee peeking past the hem. Bottoms: relaxed straight-leg utility cargos in saturated cobalt cotton twill, clean stacked pockets at mid-thigh, hem slightly cropped. Footwear: chunky white-and-gum skate runners with suede toe caps. Accessories: sculptural polished-silver hoop earrings, slim silver curb chain, black sports watch, graphite canvas crossbody worn snug under the parka, subtle moto belt peeking at waistband. Hair/makeup: hair tapered at sides with soft texture on top; skin dewy, brows brushed up, nails short and clean with clear gloss. Small dopamine dressing pop via cobalt pants; quiet luxury in clean lines and restrained palette. Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
-      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0-1763058637599.jpg"
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0-1763058637599.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-1763253886177.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-1-1763253886439.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-2-1763253886603.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-3-1763253886756.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-4-1763253886914.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-5-1763253887055.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-6-1763253887227.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-7-1763253887406.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-8-1763253887570.jpg"
+      ]
     },
     {
       "id": "explore_female_ref_1763054706190_0",
@@ -195,7 +920,18 @@
       "description": "Taupe wrap coat, cobalt scarf, fluid black trousers, sleek ankle boots.",
       "vibe": "minimal luxe",
       "prompt": "Full-body 9:16 shot with visible footwear. A modern woman wears a softly structured taupe wrap coat in brushed wool, tied with a slim moto-inspired leather belt; beneath, a charcoal fine-gauge ribbed turtleneck is neatly tucked into high-waisted black wide-leg trousers in fluid suiting wool with a subtle puddle break. A bold cobalt cashmere scarf is generously looped once, long ends draping asymmetrically. Footwear: minimal black leather ankle boots with a low block heel, matte finish. Accessories include sculptural silver hoop earrings, a slim black leather watch, and an oversized black pebble-grain tote. Hair in a sleek low bun; makeup is neutral with soft matte skin, defined brows, and a muted nude lip. Environment: corporate lobby with marble floors and tall glass, cool diffused daylight reflecting off polished stone, providing crisp highlights that emphasize textures and layers. Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0-1763054706190.jpg"
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0-1763054706190.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0/grid-1763253897774.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0/grid-cell-1-1763253898046.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0/grid-cell-2-1763253898186.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0/grid-cell-3-1763253898357.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0/grid-cell-4-1763253898640.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0/grid-cell-5-1763253898838.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0/grid-cell-6-1763253899013.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0/grid-cell-7-1763253899212.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763054706190_0/grid-cell-8-1763253899418.jpg"
+      ]
     },
     {
       "id": "explore_female_ref_1763053586285_0",
@@ -212,43 +948,60 @@
           "label": "Belted camel wool coat",
           "searchQuery": "women camel wool belted coat tailored minimal",
           "category": "outerwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-1-1763253911156.jpg"
         },
         {
           "id": "top",
           "label": "Champagne metallic ribbed turtleneck",
           "searchQuery": "women champagne metallic ribbed turtleneck fine gauge",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-2-1763253911312.jpg"
         },
         {
           "id": "bottom",
           "label": "Deep cocoa wide-leg trousers",
           "searchQuery": "women deep cocoa wide leg trousers fluid",
           "category": "bottom",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-3-1763253911495.jpg"
         },
         {
           "id": "footwear",
           "label": "Chocolate square-toe ankle boots",
           "searchQuery": "women chocolate leather square toe ankle boots",
           "category": "footwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-4-1763253911666.jpg"
         },
         {
           "id": "scarf",
           "label": "Caramel oversized brushed alpaca scarf",
           "searchQuery": "women caramel alpaca oversized scarf brushed luxe",
           "category": "accessory",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-5-1763253911820.jpg"
         },
         {
           "id": "bag",
           "label": "Espresso minimal leather top-handle bag",
           "searchQuery": "women espresso leather top handle bag minimal",
           "category": "bag",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-6-1763253912007.jpg"
         }
+      ],
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-1763253910711.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-1-1763253911156.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-2-1763253911312.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-3-1763253911495.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-4-1763253911666.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-5-1763253911820.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-6-1763253912007.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-7-1763253912182.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763053586285_0/grid-cell-8-1763253912368.jpg"
       ]
     },
     {
@@ -266,43 +1019,60 @@
           "label": "Charcoal brushed-wool coat with shearling collar",
           "searchQuery": "women's charcoal brushed wool shearling collar coat minimal",
           "category": "outerwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-1-1763253923878.jpg"
         },
         {
           "id": "dress",
           "label": "Silver-grey satin slip dress, mid-calf",
           "searchQuery": "women's silver satin slip dress mid calf minimal",
           "category": "dress",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-2-1763253924065.jpg"
         },
         {
           "id": "knit",
           "label": "Stone fine-rib knit turtleneck",
           "searchQuery": "women's stone ribbed knit turtleneck lightweight layering minimal",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-3-1763253924227.jpg"
         },
         {
           "id": "footwear",
           "label": "Off-white chunky runners with gum sole",
           "searchQuery": "women's off white chunky sneakers gum sole clean minimal",
           "category": "shoes",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-4-1763253924447.jpg"
         },
         {
           "id": "accessory_ear",
           "label": "Sculptural silver earrings",
           "searchQuery": "women's sculptural silver earrings modern minimal statement",
           "category": "jewelry",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-5-1763253924734.jpg"
         },
         {
           "id": "bag_belt",
           "label": "Black leather moto belt and taupe oversized tote",
           "searchQuery": "women's black leather moto belt taupe oversized tote",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-6-1763253924903.jpg"
         }
+      ],
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-1763253923412.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-1-1763253923878.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-2-1763253924065.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-3-1763253924227.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-4-1763253924447.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-5-1763253924734.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-6-1763253924903.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-7-1763253925100.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763052108290_0/grid-cell-8-1763253925306.jpg"
       ]
     },
     {
@@ -320,50 +1090,68 @@
           "label": "Light grey cropped wool bomber",
           "searchQuery": "women light grey wool cropped bomber jacket chic",
           "category": "outerwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-1-1763253936838.jpg"
         },
         {
           "id": "top",
           "label": "Ivory fine rib knit tank",
           "searchQuery": "women ivory rib knit tank fine lightweight minimal",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-2-1763253937011.jpg"
         },
         {
           "id": "bottom",
           "label": "Mid-wash barrel-leg jeans with puddle hem",
           "searchQuery": "women mid wash barrel leg jeans relaxed pleated",
           "category": "bottom",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-3-1763253937198.jpg"
         },
         {
           "id": "footwear",
           "label": "Nude almond-toe leather ballet flats",
           "searchQuery": "women nude leather almond toe ballet flats minimal",
           "category": "footwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-4-1763253937393.jpg"
         },
         {
           "id": "accessory1",
           "label": "Sculptural silver hoop earrings",
           "searchQuery": "women sculptural silver hoop earrings modern polished",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-5-1763253937578.jpg"
         },
         {
           "id": "accessory2",
           "label": "Black slim moto belt",
           "searchQuery": "women black slim leather moto belt sleek",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-6-1763253937734.jpg"
         },
         {
           "id": "bag",
           "label": "Oversized taupe canvas tote",
           "searchQuery": "women oversized taupe canvas tote minimalist durable",
           "category": "bag",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-7-1763253937916.jpg"
         }
+      ],
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-1763253936378.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-1-1763253936838.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-2-1763253937011.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-3-1763253937198.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-4-1763253937393.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-5-1763253937578.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-6-1763253937734.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-7-1763253937916.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051385444_0/grid-cell-8-1763253938104.jpg"
       ]
     },
     {
@@ -373,7 +1161,18 @@
       "description": "Longline trench over pleated wide-leg denim with chunky runners.",
       "vibe": "minimal luxe",
       "prompt": "Full-body 9:16 shot, visible footwear. Model wears a sand longline cotton twill trench layered atop a charcoal jersey turtleneck and light blue pleated wide-leg denim. Footwear: white and grey chunky runners. Accessories: brushed nickel sculptural earrings, slim black moto belt, oversized black leather tote. Hair: sleek low ponytail. Makeup: soft matte base, taupe eyes, clear gloss. Environment: minimalist metro entrance with steel railings and graphic shadow lines, cool-weather overcast. Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1-1763051393928.jpg"
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1-1763051393928.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1/grid-1763253948754.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1/grid-cell-1-1763253949001.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1/grid-cell-2-1763253949162.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1/grid-cell-3-1763253949306.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1/grid-cell-4-1763253949479.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1/grid-cell-5-1763253949619.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1/grid-cell-6-1763253949758.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1/grid-cell-7-1763253949967.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051393928_1/grid-cell-8-1763253950122.jpg"
+      ]
     },
     {
       "id": "explore_female_ref_1763051402147_2",
@@ -382,7 +1181,18 @@
       "description": "Boxy knit over slip skirt with puddle-hem denim peeking.",
       "vibe": "weekend chic",
       "prompt": "Full-body 9:16 shot, visible footwear. Model wears an oat-colored boxy fisherman knit layered over a pale sage satin slip skirt, with light-wash puddle-hem denim peeking underneath as underlayer. Footwear: cream leather ballet flats with tiny bow. Accessories: irregular silver earrings, canvas-and-leather oversized tote. Hair: air-dried waves. Makeup: dewy skin, soft blush, brown mascara. Environment: café sidewalk seating with terrazzo tables and potted herbs, mild spring afternoon. Scene: stormy coastline boardwalk with matte sky and dramatic waves. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2-1763051402147.jpg"
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2-1763051402147.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2/grid-1763253964730.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2/grid-cell-1-1763253965388.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2/grid-cell-2-1763253965551.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2/grid-cell-3-1763253965728.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2/grid-cell-4-1763253965883.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2/grid-cell-5-1763253966175.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2/grid-cell-6-1763253966592.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2/grid-cell-7-1763253966765.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051402147_2/grid-cell-8-1763253967042.jpg"
+      ]
     },
     {
       "id": "explore_female_ref_1763051410710_3",
@@ -391,7 +1201,18 @@
       "description": "Cropped puffer, black wide-leg denim, sculptural earrings, sleek runners.",
       "vibe": "sporty",
       "prompt": "Full-body 9:16 shot, visible footwear. Model wears a matte graphite cropped down puffer over a slate long-sleeve technical tee and washed black wide-leg denim. Footwear: two-tone grey chunky running sneakers. Accessories: polished sculptural earrings, nylon crossbody, black moto belt. Hair: high braided pony. Makeup: fresh, subtle highlight, soft liner. Environment: glassy business district plaza with wet pavement reflections, cool misty morning. Scene: windswept Mediterranean pier with terracotta planters and sea mist. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3-1763051410710.jpg"
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3-1763051410710.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3/grid-1763253979973.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3/grid-cell-1-1763253980271.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3/grid-cell-2-1763253980535.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3/grid-cell-3-1763253980685.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3/grid-cell-4-1763253980831.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3/grid-cell-5-1763253981033.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3/grid-cell-6-1763253981203.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3/grid-cell-7-1763253981406.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051410710_3/grid-cell-8-1763253981557.jpg"
+      ]
     },
     {
       "id": "explore_female_ref_1763051418920_4",
@@ -400,7 +1221,18 @@
       "description": "Oversized blazer with satin skirt and square-toe ballet flats.",
       "vibe": "minimal luxe",
       "prompt": "Full-body 9:16 shot, visible footwear. Model wears a charcoal oversized menswear blazer over a silky black camisole and deep navy bias-cut satin midi skirt. Footwear: black square-toe ballet flats. Accessories: sculptural silver drop earrings, slim black moto belt layered over skirt, oversized croc-embossed tote. Hair: tucked straight hair behind ears. Makeup: soft smoky lash, velvet nude lip. Environment: museum steps with limestone walls and long afternoon shadows, crisp air. Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4-1763051418920.jpg"
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4-1763051418920.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4/grid-1763253992037.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4/grid-cell-1-1763253992325.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4/grid-cell-2-1763253992489.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4/grid-cell-3-1763253992676.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4/grid-cell-4-1763253992985.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4/grid-cell-5-1763253993128.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4/grid-cell-6-1763253993294.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4/grid-cell-7-1763253993452.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051418920_4/grid-cell-8-1763253993618.jpg"
+      ]
     },
     {
       "id": "explore_female_ref_1763051426273_5",
@@ -417,50 +1249,68 @@
           "label": "Dark cedar suede shearling-trim moto jacket",
           "searchQuery": "women's cedar suede shearling moto jacket streetwear",
           "category": "outerwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-1-1763254007535.jpg"
         },
         {
           "id": "top",
           "label": "Ecru thermal henley",
           "searchQuery": "women's ecru thermal henley waffle knit casual",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-2-1763254007751.jpg"
         },
         {
           "id": "bottom",
           "label": "Mid-indigo pleated wide-leg jeans",
           "searchQuery": "women's mid indigo pleated wide leg jeans",
           "category": "bottom",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-3-1763254007950.jpg"
         },
         {
           "id": "footwear",
           "label": "Black leather lug-sole ankle boots",
           "searchQuery": "women's black leather lug sole ankle boots",
           "category": "footwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-4-1763254008136.jpg"
         },
         {
           "id": "accessory1",
           "label": "Matte silver ear cuffs",
           "searchQuery": "women's matte silver ear cuffs minimalistedgy",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-5-1763254008320.jpg"
         },
         {
           "id": "accessory2",
           "label": "Wide black moto belt",
           "searchQuery": "women's wide black leather moto belt hardware",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-6-1763254008492.jpg"
         },
         {
           "id": "bag",
           "label": "Olive oversized tote",
           "searchQuery": "women's olive oversized tote bag utilitarian",
           "category": "bag",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-7-1763254008702.jpg"
         }
+      ],
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-1763254006992.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-1-1763254007535.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-2-1763254007751.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-3-1763254007950.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-4-1763254008136.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-5-1763254008320.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-6-1763254008492.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-7-1763254008702.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051426273_5/grid-cell-8-1763254008866.jpg"
       ]
     },
     {
@@ -470,7 +1320,18 @@
       "description": "Metallic windbreaker with petal-hem denim and chunky runners.",
       "vibe": "sporty",
       "prompt": "Full-body 9:16 shot, visible footwear. Model wears a light chrome nylon windbreaker with subtle sheen over a white ribbed mock-neck and soft blue petal-hem barrel jeans. Footwear: off-white chunky runners with reflective accents. Accessories: sculptural chrome earrings, technical nylon belt bag, slim black moto belt. Hair: sleek half-up. Makeup: glossy skin, clear balm, groomed brows. Environment: rooftop track with city skyline, golden-hour breeze. Scene: stormy coastline boardwalk with matte sky and dramatic waves. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6-1763051435443.jpg"
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6-1763051435443.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-1763254019707.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-1-1763254020022.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-2-1763254020431.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-3-1763254020641.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-4-1763254021044.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-5-1763254021247.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-6-1763254021457.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-7-1763254021646.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-8-1763254021836.jpg"
+      ]
     },
     {
       "id": "explore_female_ref_1763051442980_7",
@@ -479,7 +1340,18 @@
       "description": "Liquid satin slip under leather trench with ballet flats.",
       "vibe": "evening glamour",
       "prompt": "Full-body 9:16 shot, visible footwear. Model wears a deep espresso leather trench draped over a molten champagne satin slip dress. Footwear: cocoa leather ballet flats with slingback strap. Accessories: abstract silver earrings, slender moto belt cinching trench, small oversized tote tucked under arm. Hair: polished chignon. Makeup: luminous skin, soft bronze eye, bitten lip. Environment: dimly lit hotel driveway with marble columns and warm sconces, cool night. Scene: art gallery cube with floating plinths and diffused spotlights. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
-      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7-1763051442980.jpg"
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7-1763051442980.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7/grid-1763254032390.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7/grid-cell-1-1763254032665.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7/grid-cell-2-1763254032823.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7/grid-cell-3-1763254032964.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7/grid-cell-4-1763254033170.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7/grid-cell-5-1763254033322.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7/grid-cell-6-1763254033479.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7/grid-cell-7-1763254033687.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051442980_7/grid-cell-8-1763254033828.jpg"
+      ]
     },
     {
       "id": "explore_female_ref_1763051452195_8",
@@ -496,50 +1368,68 @@
           "label": "Slate wool-blend shacket",
           "searchQuery": "women's slate wool blend shacket relaxed streetwear",
           "category": "outerwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-1-1763254046186.jpg"
         },
         {
           "id": "top",
           "label": "Cream jersey tee",
           "searchQuery": "women's cream jersey tee boxy minimalist street",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-2-1763254046401.jpg"
         },
         {
           "id": "bottom",
           "label": "Dark-wash wide-leg denim cargo trousers",
           "searchQuery": "women's dark wash denim cargo wide leg pleated",
           "category": "bottom",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-3-1763254046672.jpg"
         },
         {
           "id": "footwear",
           "label": "Black and white chunky runners",
           "searchQuery": "women's black white chunky sneakers streetwear platform",
           "category": "footwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-4-1763254046866.jpg"
         },
         {
           "id": "accessory1",
           "label": "Bold sculptural earrings",
           "searchQuery": "women's bold sculptural metal earrings statement modern",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-5-1763254047046.jpg"
         },
         {
           "id": "accessory2",
           "label": "Black moto belt",
           "searchQuery": "women's black leather moto belt silver buckle",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-6-1763254047229.jpg"
         },
         {
           "id": "bag",
           "label": "Oversized black canvas tote",
           "searchQuery": "women's oversized black canvas tote minimalist utility",
           "category": "bag",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-7-1763254047411.jpg"
         }
+      ],
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-1763254045738.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-1-1763254046186.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-2-1763254046401.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-3-1763254046672.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-4-1763254046866.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-5-1763254047046.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-6-1763254047229.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-7-1763254047411.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051452195_8/grid-cell-8-1763254047580.jpg"
       ]
     },
     {
@@ -557,50 +1447,68 @@
           "label": "Seafoam bouclé fringe cardigan",
           "searchQuery": "women seafoam boucle fringe cardigan boho texture",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-1-1763254059708.jpg"
         },
         {
           "id": "base",
           "label": "White cotton tank",
           "searchQuery": "women white cotton tank slim ribbed layering",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-2-1763254059932.jpg"
         },
         {
           "id": "bottom",
           "label": "Light-wash puddle-hem barrel jeans",
           "searchQuery": "women light wash barrel jeans puddle hem relaxed",
           "category": "bottom",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-3-1763254060086.jpg"
         },
         {
           "id": "footwear",
           "label": "Pale pistachio ballet flats",
           "searchQuery": "women pistachio ballet flats soft leather minimalist",
           "category": "footwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-4-1763254060305.jpg"
         },
         {
           "id": "accessory1",
           "label": "Hammered silver sculptural earrings",
           "searchQuery": "women hammered silver sculptural earrings organic shape",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-5-1763254060481.jpg"
         },
         {
           "id": "accessory2",
           "label": "Black braided moto belt",
           "searchQuery": "women black braided leather belt moto vibe",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-6-1763254060676.jpg"
         },
         {
           "id": "bag",
           "label": "Oversized structured straw tote",
           "searchQuery": "women oversized structured straw tote market bag",
           "category": "accessories",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-7-1763254060845.jpg"
         }
+      ],
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-1763254059201.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-1-1763254059708.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-2-1763254059932.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-3-1763254060086.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-4-1763254060305.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-5-1763254060481.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-6-1763254060676.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-7-1763254060845.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051460057_9/grid-cell-8-1763254061097.jpg"
       ]
     },
     {
@@ -611,7 +1519,18 @@
       "vibe": "minimal luxe",
       "prompt": "Full-body, vertical 9:16 shot with shoes visible. Model wears an ivory linen waistcoat layered over a ribbed white tank, paired with light-wash barrel-leg denim with a subtle puddle hem, a slim black utility belt, and silver adidas Samba sneakers. Add a cropped nylon bomber draped over the shoulders and thin stacked bangles. Hair in sleek mid-part low bun; makeup clean-girl glow with brushed brows and soft gloss. Pose relaxed, one hand in pocket, weight on back leg. Lighting crisp with sculptural shadows for a contemporary streetwearedge. Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
       "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0-1763047952203.jpg",
-      "styleTag": "street"
+      "styleTag": "street",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0/grid-1763254072620.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0/grid-cell-1-1763254072858.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0/grid-cell-2-1763254072991.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0/grid-cell-3-1763254073177.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0/grid-cell-4-1763254073333.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0/grid-cell-5-1763254073575.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0/grid-cell-6-1763254073771.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0/grid-cell-7-1763254073948.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047952203_0/grid-cell-8-1763254074101.jpg"
+      ]
     },
     {
       "id": "explore_female_1763047959492_1",
@@ -629,43 +1548,60 @@
           "label": "Black mesh turtleneck",
           "searchQuery": "women's black mesh turtleneck sheer street chic",
           "category": "top",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-1-1763254086443.jpg"
         },
         {
           "id": "outerwear",
           "label": "Oversized charcoal wool blazer",
           "searchQuery": "women's charcoal wool oversized blazer tailored street",
           "category": "outerwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-2-1763254086640.jpg"
         },
         {
           "id": "bottom",
           "label": "Slate parachute cargo pants",
           "searchQuery": "women's slate nylon parachute cargo pants cinched hem",
           "category": "bottom",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-3-1763254086808.jpg"
         },
         {
           "id": "footwear",
           "label": "Black leather kitten-heel mules",
           "searchQuery": "women's black leather kitten heel mules sleek",
           "category": "footwear",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-4-1763254087027.jpg"
         },
         {
           "id": "bag",
           "label": "Slim croc-embossed shoulder bag",
           "searchQuery": "women's black croc embossed shoulder bag minimal",
           "category": "accessory",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-5-1763254087208.jpg"
         },
         {
           "id": "sunglasses",
           "label": "Vintage oval sunglasses",
           "searchQuery": "women's vintage oval sunglasses black retro",
           "category": "accessory",
-          "gender": "female"
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-6-1763254087381.jpg"
         }
+      ],
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-1763254086028.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-1-1763254086443.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-2-1763254086640.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-3-1763254086808.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-4-1763254087027.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-5-1763254087208.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-6-1763254087381.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-7-1763254087537.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763047959492_1/grid-cell-8-1763254087696.jpg"
       ]
     },
     {
@@ -676,7 +1612,18 @@
       "vibe": "weekend chic",
       "prompt": "Full-body vertical 9:16 shotof a womanin a sleeveless cream cable-knit sweater vest layered over a crisp white oxford button-down with collar visible, navy pleated wool mini skirt, and burgundy leather penny loafers with white athletic socks, shoesfully visible. Hairin low ponytail with tortoiseshell headband, minimal makeup with rosy blush. She stands casually with one hand adjusting her collar, shoton manicured university quad with brick library facade and autumn leaves scatteredon cobblestones, soft natural daylight. Scene: stormy coastline boardwalk with matte sky and dramatic waves. Full body portrait, vertical 9:16 composition (tall), cameraat waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
       "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0-1763028319940.jpg",
-      "styleTag": "preppy"
+      "styleTag": "preppy",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0/grid-1763254098641.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0/grid-cell-1-1763254098979.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0/grid-cell-2-1763254099166.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0/grid-cell-3-1763254099370.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0/grid-cell-4-1763254099534.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0/grid-cell-5-1763254099715.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0/grid-cell-6-1763254099888.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0/grid-cell-7-1763254100044.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028319940_0/grid-cell-8-1763254100191.jpg"
+      ]
     },
     {
       "id": "explore_female_1763028327896_1",
@@ -686,7 +1633,18 @@
       "vibe": "sporty",
       "prompt": "Full-body vertical 9:16 shotof a womanwearing a fitted sage green and ivory striped knit polo with ribbed collar tucked into a crisp white pleated tennis skirt with knife pleats, paired with black patent leather Mary Jane heels with thin ankle strap, shoesfully visible. Hair slicked back into high ponytail, dewy skin with corallip. She holds a vintage tennis racket, standing beside ivy-covered tennis court fence with geometric shadows, shotat golden houron pristine Ivy League athletic grounds with manicured hedgesin background. Scene: mirror-studded desert salt flatat golden hour. Full body portrait, vertical 9:16 composition (tall), cameraat waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
       "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1-1763028327896.jpg",
-      "styleTag": "preppy"
+      "styleTag": "preppy",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1/grid-1763254111072.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1/grid-cell-1-1763254111455.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1/grid-cell-2-1763254111686.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1/grid-cell-3-1763254111844.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1/grid-cell-4-1763254112004.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1/grid-cell-5-1763254112164.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1/grid-cell-6-1763254112316.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1/grid-cell-7-1763254112472.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763028327896_1/grid-cell-8-1763254112637.jpg"
+      ]
     }
   ]
 }

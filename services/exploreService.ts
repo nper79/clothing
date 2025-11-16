@@ -155,6 +155,38 @@ export const ExploreService = {
     return payload.look ?? look;
   },
 
+  async regenerateGrid(gender: 'male' | 'female', lookId: string): Promise<ExploreLook> {
+    const response = await fetch('/api/explore/regenerate-grid', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gender, lookId }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || 'Failed to regenerate grid');
+    }
+
+    const payload = await response.json();
+    return payload.look;
+  },
+
+  async regenerateAllGrids(gender: 'male' | 'female'): Promise<ExploreLook[]> {
+    const response = await fetch('/api/explore/regenerate-grid', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gender }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || 'Failed to regenerate grids');
+    }
+
+    const payload = await response.json();
+    return payload.looks ?? [];
+  },
+
   async getLookWithItems(lookId: string): Promise<ExploreLook> {
     const response = await fetch('/api/explore/itemize', {
       method: 'POST',

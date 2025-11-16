@@ -17,7 +17,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/1tX9pyJEodWZKfsHjZj_qZ7
 2. Set the API keys in your `.env`/`.env.local` file:
    - `GEMINI_API_KEY` for the Gemini features
    - `REPLICATE_API_TOKEN` (used by the GPT-5 -> Reve pipeline)
-   - `SERPER_API_KEY` for Google Shopping lookups
+   - `SCRAPINGDOG_API_KEY` for Google Lens / Shopping lookups
    - Optionally `VITE_PERSONAL_STYLING_API_URL` if your backend runs on a custom host
    - Optionally `VITE_PERSONAL_LOOK_LIMIT` to control how many looks are generated per upload
 3. Start developing with a single command:

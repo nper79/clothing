@@ -1,10 +1,13 @@
 import Replicate from 'replicate';
+import fetch from 'node-fetch';
 import type { PersonalLook, UserPreferences } from '../types/personalStyling';
-import type { ExploreLook, ShopItem } from '../types/explore';
+import type { ExploreLook, ShopItem, CachedShoppingProduct } from '../types/explore';
 import { ComprehensivePromptLibrary, type ComprehensiveLook } from '../services/comprehensivePromptLibrary';
 import { ExploreLookLibrary } from '../services/exploreLookLibrary';
 import { readExploreDataset, writeExploreDataset } from './exploreDatasetStore';
-import { persistExploreImage, persistRemixImage, getRemixSignedUrl, persistReferenceImage } from './imageStorage';
+import { persistExploreImage, persistRemixImage, getRemixSignedUrl, persistReferenceImage, persistExploreAssetBuffer } from './imageStorage';
+import { searchShoppingByImage, type ShoppingProduct } from './serperClient.js';
+import sharp, { type OverlayOptions } from 'sharp';
 
 const GPT5_MODEL = 'openai/gpt-5';
 const REVE_MODEL = 'reve/edit-fast:f0253eb7b26cc2416ad98c20492fbe4b842e09d808318fdf9e7caeffa9ae78f5';
@@ -12,6 +15,36 @@ const NANO_BANANA_MODEL = 'google/nano-banana';
 const IMAGE_CAPTION_MODEL = 'nateraw/vit-gpt2-image-captioning';
 const VISION_CHAT_MODEL = 'yorickvp/llava-1.5-7b';
 const DEFAULT_LOOK_LIMIT = 1;
+const GRID_TEMPLATE_WIDTH = 1344;
+const GRID_TEMPLATE_HEIGHT = 2048;
+const GRID_TEMPLATE_BACKGROUND = '#b3b3b3';
+const GRID_TEMPLATE_LINE_COLOR = '#f4f4f4';
+const GRID_TEMPLATE_LINE_THICKNESS = 8;
+const GRID_TEMPLATE_URL = process.env.GRID_TEMPLATE_URL;
+const TRUSTED_MERCHANT_KEYWORDS = [
+  'amazon',
+  'shopbop',
+  'uniqlo',
+  'macys',
+  'macy',
+  'nordstrom',
+  'nordstrom rack',
+  'bloomingdale',
+  'zara',
+  'h&m',
+  'hm.com',
+  'cos',
+  'cosstores',
+  'everlane',
+  'aritzia',
+  'anthropologie',
+  'urban outfitters',
+  'banana republic',
+  'gap',
+  'j.crew',
+  'madewell',
+];
+const MAX_CACHED_PRODUCTS = 6;
 
 const SCENE_PRESETS = {
   female: [
@@ -43,6 +76,13 @@ const SCENE_PRESETS = {
 const ALL_SCENE_REFERENCES = Array.from(
   new Set([...SCENE_PRESETS.female, ...SCENE_PRESETS.male])
 );
+
+const gridTemplateDataUriPromise: Promise<string | null> = GRID_TEMPLATE_URL
+  ? Promise.resolve(GRID_TEMPLATE_URL)
+  : createGridTemplateDataUri().catch((error) => {
+      console.error('[server] Failed to build grid template overlay', error);
+      return null;
+    });
 
 const FRAMING_REQUIREMENTS =
   'Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.';
@@ -242,12 +282,30 @@ export const sanitizeText = (text: string): string => {
   return normalized.trim();
 };
 
+const sanitizeCachedProduct = (product: CachedShoppingProduct): CachedShoppingProduct => ({
+  title: sanitizeText(product.title),
+  link: typeof product.link === 'string' ? product.link.trim() : '',
+  price: product.price ? sanitizeText(product.price) : undefined,
+  source: product.source ? sanitizeText(product.source) : undefined,
+  imageUrl: typeof product.imageUrl === 'string' ? product.imageUrl.trim() : undefined,
+  rating: typeof product.rating === 'number' ? product.rating : undefined,
+  ratingCount: typeof product.ratingCount === 'number' ? product.ratingCount : undefined,
+  position: typeof product.position === 'number' ? product.position : undefined,
+});
+
 const sanitizeShopItem = (item: ShopItem): ShopItem => ({
   id: sanitizeText(item.id),
   label: sanitizeText(item.label),
   searchQuery: sanitizeText(item.searchQuery),
   category: sanitizeText(item.category),
   gender: item.gender === 'male' ? 'male' : 'female',
+  gridCellUrl: typeof item.gridCellUrl === 'string' ? item.gridCellUrl : undefined,
+  cachedProducts: Array.isArray(item.cachedProducts)
+    ? item.cachedProducts
+        .map((product) => sanitizeCachedProduct(product))
+        .filter((product) => Boolean(product.title && product.link))
+    : undefined,
+  cachedAt: item.cachedAt ? new Date(item.cachedAt).toISOString() : undefined,
 });
 
 export const sanitizeExploreLook = (look: ExploreLook): ExploreLook => ({
@@ -269,6 +327,76 @@ const getStyleDirective = (styleTag?: string) =>
 
 const stripSceneClauses = (value: string): string =>
   value.replace(/Scene:[^\.!?]*(?:[\.!?])/gi, ' ').replace(/\s+/g, ' ').trim();
+
+const extractHost = (link?: string): string => {
+  if (!link) return '';
+  try {
+    return new URL(link).hostname.toLowerCase();
+  } catch {
+    return '';
+  }
+};
+
+const isTrustedProduct = (product: ShoppingProduct): boolean => {
+  const source = (product.source ?? '').toLowerCase();
+  const host = extractHost(product.link);
+  return TRUSTED_MERCHANT_KEYWORDS.some((keyword) => {
+    const normalized = keyword.toLowerCase();
+    return source.includes(normalized) || host.includes(normalized.replace(/\s+/g, ''));
+  });
+};
+
+const mapToCachedProduct = (product: ShoppingProduct): CachedShoppingProduct => ({
+  title: product.title ?? '',
+  link: product.link ?? '',
+  price: product.price ?? undefined,
+  source: product.source ?? undefined,
+  imageUrl: product.imageUrl ?? undefined,
+  rating: typeof product.rating === 'number' ? product.rating : undefined,
+  ratingCount: typeof product.ratingCount === 'number' ? product.ratingCount : undefined,
+  position: typeof product.position === 'number' ? product.position : undefined,
+});
+
+async function cacheLookShoppingResults(look: ExploreLook): Promise<ExploreLook> {
+  if (!look.items?.length) {
+    return look;
+  }
+  const updatedItems: ShopItem[] = [];
+  for (const item of look.items) {
+    if (!item.gridCellUrl) {
+      updatedItems.push(item);
+      continue;
+    }
+    try {
+      const response = await searchShoppingByImage({
+        imageUrl: item.gridCellUrl,
+        query: item.searchQuery || item.label,
+        country: 'us',
+        language: 'en',
+      });
+      const trusted = (response.shopping ?? [])
+        .filter((product) => Boolean(product?.title && product?.link))
+        .filter(isTrustedProduct)
+        .slice(0, MAX_CACHED_PRODUCTS)
+        .map((product) => sanitizeCachedProduct(mapToCachedProduct(product)));
+
+      if (trusted.length > 0) {
+        updatedItems.push({
+          ...item,
+          cachedProducts: trusted,
+          cachedAt: new Date().toISOString(),
+        });
+      } else {
+        updatedItems.push(item);
+      }
+    } catch (error) {
+      console.warn(`[server] Failed to cache shopping results for ${item.label}`, error);
+      updatedItems.push(item);
+    }
+  }
+  look.items = updatedItems;
+  return look;
+}
 
 function pickRandom<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)];
@@ -407,6 +535,190 @@ async function generateNanoBananaImage(prompt: string, imageInputs: string[] = [
     throw new Error('nano-banana did not return an image URL.');
   }
   return imageUrl;
+}
+
+async function createGridTemplateDataUri(): Promise<string> {
+  const base = sharp({
+    create: {
+      width: GRID_TEMPLATE_WIDTH,
+      height: GRID_TEMPLATE_HEIGHT,
+      channels: 3,
+      background: GRID_TEMPLATE_BACKGROUND,
+    },
+  });
+
+  const verticalLine = await sharp({
+    create: {
+      width: GRID_TEMPLATE_LINE_THICKNESS,
+      height: GRID_TEMPLATE_HEIGHT,
+      channels: 3,
+      background: GRID_TEMPLATE_LINE_COLOR,
+    },
+  })
+    .png()
+    .toBuffer();
+
+  const horizontalLine = await sharp({
+    create: {
+      width: GRID_TEMPLATE_WIDTH,
+      height: GRID_TEMPLATE_LINE_THICKNESS,
+      channels: 3,
+      background: GRID_TEMPLATE_LINE_COLOR,
+    },
+  })
+    .png()
+    .toBuffer();
+
+  const overlays: OverlayOptions[] = [
+    {
+      input: verticalLine,
+      left: Math.round(GRID_TEMPLATE_WIDTH / 2 - GRID_TEMPLATE_LINE_THICKNESS / 2),
+      top: 0,
+    },
+    {
+      input: horizontalLine,
+      left: 0,
+      top: Math.round(GRID_TEMPLATE_HEIGHT / 4 - GRID_TEMPLATE_LINE_THICKNESS / 2),
+    },
+    {
+      input: horizontalLine,
+      left: 0,
+      top: Math.round(GRID_TEMPLATE_HEIGHT / 2 - GRID_TEMPLATE_LINE_THICKNESS / 2),
+    },
+    {
+      input: horizontalLine,
+      left: 0,
+      top: Math.round((GRID_TEMPLATE_HEIGHT * 3) / 4 - GRID_TEMPLATE_LINE_THICKNESS / 2),
+    },
+  ];
+
+  const buffer = await base.composite(overlays).png().toBuffer();
+  return `data:image/png;base64,${buffer.toString('base64')}`;
+}
+
+const getGridTemplateDataUri = async (): Promise<string | null> => gridTemplateDataUriPromise;
+
+const buildGridSlotBlock = (look: ExploreLook): string => {
+  const items = Array.isArray(look.items) ? look.items : [];
+  const slots = Array.from({ length: 8 }, (_, index) => items[index]);
+  const rows: string[] = [];
+
+  for (let row = 0; row < 4; row++) {
+    rows.push(`Row ${row + 1}`);
+    for (let col = 0; col < 2; col++) {
+      const idx = row * 2 + col;
+      const item = slots[idx];
+      if (item) {
+        rows.push(`${idx + 1}. ${sanitizeText(item.label)} – ${sanitizeText(item.searchQuery)}`);
+      } else {
+        rows.push(`${idx + 1}. Leave this cell completely empty with only the neutral grey background.`);
+      }
+    }
+    rows.push('');
+  }
+
+  return rows.join('\n').trim();
+};
+
+const buildGridPrompt = (look: ExploreLook): string => {
+  const slotBlock = buildGridSlotBlock(look);
+  const summaryPieces = [look.title, look.description, look.vibe]
+    .map((text) => sanitizeText(text ?? ''))
+    .filter(Boolean)
+    .join(' · ');
+
+  return `You will receive a reference outfit photo as the ONLY visual input. Do not render the person or any background.
+Reference outfit summary: ${summaryPieces || 'modern outfit'}.
+
+Create a clean 2×4 fashion flat-lay grid on a neutral grey background.
+Each cell must contain ONE item, centered, evenly spaced, with soft shadow, shot as high-quality product photography. No model, no hands, no background elements.
+
+Use this exact order:
+
+${slotBlock}
+
+Strict rules:
+– The layout must be exactly 2×4.
+– All items must match the descriptions precisely.
+– Identical camera angle, fixed scale, consistent lighting.
+– No people, no mannequins, no props.
+– If a slot specifies leaving it empty, leave that cell blank with only the neutral grey background.`;
+};
+
+async function sliceGridCells(buffer: Buffer, gender: 'male' | 'female', lookId: string): Promise<string[]> {
+  const verticalGap = GRID_TEMPLATE_LINE_THICKNESS;
+  const horizontalGap = GRID_TEMPLATE_LINE_THICKNESS;
+
+  const usableWidth = GRID_TEMPLATE_WIDTH - verticalGap;
+  const firstColumnWidth = Math.floor(usableWidth / 2);
+  const secondColumnWidth = GRID_TEMPLATE_WIDTH - firstColumnWidth - verticalGap;
+  const columnWidths = [firstColumnWidth, secondColumnWidth];
+  const columnLefts = [0, firstColumnWidth + verticalGap];
+
+  const usableHeight = GRID_TEMPLATE_HEIGHT - horizontalGap * 3;
+  const baseRowHeight = Math.floor(usableHeight / 4);
+  const rowHeights = [
+    baseRowHeight,
+    baseRowHeight,
+    baseRowHeight,
+    GRID_TEMPLATE_HEIGHT - (baseRowHeight * 3 + horizontalGap * 3),
+  ];
+  const rowTops = rowHeights.map((_, index) => {
+    const gapCount = index === 0 ? 0 : index;
+    const previousHeights = rowHeights.slice(0, index).reduce((sum, value) => sum + value, 0);
+    return previousHeights + gapCount * horizontalGap;
+  });
+
+  const cells: string[] = [];
+
+  for (let row = 0; row < 4; row++) {
+    for (let col = 0; col < 2; col++) {
+      const left = columnLefts[col];
+      const top = rowTops[row];
+      const width = columnWidths[col];
+      const height = rowHeights[row];
+      const cellBuffer = await sharp(buffer)
+        .extract({ left, top, width, height })
+        .jpeg({ quality: 92 })
+        .toBuffer();
+      const url = await persistExploreAssetBuffer(cellBuffer, gender, lookId, `grid-cell-${row * 2 + col + 1}`, 'image/jpeg');
+      cells.push(url);
+    }
+  }
+
+  return cells;
+}
+
+async function generateLookGridAssets(look: ExploreLook): Promise<{ gridImageUrl: string; gridCellUrls: string[] } | null> {
+  if (!look.imageUrl) {
+    return null;
+  }
+
+  try {
+    const template = await getGridTemplateDataUri();
+    const inputs = [look.imageUrl];
+    if (template) {
+      inputs.push(template);
+    }
+    const gridPrompt = buildGridPrompt(look);
+    const gridUrl = await generateNanoBananaImage(gridPrompt, inputs);
+    const response = await fetch(gridUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to download grid image (${response.status})`);
+    }
+    const arrayBuffer = await response.arrayBuffer();
+    const baseBuffer = Buffer.from(arrayBuffer);
+    const normalizedBuffer = await sharp(baseBuffer)
+      .resize(GRID_TEMPLATE_WIDTH, GRID_TEMPLATE_HEIGHT, { fit: 'cover' })
+      .jpeg({ quality: 94 })
+      .toBuffer();
+    const gridImageUrl = await persistExploreAssetBuffer(normalizedBuffer, look.gender, look.id, 'grid', 'image/jpeg');
+    const gridCellUrls = await sliceGridCells(normalizedBuffer, look.gender, look.id);
+    return { gridImageUrl, gridCellUrls };
+  } catch (error) {
+    console.error(`[server] Failed to generate grid assets for ${look.id}`, error);
+    return null;
+  }
 }
 
 async function generateRawCaption(imageData: string): Promise<string> {
@@ -695,8 +1007,9 @@ Rules:
 1. At least half of the looks should feel approachable / real-world (linen tailoring, denim, athleisure, elevated basics). The rest can introduce bolder textures or silhouettes, but keep everything tasteful.
 2. "description" stays under 14 words and highlights the standout pieces.
 3. "prompt" must describe clothing layers, fabrics, footwear, hair/makeup, pose energy, and a unique environment (use scenes like: ${sceneSample}). Explicitly mention that the shot is full-body, vertical 9:16, shoes visible.
-4. Every look must be meaningfully different from the others. Avoid repeating the same clothing combination or palette; vary silhouettes, footwear, fabrics, and environments. Reference previously mentioned looks in your planning to prevent duplicates.
-${styleDirective ? `5. Apply this specific aesthetic throughout: ${styleDirective.instructions}` : '5. Ensure the set includes realistic seasonal dressing (e.g., outerwear for cold months, breezy fabrics for summer) and believable environments for each look.'}
+4. Every garment reference must include a clear color adjective (e.g., "charcoal pressed trousers" instead of just "pressed trousers"). Apply this both in the narrative prompt and in each item entry.
+5. Every look must be meaningfully different from the others. Avoid repeating the same clothing combination or palette; vary silhouettes, footwear, fabrics, and environments. Reference previously mentioned looks in your planning to prevent duplicates.
+${styleDirective ? `6. Apply this specific aesthetic throughout: ${styleDirective.instructions}` : '6. Ensure the set includes realistic seasonal dressing (e.g., outerwear for cold months, breezy fabrics for summer) and believable environments for each look.'}
 
 Trend inspiration to weave into the outfits: ${trendNotes}
 
@@ -717,7 +1030,7 @@ Return ONLY a valid JSON array (no surrounding prose). The response MUST begin w
     ...
   ]
 }
-Guidelines for items: include 4-6 entries covering the full outfit (tops, bottoms, footwear, outer layers, hero accessories). Make "search_query" 6-10 words, describing gender, color, fabric, and vibe so we can plug it into shopping search.
+Guidelines for items: include 4-6 entries covering the full outfit (tops, bottoms, footwear, outer layers, hero accessories). Make "search_query" 6-10 words describing gender, color (mandatory), fabric, and vibe so we can plug it into shopping search.
 Use precise fashion language, highlight footwear, and ensure full-body framing.`;
 
   const output = await runReplicateModel(GPT5_MODEL, {
@@ -793,6 +1106,20 @@ export async function generateExploreLooks(
       imageUrl: persistentUrl,
       styleTag,
     });
+
+    const gridAssets = await generateLookGridAssets(look);
+    if (gridAssets) {
+      look.gridImageUrl = gridAssets.gridImageUrl;
+      look.gridCellUrls = gridAssets.gridCellUrls;
+      if (look.items?.length) {
+        look.items = look.items.map((item, index) => ({
+          ...item,
+          gridCellUrl: gridAssets.gridCellUrls[index] ?? item.gridCellUrl,
+        }));
+      }
+    }
+
+    await cacheLookShoppingResults(look);
 
     const key = uniquenessKey(look);
     if (seenKeys.has(key)) {
@@ -891,8 +1218,9 @@ Rules:
 2. Half of the looks should feel realistic for daily wear, half can push into bolder statement territory. Keep them cohesive with the references.
 3. "description" must stay under 14 words, highlight the hero pieces, and read naturally.
 4. "prompt" must describe clothing layers, fabrics, footwear, hair/makeup, and a unique environment. Mention that it is a full-body 9:16 shot with visible footwear. Explicitly state that the render is full-color, rich, and never black-and-white.
-5. Assign a different environment to each look by choosing from or inspired by this list (avoid repeats): ${sceneIdeas.join(', ')}.
-${styleDirective ? `6. Apply this aesthetic focus: ${styleDirective.instructions}` : '6. Balance seasonal practicality with the references (outerwear if the inspiration shows cool weather, etc.).'}
+5. Every garment mention (in "prompt" and in each item entry) must explicitly include a color descriptor so nothing is left ambiguous.
+6. Assign a different environment to each look by choosing from or inspired by this list (avoid repeats): ${sceneIdeas.join(', ')}.
+${styleDirective ? `7. Apply this aesthetic focus: ${styleDirective.instructions}` : '7. Balance seasonal practicality with the references (outerwear if the inspiration shows cool weather, etc.).'}
 
 Trend cues to weave in: ${trendNotes}
 
@@ -912,7 +1240,7 @@ Return ONLY a valid JSON array (no commentary). Response MUST begin with "[" and
     }
   ]
 }
-Make items 4-6 entries, covering tops, bottoms, footwear, outerwear, accessories, each with descriptive search queries.
+Make items 4-6 entries, covering tops, bottoms, footwear, outerwear, accessories, each with descriptive search queries that include explicit colors.
 Do not mention the image URLs in the output.`;
 
   const output = await runReplicateModel(GPT5_MODEL, {
@@ -996,6 +1324,20 @@ export async function generateExploreLooksFromReferences(options: ReferenceInspi
       styleTag,
     });
 
+    const gridAssets = await generateLookGridAssets(look);
+    if (gridAssets) {
+      look.gridImageUrl = gridAssets.gridImageUrl;
+      look.gridCellUrls = gridAssets.gridCellUrls;
+      if (look.items?.length) {
+        look.items = look.items.map((item, index) => ({
+          ...item,
+          gridCellUrl: gridAssets.gridCellUrls[index] ?? item.gridCellUrl,
+        }));
+      }
+    }
+
+    await cacheLookShoppingResults(look);
+
     const key = uniquenessKey(look);
     if (seenKeys.has(key)) {
       console.warn('[server] Skipping duplicate reference-inspired look', look.title);
@@ -1013,6 +1355,78 @@ export async function generateExploreLooksFromReferences(options: ReferenceInspi
   dataset[gender] = merged;
   await writeExploreDataset(dataset);
   return merged;
+}
+
+async function applyGridAssetsToLook(
+  look: ExploreLook,
+  fallbackGender: 'male' | 'female'
+): Promise<ExploreLook> {
+  const targetGender = look.gender ?? fallbackGender;
+  const assets = await generateLookGridAssets({ ...look, gender: targetGender });
+  if (!assets) {
+    throw new Error('Failed to generate grid assets.');
+  }
+
+  const itemsWithCells = look.items?.map((item, index) => ({
+    ...item,
+    gridCellUrl: assets.gridCellUrls[index] ?? item.gridCellUrl,
+  }));
+
+  const lookWithAssets: ExploreLook = {
+    ...look,
+    gender: targetGender,
+    gridImageUrl: assets.gridImageUrl,
+    gridCellUrls: assets.gridCellUrls,
+    items: itemsWithCells,
+  };
+
+  const cached = await cacheLookShoppingResults(lookWithAssets);
+  return sanitizeExploreLook(cached);
+}
+
+export async function regenerateLookGrid(
+  gender: 'male' | 'female',
+  lookId: string
+): Promise<ExploreLook> {
+  if (!lookId) {
+    throw new Error('Look id is required.');
+  }
+  const dataset = await readExploreDataset();
+  const index = dataset[gender].findIndex((look) => look.id === lookId);
+  if (index === -1) {
+    throw new Error('Look not found.');
+  }
+
+  const refreshed = await applyGridAssetsToLook(dataset[gender][index], gender);
+  dataset[gender][index] = refreshed;
+  await writeExploreDataset(dataset);
+  return refreshed;
+}
+
+export async function regenerateAllLookGrids(
+  gender: 'male' | 'female',
+  onProgress?: (progress: number) => void
+): Promise<ExploreLook[]> {
+  const dataset = await readExploreDataset();
+  const updated: ExploreLook[] = [];
+
+  for (let index = 0; index < dataset[gender].length; index++) {
+    const look = dataset[gender][index];
+    try {
+      const refreshed = await applyGridAssetsToLook(look, gender);
+      updated.push(refreshed);
+    } catch (error) {
+      console.error(`[server] Failed to regenerate grid for ${look.id}`, error);
+      updated.push(sanitizeExploreLook(look));
+    }
+    if (onProgress) {
+      onProgress(index + 1);
+    }
+  }
+
+  dataset[gender] = updated;
+  await writeExploreDataset(dataset);
+  return updated;
 }
 
 async function generateSingleLookSpec(
@@ -1040,6 +1454,7 @@ Return ONLY a JSON object with this shape:
 Guidelines:
 - Use the information below (title, description, existing prompt) to infer silhouette, colors, fabrics, footwear, and environment.
 - "image_prompt" should be ready for an image model (full body, color, setting).
+- Every clothing mention in "image_prompt" and in each item must explicitly include a color descriptor (e.g., "sage wool trench" instead of just "wool trench").
 - Create 4-6 items covering tops, bottoms, footwear, outer layers, statement accessories. Each search_query should be 6-10 words with gender, fabric, color, vibe.
 - Keep the JSON minified (no comments).
 
@@ -1084,9 +1499,10 @@ export async function enrichLookItems(lookId: string): Promise<ExploreLook> {
       imagePrompt: spec.imagePrompt ?? look.imagePrompt ?? look.prompt,
       items: spec.items ?? look.items,
     });
-    dataset[gender][index] = updated;
+    const cached = await cacheLookShoppingResults(updated);
+    dataset[gender][index] = sanitizeExploreLook(cached);
     await writeExploreDataset(dataset);
-    return updated;
+    return dataset[gender][index];
   }
 
   throw new Error('Look not found for enrichment.');

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, RefreshCw, Loader2, Sparkles } from 'lucide-react';
 import type { ExploreLook, ShopItem } from '../types/explore';
 import { ExploreService } from '../services/exploreService';
-import { ShopService, type ShopImageSearchResult } from '../services/shopService';
+import { ShopService, type ItemShoppingResult } from '../services/shopService';
 import { useAuth } from '../contexts/AuthContext';
 
 type RemixReady = {
@@ -12,7 +12,7 @@ type RemixReady = {
   imageUrl?: string;
   referenceImage?: string;
   items?: ShopItem[];
-  shopResults?: ShopImageSearchResult | null;
+  shopResults?: ItemShoppingResult[];
   error?: string;
   timestamp: number;
 };
@@ -34,7 +34,6 @@ const ExplorePage: React.FC = () => {
   const [viewMode, setViewMode] = useState<'explore' | 'liked'>('explore');
   const [activeTryOnId, setActiveTryOnId] = useState<string | null>(null);
   const [remixQueue, setRemixQueue] = useState<RemixReady[]>([]);
-  const [selectedRemix, setSelectedRemix] = useState<RemixReady | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'info' | 'error' | 'success' } | null>(null);
   const toastTimerRef = useRef<number | null>(null);
 
@@ -121,20 +120,36 @@ const ExplorePage: React.FC = () => {
         });
       }
       const items = lookWithItems.items ?? [];
-      let shopResults: ShopImageSearchResult | null = null;
+      let shopResults: ItemShoppingResult[] | undefined;
       let shopErr: string | undefined;
-      if (lookWithItems.imageUrl) {
-        try {
-          const primaryQuery =
-            lookWithItems.items?.[0]?.searchQuery ||
-            `${lookWithItems.title} ${lookWithItems.vibe ?? ''}`.trim() ||
-            undefined;
-          shopResults = await ShopService.searchByImage(lookWithItems.imageUrl, primaryQuery);
-        } catch (error) {
-          shopErr = error instanceof Error ? error.message : 'Failed to load shopping results';
+      if (items.length) {
+        if (items.some((item) => item.gridCellUrl)) {
+          const cachedBatch = ShopService.getCachedResults(items);
+          if (cachedBatch.length) {
+            shopResults = ShopService.mergeResults(items, cachedBatch);
+          }
+          const itemsNeedingSearch = items.filter((item) => !item.cachedProducts?.length);
+          if (itemsNeedingSearch.length > 0) {
+            try {
+              const liveResults = await ShopService.searchItemsByImage(itemsNeedingSearch);
+              shopResults = ShopService.mergeResults(items, cachedBatch, liveResults);
+              if (!shopResults.some((entry) => entry.data?.shopping?.length)) {
+                shopErr = 'No matching listings found yet. Try again shortly.';
+              }
+            } catch (error) {
+              shopErr = error instanceof Error ? error.message : 'Failed to load shopping results';
+              if (!shopResults && cachedBatch.length) {
+                shopResults = ShopService.mergeResults(items, cachedBatch);
+              }
+            }
+          } else if (!cachedBatch.length) {
+            shopErr = 'No matching listings found yet. Try again shortly.';
+          }
+        } else {
+          shopErr = 'This look predates our segmented grids. Rebuild it in the admin panel to unlock shopping links.';
         }
       } else {
-        shopErr = 'Missing reference image for shopping search.';
+        shopErr = 'This look predates our shopping data. Regenerate it to unlock links.';
       }
 
       const ready: RemixReady = {
@@ -219,7 +234,10 @@ const ExplorePage: React.FC = () => {
 
   const clearRemixQueue = () => {
     setRemixQueue([]);
-    setSelectedRemix(null);
+  };
+
+  const openRemixDetailPage = (entry: RemixReady) => {
+    navigate('/remixes', { state: { remixLookId: entry.id } });
   };
 
   const likedLookIds = Object.entries(likes)
@@ -297,7 +315,7 @@ const ExplorePage: React.FC = () => {
               remixQueue.map((entry) => (
                 <button
                   key={`${entry.id}_${entry.timestamp}`}
-                  onClick={() => setSelectedRemix(entry)}
+                  onClick={() => openRemixDetailPage(entry)}
                   className="w-full text-left rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition p-3 flex items-center gap-3"
                 >
                   <div className="w-14 h-20 rounded-xl overflow-hidden bg-white/10">
@@ -368,7 +386,7 @@ const ExplorePage: React.FC = () => {
               {remixQueue.map((entry) => (
                 <button
                   key={`${entry.id}_mobile_${entry.timestamp}`}
-                  onClick={() => setSelectedRemix(entry)}
+                  onClick={() => openRemixDetailPage(entry)}
                   className="w-full rounded-2xl border border-white/10 bg-black/40 p-3 flex items-center gap-3 text-left"
                 >
                   <div className="w-14 h-20 rounded-xl overflow-hidden bg-white/10">
@@ -410,199 +428,66 @@ const ExplorePage: React.FC = () => {
             <p className="text-white/50 mt-2">Tap the heart icon on any explore card to save it here.</p>
           </div>
         ) : (
-          <div className="flex flex-col xl:flex-row gap-6">
-            <div className="flex-1">
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {displayLooks.map((look) => {
-                  const isActive = activeTryOnId === look.id;
-                  return (
-                    <article
-                      key={look.id}
-                      className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-xl group h-full flex flex-col"
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {displayLooks.map((look) => {
+              const isActive = activeTryOnId === look.id;
+              return (
+                <article
+                  key={look.id}
+                  className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-xl group h-full flex flex-col"
+                >
+                  <div className="relative">
+                    <img
+                      src={look.imageUrl}
+                      alt={look.title}
+                      className="w-full object-cover"
+                      style={{ aspectRatio: '9 / 16' }}
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition" />
+                    <div className="absolute bottom-3 left-3 right-3 text-sm">
+                      <p className="font-semibold">{look.title}</p>
+                      <p className="text-white/70 text-xs">{look.description}</p>
+                    </div>
+                  </div>
+                  <div className="p-3 flex items-center justify-between text-sm border-t border-white/10 mt-auto gap-2 flex-wrap">
+                    <button
+                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${
+                        likes[look.id] ? 'bg-green-500 text-white' : 'bg-white text-black'
+                      }`}
+                      onClick={() => handleLike(look)}
                     >
-                      <div className="relative">
-                        <img
-                          src={look.imageUrl}
-                          alt={look.title}
-                          className="w-full object-cover"
-                          style={{ aspectRatio: '9 / 16' }}
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition" />
-                        <div className="absolute bottom-3 left-3 right-3 text-sm">
-                          <p className="font-semibold">{look.title}</p>
-                          <p className="text-white/70 text-xs">{look.description}</p>
-                        </div>
-                      </div>
-                      <div className="p-3 flex items-center justify-between text-sm border-t border-white/10 mt-auto gap-2 flex-wrap">
-                        <button
-                          className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${
-                            likes[look.id] ? 'bg-green-500 text-white' : 'bg-white text-black'
-                          }`}
-                          onClick={() => handleLike(look)}
-                        >
-                          <Heart className="w-4 h-4" />
-                          {likes[look.id] ? 'Saved' : 'Like'}
-                        </button>
-                        <button
-                          onClick={() => handleRemix(look)}
-                          disabled={isActive}
-                          className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border transition ${
-                            isActive
-                              ? 'border-amber-300 text-amber-200 bg-amber-400/10 animate-pulse cursor-wait'
-                              : 'border-white/30 text-white/80 hover:text-white'
-                          }`}
-                        >
-                          {isActive ? (
-                            <>
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                              Creating...
-                            </>
-                          ) : (
-                            <>
-                              <RefreshCw className="w-4 h-4" />
-                              Try on
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-
+                      <Heart className="w-4 h-4" />
+                      {likes[look.id] ? 'Saved' : 'Like'}
+                    </button>
+                    <button
+                      onClick={() => handleRemix(look)}
+                      disabled={isActive}
+                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border transition ${
+                        isActive
+                          ? 'border-amber-300 text-amber-200 bg-amber-400/10 animate-pulse cursor-wait'
+                          : 'border-white/30 text-white/80 hover:text-white'
+                      }`}
+                    >
+                      {isActive ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Creating...
+                        </>
+                      ) : (
+                        <>
+                          <RefreshCw className="w-4 h-4" />
+                          Try on
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </main>
-      {selectedRemix && (
-        <div className="fixed top-0 right-0 bottom-0 left-0 md:left-72 z-40 bg-black/80 backdrop-blur-xl">
-          <div className="flex flex-col h-full overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-              <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-white/50">Remix ready</p>
-                <h3 className="text-2xl font-semibold mt-1">{selectedRemix.name}</h3>
-                <p className="text-sm text-white/60">Finished at {formatRemixTime(selectedRemix.timestamp)}</p>
-              </div>
-              <button
-                onClick={() => setSelectedRemix(null)}
-                className="rounded-full border border-white/20 px-4 py-2 text-sm text-white/70 hover:text-white"
-              >
-                Close
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-6">
-              <div className="grid gap-6 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)]">
-                <div className="space-y-4">
-                  <div className="rounded-3xl border border-white/10 bg-white/5 overflow-hidden">
-                    {selectedRemix.imageUrl || selectedRemix.referenceImage ? (
-                      <img
-                        src={selectedRemix.imageUrl || selectedRemix.referenceImage}
-                        alt={selectedRemix.name}
-                        className="w-full h-full object-cover"
-                        style={{ aspectRatio: '9 / 16' }}
-                      />
-                    ) : (
-                      <div className="aspect-[9/16] flex items-center justify-center text-white/60 text-sm">
-                        Remix preview unavailable
-                      </div>
-                    )}
-                  </div>
-                  {selectedRemix.items && selectedRemix.items.length > 0 && (
-                    <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs uppercase tracking-[0.3em] text-white/50 mb-3">Items detected</p>
-                      <ul className="space-y-2 text-sm text-white/80">
-                        {selectedRemix.items.map((item) => (
-                          <li key={item.id}>
-                            <span className="font-semibold">{item.label}</span>
-                            <span className="text-white/50"> - {item.searchQuery}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-                <div className="space-y-4">
-                  {selectedRemix.error && (
-                    <div className="rounded-3xl border border-yellow-500/30 bg-yellow-500/10 text-yellow-100 text-sm p-4">
-                      {selectedRemix.error}
-                    </div>
-                  )}
-                  {selectedRemix.shopResults && selectedRemix.shopResults.shopping.length > 0 ? (
-                    <div className="rounded-3xl border border-white/10 bg-black/40 p-4 space-y-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-[11px] uppercase tracking-[0.3em] text-white/50">Google Shopping</p>
-                          <p className="text-base font-semibold">
-                            {selectedRemix.shopResults.searchParameters?.q ?? 'Similar pieces we found'}
-                          </p>
-                          <p className="text-xs text-white/50 mt-1">Image-based search via serper.dev</p>
-                        </div>
-                        {selectedRemix.shopResults.searchParameters?.q && (
-                          <a
-                            href={`https://www.google.com/search?tbm=shop&q=${encodeURIComponent(
-                              selectedRemix.shopResults.searchParameters.q
-                            )}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-xs text-amber-300 hover:text-amber-200"
-                          >
-                            Open search
-                          </a>
-                        )}
-                      </div>
-                      <div className="space-y-3">
-                        {selectedRemix.shopResults.shopping.slice(0, 6).map((product, idx) => (
-                          <a
-                            key={`${product.productId ?? product.link}_${idx}`}
-                            href={product.link}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="flex items-center gap-3 rounded-2xl border border-white/10 p-3 hover:bg-white/5 transition"
-                          >
-                            <div className="w-16 h-16 rounded-xl overflow-hidden bg-white/5 flex-shrink-0">
-                              {product.imageUrl ? (
-                                <img
-                                  src={product.imageUrl}
-                                  alt={product.title}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-[10px] text-white/50">
-                                  No image
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium leading-tight line-clamp-2">{product.title}</p>
-                              <p className="text-xs text-white/50">
-                                {product.source ?? 'Google Shopping'}
-                                {typeof product.rating === 'number' && (
-                                  <span className="ml-2">
-                                    {product.rating.toFixed(1)}★
-                                    {product.ratingCount ? ` (${product.ratingCount})` : ''}
-                                  </span>
-                                )}
-                              </p>
-                            </div>
-                            <span className="text-sm font-semibold text-white/80">
-                              {product.price ?? 'View'}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
-                      Shopping links are warming up. Use the look description above if you need to search manually.
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {toast && (
         <div

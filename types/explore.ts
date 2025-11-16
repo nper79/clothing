@@ -1,9 +1,23 @@
+export interface CachedShoppingProduct {
+  title: string;
+  link: string;
+  price?: string;
+  source?: string;
+  imageUrl?: string;
+  rating?: number;
+  ratingCount?: number;
+  position?: number;
+}
+
 export interface ShopItem {
   id: string;
   label: string;
   searchQuery: string;
   category: string;
   gender: 'male' | 'female';
+  gridCellUrl?: string;
+  cachedProducts?: CachedShoppingProduct[];
+  cachedAt?: string;
 }
 
 export interface ExploreLook {
@@ -17,4 +31,6 @@ export interface ExploreLook {
   imageUrl: string;
   vibe: string;
   styleTag?: string;
+  gridImageUrl?: string;
+  gridCellUrls?: string[];
 }

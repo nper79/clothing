@@ -186,7 +186,7 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
           req,
           res,
           async (body) => {
-            const { searchShoppingByImage } = await import('./server/serperClient');
+            const { searchShoppingByImage } = await import('./server/serperClient.js');
             const result = await searchShoppingByImage({
               imageUrl: body.imageUrl,
               query: body.query,
@@ -196,6 +196,23 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
             return { result };
           },
           '/api/shop-search'
+        );
+      });
+
+      server.middlewares.use('/api/explore/regenerate-grid', async (req: IncomingMessage, res: ServerResponse) => {
+        await handleJsonPost(
+          req,
+          res,
+          async (body) => {
+            const { regenerateLookGrid, regenerateAllLookGrids } = await import('./server/personalStylingWorkflow');
+            if (typeof body.lookId === 'string' && body.lookId.trim().length > 0) {
+              const look = await regenerateLookGrid(body.gender, body.lookId);
+              return { look };
+            }
+            const looks = await regenerateAllLookGrids(body.gender);
+            return { looks };
+          },
+          '/api/explore/regenerate-grid'
         );
       });
 
@@ -323,8 +340,11 @@ export default defineConfig(({ mode, command }) => {
   if (!process.env.SUPABASE_REMIX_BUCKET && env.SUPABASE_REMIX_BUCKET) {
     process.env.SUPABASE_REMIX_BUCKET = env.SUPABASE_REMIX_BUCKET;
   }
-  if (!process.env.SERPER_API_KEY && env.SERPER_API_KEY) {
-    process.env.SERPER_API_KEY = env.SERPER_API_KEY;
+  if (!process.env.SCRAPINGDOG_API_KEY && env.SCRAPINGDOG_API_KEY) {
+    process.env.SCRAPINGDOG_API_KEY = env.SCRAPINGDOG_API_KEY;
+  }
+  if (!process.env.GRID_TEMPLATE_URL && env.GRID_TEMPLATE_URL) {
+    process.env.GRID_TEMPLATE_URL = env.GRID_TEMPLATE_URL;
   }
 
   const backendTarget = env.VITE_PERSONAL_STYLING_API_URL || 'http://localhost:4000';

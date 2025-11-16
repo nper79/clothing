@@ -46,6 +46,28 @@ const uploadToSupabase = async (bucket: string, path: string, remoteUrl: string)
   }
 };
 
+const uploadBufferToSupabase = async (
+  bucket: string,
+  path: string,
+  buffer: Buffer,
+  mime: string
+): Promise<string> => {
+  if (!supabase) {
+    throw new Error('Supabase Storage is not configured.');
+  }
+
+  const { error } = await supabase.storage
+    .from(bucket)
+    .upload(path, buffer, { contentType: mime, upsert: true });
+
+  if (error) {
+    throw new Error(`[storage] Supabase buffer upload failed: ${error.message}`);
+  }
+
+  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+  return data.publicUrl;
+};
+
 export const persistExploreImage = async (
   sourceUrl: string,
   gender: string,
@@ -104,6 +126,27 @@ export const persistReferenceImage = async (
 
   const { data } = supabase.storage.from(EXPLORE_BUCKET).getPublicUrl(path);
   return data.publicUrl;
+};
+
+const safeSegment = (value: string, fallback: string) =>
+  (value || fallback).replace(/[^a-zA-Z0-9-_]/g, '') || fallback;
+
+export const persistExploreAssetBuffer = async (
+  buffer: Buffer,
+  gender: string,
+  lookId: string,
+  label: string,
+  mime = 'image/jpeg'
+): Promise<string> => {
+  if (!supabase) {
+    throw new Error('Supabase Storage is not configured.');
+  }
+
+  const ext = inferExtension(mime);
+  const safeId = safeSegment(lookId, 'look');
+  const safeLabel = safeSegment(label, 'asset');
+  const path = `${gender}/${safeId}/${safeLabel}-${Date.now()}.${ext}`;
+  return uploadBufferToSupabase(EXPLORE_BUCKET, path, buffer, mime);
 };
 
 export const getRemixSignedUrl = async (path: string): Promise<string> => {

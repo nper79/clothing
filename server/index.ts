@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 import {
@@ -8,6 +9,8 @@ import {
   sanitizeExploreLook,
   generateExploreLooksFromReferences,
   enrichLookItems,
+  regenerateLookGrid,
+  regenerateAllLookGrids,
 } from './personalStylingWorkflow';
 import { getRemixSignedUrl } from './imageStorage';
 import { readExploreDataset, writeExploreDataset } from './exploreDatasetStore';
@@ -96,7 +99,7 @@ app.post('/api/explore/prompts', async (req, res) => {
     return res.status(400).json({ error: 'gender must be "male" or "female".' });
   }
 
-  const desiredCount = normalizedImages.length;
+  const desiredCount = Math.min(Math.max(Number(count) || 10, 1), 50);
 
   try {
     const looks = await generateExplorePrompts(gender, desiredCount);
@@ -166,6 +169,32 @@ app.post('/api/explore/inspire', async (req, res) => {
   }
 });
 
+app.post('/api/explore/regenerate-grid', async (req, res) => {
+  const { gender, lookId } = req.body ?? {};
+  if (gender !== 'male' && gender !== 'female') {
+    return res.status(400).json({ error: 'gender must be "male" or "female".' });
+  }
+  try {
+    if (typeof lookId === 'string' && lookId.trim().length > 0) {
+      const look = await regenerateLookGrid(gender, lookId);
+      res.json({ look });
+    } else {
+      res.setHeader('Content-Type', 'application/json');
+      res.write('{"status":"running"}');
+      await regenerateAllLookGrids(gender, progress => {
+        res.write(`\n{"progress":${progress}}`);
+      });
+      res.write('\n{"status":"completed"}');
+      res.end();
+    }
+  } catch (error) {
+    console.error('[server] Failed to regenerate grid', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to regenerate grid',
+    });
+  }
+});
+
 app.post('/api/shop-search', async (req, res) => {
   const { imageUrl, query, country = 'us', language = 'en' } = req.body ?? {};
   if (!imageUrl || typeof imageUrl !== 'string') {
@@ -176,7 +205,7 @@ app.post('/api/shop-search', async (req, res) => {
     const result = await searchShoppingByImage({ imageUrl, query, country, language });
     res.json({ result });
   } catch (error) {
-    console.error('[server] Failed to query Serper lens', error);
+    console.error('[server] Failed to query Scrapingdog Lens', error);
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Failed to search shopping items',
     });
