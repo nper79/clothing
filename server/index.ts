@@ -336,37 +336,62 @@ app.post('/api/explore/delete', async (req, res) => {
 app.post('/api/style-profile', async (req, res) => {
   try {
     const profile = req.body;
+    console.log('[server] Received style profile:', JSON.stringify(profile, null, 2));
 
-    // Generate a style analysis using Replicate/GPT
-    const analysisPrompt = `
-Based on this style profile, analyze the user's style preferences and provide a brief style description:
+    // TODO: Save to database (Supabase, MongoDB, etc.)
+    // For now, we'll simulate saving with an in-memory store
+    const profileId = Date.now().toString();
+    const savedProfile = {
+      id: profileId,
+      ...profile,
+      createdAt: new Date().toISOString()
+    };
 
-Perception Style: ${profile.perceptionStyle?.join(', ') || 'Not specified'}
-Wear Places: ${profile.wearPlaces?.join(', ') || 'Not specified'}
-Current Style: ${profile.currentStyle?.join(', ') || 'Not specified'}
-Desired Style: ${profile.desiredStyle?.join(', ') || 'Not specified'}
-Outfit Goals: ${profile.outfitGoals?.join(', ') || 'Not specified'}
-Color Preferences: ${profile.colorPreferences?.join(', ') || 'Not specified'}
-Disliked Colors: ${profile.dislikedColors || 'None'}
-Outfit Complexity: ${profile.outfitComplexity || 'Not specified'}
-Never Wear: ${profile.neverWearItems?.join(', ') || 'None'}
-
-Provide a concise style analysis (2-3 sentences) that captures their aesthetic and transformation goals.
-    `;
-
-    // Here you can integrate with Replicate or GPT for analysis
-    // For now, we'll save the profile
-    console.log('[server] Style profile submitted:', profile);
+    // Generate a style analysis
+    console.log('[server] Style profile saved with ID:', profileId);
 
     res.json({
       success: true,
       message: 'Style profile saved successfully',
-      profile
+      profileId: profileId,
+      profile: savedProfile
     });
   } catch (error) {
     console.error('[server] Failed to save style profile:', error);
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Failed to save style profile',
+    });
+  }
+});
+
+// Get style profile
+app.get('/api/style-profile/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log('[server] Fetching style profile for user:', userId);
+
+    // TODO: Fetch from database
+    // For now, return mock data if user has completed quiz
+    const mockProfile = {
+      perceptionStyle: ['Modern', 'Confident', 'Elegant'],
+      wearPlaces: ['Work', 'Dates', 'Nights out'],
+      currentStyle: ['Basic casual'],
+      desiredStyle: ['Clean girl / clean fit', 'Modern chic'],
+      outfitGoals: ['Make me look more put-together', 'Make me look more confident'],
+      colorPreferences: ['Neutral tones', 'Monochrome'],
+      dislikedColors: 'Orange, Brown',
+      outfitComplexity: 'I like balanced but interesting outfits',
+      neverWearItems: ['Crop tops', 'Leather']
+    };
+
+    res.json({
+      success: true,
+      profile: mockProfile
+    });
+  } catch (error) {
+    console.error('[server] Failed to fetch style profile:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch style profile',
     });
   }
 });

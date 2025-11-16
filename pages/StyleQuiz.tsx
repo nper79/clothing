@@ -166,6 +166,11 @@ const StyleQuiz: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    console.log('Submitting quiz with responses:', responses);
+
+    // Show alert for debugging
+    alert('Submitting quiz... Check console for details!');
+
     try {
       // Save profile to backend
       const response = await fetch('/api/style-profile', {
@@ -176,12 +181,23 @@ const StyleQuiz: React.FC = () => {
         body: JSON.stringify(responses)
       });
 
+      console.log('Response status:', response.status);
+
       if (response.ok) {
+        const data = await response.json();
+        console.log('Profile saved successfully:', data);
+        alert('Profile saved! Redirecting to Explore...');
         // Navigate to explore with profile
+        navigate('/explore', { state: { profileCompleted: true } });
+      } else {
+        console.error('Failed to save profile. Status:', response.status);
+        alert('Failed to save, but still redirecting...');
+        // Still navigate even if save fails
         navigate('/explore', { state: { profileCompleted: true } });
       }
     } catch (error) {
       console.error('Failed to save style profile:', error);
+      alert('Error occurred, but still redirecting...');
       // Still navigate even if save fails
       navigate('/explore', { state: { profileCompleted: true } });
     }
@@ -196,7 +212,10 @@ const StyleQuiz: React.FC = () => {
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
 
-  return (
+  // Debug log
+console.log('StyleQuiz rendered. Current question:', currentQuestion, 'Total questions:', questions.length);
+
+return (
     <div className="min-h-screen bg-black text-white flex flex-col">
       {/* Header */}
       <header className="flex items-center justify-between p-6 border-b border-white/10">
@@ -308,7 +327,7 @@ const StyleQuiz: React.FC = () => {
 
         <button
           onClick={handleNext}
-          disabled={question.multiSelect && currentValues.length === 0}
+          disabled={question.multiSelect ? currentValues.length === 0 : false}
           className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-200 ${
             question.multiSelect && currentValues.length === 0
               ? 'bg-white/10 text-white/30 cursor-not-allowed'

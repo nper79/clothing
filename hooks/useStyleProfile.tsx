@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import StyleAnalysisService from '../services/styleAnalysisService';
 
 interface StyleProfile {
   perceptionStyle: string[];
@@ -32,10 +33,15 @@ export const useStyleProfile = () => {
 
     try {
       // Check if user has completed the style quiz
-      const response = await fetch(`/api/style-analysis/${user.id}`);
+      const response = await fetch(`/api/style-profile/${user.id}`);
       if (response.ok) {
-        setHasProfile(true);
-        // You could also load the profile data here if needed
+        const data = await response.json();
+        if (data.success && data.profile) {
+          setProfile(data.profile);
+          setHasProfile(true);
+          // Set the profile in the StyleAnalysisService
+          StyleAnalysisService.setUserProfile(data.profile);
+        }
       } else {
         setHasProfile(false);
       }
