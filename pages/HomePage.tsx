@@ -59,6 +59,12 @@ const HomePage: React.FC = () => {
           </ul>
           <div className="flex flex-wrap gap-4 pt-4">
             <button
+              onClick={() => navigate('/style-quiz')}
+              className="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold hover:from-purple-600 hover:to-pink-600 transition"
+            >
+              Take Style Quiz
+            </button>
+            <button
               onClick={handlePrimaryAction}
               className="px-6 py-3 rounded-full bg-blue-500 text-white font-semibold hover:bg-blue-400 transition"
             >

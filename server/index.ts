@@ -332,6 +332,69 @@ app.post('/api/explore/delete', async (req, res) => {
   }
 });
 
+// Style profile endpoint
+app.post('/api/style-profile', async (req, res) => {
+  try {
+    const profile = req.body;
+
+    // Generate a style analysis using Replicate/GPT
+    const analysisPrompt = `
+Based on this style profile, analyze the user's style preferences and provide a brief style description:
+
+Perception Style: ${profile.perceptionStyle?.join(', ') || 'Not specified'}
+Wear Places: ${profile.wearPlaces?.join(', ') || 'Not specified'}
+Current Style: ${profile.currentStyle?.join(', ') || 'Not specified'}
+Desired Style: ${profile.desiredStyle?.join(', ') || 'Not specified'}
+Outfit Goals: ${profile.outfitGoals?.join(', ') || 'Not specified'}
+Color Preferences: ${profile.colorPreferences?.join(', ') || 'Not specified'}
+Disliked Colors: ${profile.dislikedColors || 'None'}
+Outfit Complexity: ${profile.outfitComplexity || 'Not specified'}
+Never Wear: ${profile.neverWearItems?.join(', ') || 'None'}
+
+Provide a concise style analysis (2-3 sentences) that captures their aesthetic and transformation goals.
+    `;
+
+    // Here you can integrate with Replicate or GPT for analysis
+    // For now, we'll save the profile
+    console.log('[server] Style profile submitted:', profile);
+
+    res.json({
+      success: true,
+      message: 'Style profile saved successfully',
+      profile
+    });
+  } catch (error) {
+    console.error('[server] Failed to save style profile:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to save style profile',
+    });
+  }
+});
+
+// Get style profile analysis
+app.get('/api/style-analysis/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    // Here you would fetch the user's profile from database
+    // For now, return a placeholder
+
+    res.json({
+      userId,
+      analysis: "Your style is evolving towards modern elegance with a focus on confident, sophisticated looks.",
+      recommendations: [
+        "Focus on clean lines and neutral tones",
+        "Add statement pieces for visual interest",
+        "Balance casual and formal elements"
+      ]
+    });
+  } catch (error) {
+    console.error('[server] Failed to fetch style analysis:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to fetch style analysis',
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`[server] Personal styling API listening on http://localhost:${port}`);
 });

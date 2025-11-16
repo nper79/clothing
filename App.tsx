@@ -21,6 +21,7 @@ import PersonalStylingPage from './pages/PersonalStyling';
 import ExplorePage from './pages/Explore';
 import ExploreAdmin from './pages/ExploreAdmin';
 import RemixesPage from './pages/Remixes';
+import StyleQuiz from './pages/StyleQuiz';
 import HomePage from './pages/HomePage';
 import QuickTest from './QuickTest';
 import { generateStyleSuggestions, extractOutfitMetadata, detectGender } from './services/geminiService';
@@ -670,6 +671,7 @@ const App: React.FC = () => {
           <Route path="/cache-diagnostic" element={<CacheDiagnostic />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/personal-styling" element={<PersonalStylingPage />} />
+          <Route path="/style-quiz" element={<StyleQuiz />} />
           <Route path="/quick-test" element={<QuickTest />} />
           <Route
             path="/explore"

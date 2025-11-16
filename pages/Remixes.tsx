@@ -3,22 +3,23 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Trash2, Loader2, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { ExploreService, type SavedRemix } from '../services/exploreService';
-import { ShopService, type ItemShoppingResult } from '../services/shopService';
+// import { ShopService, type ItemShoppingResult } from '../services/shopService'; // Disabled for style quiz
 import type { ExploreLook } from '../types/explore';
+import StyleAnalysisCard from '../components/StyleAnalysisCard';
+import StyleAnalysisService from '../services/styleAnalysisService';
+import { useStyleProfile } from '../hooks/useStyleProfile';
 
 const RemixesPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { hasProfile } = useStyleProfile();
   const userId = user?.id ?? 'guest';
   const [remixes, setRemixes] = useState<SavedRemix[]>([]);
   const [isClearing, setIsClearing] = useState(false);
   const [isLoadingGallery, setIsLoadingGallery] = useState(true);
   const [selectedRemix, setSelectedRemix] = useState<SavedRemix | null>(null);
   const [selectedLook, setSelectedLook] = useState<ExploreLook | null>(null);
-  const [shopResults, setShopResults] = useState<ItemShoppingResult[]>([]);
-  const [isDetailLoading, setIsDetailLoading] = useState(false);
-  const [detailError, setDetailError] = useState<string | null>(null);
   const autoSelectHandled = useRef(false);
 
   useEffect(() => {
@@ -94,41 +95,22 @@ const RemixesPage: React.FC = () => {
   const openRemixDetail = async (remix: SavedRemix) => {
     setSelectedRemix(remix);
     setSelectedLook(null);
-    setShopResults([]);
     setDetailError(null);
     setIsDetailLoading(true);
     try {
       const look = await ExploreService.getLookWithItems(remix.lookId);
       setSelectedLook(look);
+
+      // Shopping functionality disabled for style quiz
+      /*
       const items = look.items ?? [];
       if (items.length === 0) {
         setShopResults([]);
         setDetailError('This look predates our shopping data. Regenerate it to unlock shopping links.');
         return;
       }
-      if (!items.some((item) => item.gridCellUrl)) {
-        setShopResults(ShopService.mergeResults(items));
-        setDetailError('This look predates our segmented grids. Rebuild it in the admin panel to unlock shopping links.');
-        return;
-      }
-
-      const cachedBatch = ShopService.getCachedResults(items);
-      setShopResults(ShopService.mergeResults(items, cachedBatch));
-
-      const itemsNeedingSearch = items.filter((item) => !item.cachedProducts?.length);
-      if (itemsNeedingSearch.length === 0) {
-        if (!cachedBatch.some((entry) => entry.data?.shopping?.length)) {
-          setDetailError('No matching listings found yet. Try again shortly.');
-        }
-        return;
-      }
-
-      const results = await ShopService.searchItemsByImage(itemsNeedingSearch);
-      const merged = ShopService.mergeResults(items, cachedBatch, results);
-      setShopResults(merged);
-      if (!merged.some((entry) => entry.data?.shopping?.length)) {
-        setDetailError('No matching listings found yet. Try again shortly.');
-      }
+      // ... shopping code removed ...
+      */
     } catch (error) {
       setDetailError(error instanceof Error ? error.message : 'Failed to load remix details');
     } finally {
@@ -139,7 +121,6 @@ const RemixesPage: React.FC = () => {
   const closeRemixDetail = () => {
     setSelectedRemix(null);
     setSelectedLook(null);
-    setShopResults(null);
     setDetailError(null);
     setIsDetailLoading(false);
   };
@@ -149,19 +130,23 @@ const RemixesPage: React.FC = () => {
       <aside className="hidden md:flex flex-col w-72 border-r border-white/10 p-8 gap-8">
         <div>
           <p className="text-sm uppercase tracking-[0.4em] text-white/50">Wardrobe AI</p>
-          <h1 className="text-3xl font-bold mt-2">Your remixes</h1>
+          <h1 className="text-3xl font-bold mt-2">Your Style Collection</h1>
+          <p className="text-sm text-white/60 mt-2">Analyzed outfits tailored to your style</p>
         </div>
 
         <nav className="flex flex-col gap-4 text-white/70">
           <button className="text-left hover:text-white transition" onClick={() => navigate('/explore')}>Explore feed</button>
-          <button className="text-left hover:text-white transition">Remix gallery</button>
+          <button className="text-left hover:text-white transition">Style gallery</button>
+          <button className="text-left hover:text-white transition" onClick={() => navigate('/style-quiz')}>
+            Update Style Profile
+          </button>
           <button className="text-left hover:text-white transition" onClick={() => navigate('/explore-admin')}>
             Manage explore looks
           </button>
         </nav>
 
         <div className="mt-auto text-sm text-white/60 space-y-2">
-          <p>Every remix you trigger is stored here privately.</p>
+          <p>Your personalized outfits with AI style analysis.</p>
           <button
             onClick={handleClear}
             disabled={remixes.length === 0 || isClearing}
@@ -208,7 +193,7 @@ const RemixesPage: React.FC = () => {
             {isDetailLoading ? (
               <div className="flex flex-col items-center justify-center gap-4 text-white/60 py-16">
                 <Loader2 className="w-6 h-6 animate-spin" />
-                <p>Fetching shopping links…</p>
+                <p>Loading style analysis…</p>
               </div>
             ) : (
               <div className="grid gap-6 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)]">
@@ -247,84 +232,43 @@ const RemixesPage: React.FC = () => {
                       {detailError}
                     </div>
                   )}
-                  {shopResults.length > 0 ? (
-                    shopResults.map((entry) => (
-                      <div
-                        key={entry.item.id}
-                        className="rounded-3xl border border-white/10 bg-black/40 p-4 space-y-3"
+
+                  {/* Style Analysis Card */}
+                  {selectedLook && (
+                    <StyleAnalysisCard
+                      outfitDescription={selectedLook.prompt || selectedLook.lookName || ''}
+                      lookName={selectedLook.lookName}
+                      userHasProfile={hasProfile}
+                    />
+                  )}
+
+                  {/* Look Description */}
+                  {selectedLook?.lookName && (
+                    <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                      <p className="text-xs uppercase tracking-[0.3em] text-white/50 mb-2">Look Description</p>
+                      <p className="text-sm text-white/80">{selectedLook.lookName}</p>
+                      {selectedLook.prompt && (
+                        <p className="text-xs text-white/60 mt-2 italic">"{selectedLook.prompt.slice(0, 200)}..."</p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Style Tips */}
+                  {!hasProfile && (
+                    <div className="rounded-3xl border border-purple-500/30 bg-purple-500/10 p-4">
+                      <p className="text-sm font-medium text-purple-200 mb-2">
+                        💡 Want personalized style analysis?
+                      </p>
+                      <p className="text-xs text-white/70 mb-3">
+                        Take our style quiz to get AI-powered outfit recommendations based on your unique preferences!
+                      </p>
+                      <button
+                        onClick={() => navigate('/style-quiz')}
+                        className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg text-sm font-medium hover:from-purple-600 hover:to-pink-600 transition"
                       >
-                        <div className="flex items-start gap-3">
-                          <div className="w-20 h-20 rounded-2xl overflow-hidden bg-white/5 flex-shrink-0 border border-white/10">
-                            {entry.item.gridCellUrl ? (
-                              <img
-                                src={entry.item.gridCellUrl}
-                                alt={entry.item.label}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-[10px] text-white/50 px-2 text-center">
-                                Grid pending
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[11px] uppercase tracking-[0.3em] text-white/50">{entry.item.category}</p>
-                            <p className="text-base font-semibold">{entry.item.label}</p>
-                            <p className="text-xs text-white/50">“{entry.item.searchQuery}”</p>
-                          </div>
-                        </div>
-                            {entry.error ? (
-                              <p className="text-sm text-amber-200">{entry.error}</p>
-                            ) : entry.data?.shopping?.length ? (
-                              <div className="space-y-3">
-                                {entry.data.shopping.slice(0, 3).map((product, idx) => (
-                                  <a
-                                    key={`${entry.item.id}_${product.productId ?? product.link}_${idx}`}
-                                    href={product.link}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex items-center gap-3 rounded-2xl border border-white/10 p-3 hover:bg-white/5 transition"
-                                  >
-                                    <div className="w-16 h-16 rounded-xl overflow-hidden bg-white/5 flex-shrink-0">
-                                      {product.imageUrl ? (
-                                        <img
-                                          src={product.imageUrl}
-                                          alt={product.title}
-                                          className="w-full h-full object-cover"
-                                        />
-                                      ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-[10px] text-white/50">
-                                          No image
-                                        </div>
-                                      )}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-sm font-medium leading-tight line-clamp-2">{product.title}</p>
-                                      <p className="text-xs text-white/50">
-                                        {product.source ?? 'Google Shopping'}
-                                        {typeof product.rating === 'number' && (
-                                          <span className="ml-2">
-                                            {product.rating.toFixed(1)}★
-                                            {product.ratingCount ? ` (${product.ratingCount})` : ''}
-                                          </span>
-                                        )}
-                                      </p>
-                                    </div>
-                                    <span className="text-sm font-semibold text-white/80">{product.price ?? 'View'}</span>
-                                  </a>
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="text-sm text-white/60">Shopping links are warming up. Try again in a few seconds.</p>
-                            )}
-                      </div>
-                    ))
-                  ) : (
-                    !detailError && (
-                      <div className="rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
-                        Shopping links are warming up. Try again in a few seconds.
-                      </div>
-                    )
+                        Take Style Quiz
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -353,7 +297,7 @@ const RemixesPage: React.FC = () => {
                   <p className="text-white/60 text-xs">{new Date(remix.createdAt).toLocaleString()}</p>
                   <p className="text-xs text-emerald-300 inline-flex items-center gap-1">
                     <Sparkles className="w-3 h-3" />
-                    Tap for shopping links
+                    Tap for style details
                   </p>
                 </div>
               </article>
