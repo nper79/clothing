@@ -98,8 +98,23 @@ const AuthPage: React.FC = () => {
               <span role="img" aria-hidden>🧪</span>
               Continue as demo user
             </button>
-            <p className="text-xs text-white/40 text-center">
-              Demo login loads a sandbox profile with 10 credits so you can test generation right away.
+
+            {/* Debug button */}
+            <button
+              onClick={() => {
+                console.log('Current user:', user);
+                console.log('Loading:', loading);
+                alert(`Debug Info:\nUser: ${user ? user.id : 'null'}\nLoading: ${loading}\nUser Object: ${JSON.stringify(user, null, 2)}`);
+              }}
+              className="w-full flex items-center justify-center gap-3 rounded-2xl border border-yellow-500/30 py-3 text-sm font-semibold text-yellow-300/80 hover:text-yellow-300 hover:border-yellow-500/50 transition"
+              type="button"
+            >
+              Debug Auth Status
+            </button>
+
+            <p className="text-xs text-white/40 text-center mt-4">
+              Demo login loads a sandbox profile with 10 credits so you can test generation right away.<br/>
+              <strong>Google OAuth requires Supabase configuration</strong>
             </p>
           </div>
         </section>
