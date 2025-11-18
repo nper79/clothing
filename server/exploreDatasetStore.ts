@@ -26,7 +26,9 @@ export async function readExploreDataset(): Promise<ExploreDataset> {
   await ensureDataFile();
   try {
     const data = await fs.readFile(DATA_PATH, 'utf-8');
-    return JSON.parse(data) as ExploreDataset;
+    const dataset = JSON.parse(data) as ExploreDataset;
+    console.log(`[exploreDatasetStore] Loaded dataset: ${dataset.male.length} male, ${dataset.female.length} female looks`);
+    return dataset;
   } catch (error) {
     console.error('[server] Failed to read explore dataset:', error);
     return { male: [], female: [] };

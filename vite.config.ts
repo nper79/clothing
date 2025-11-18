@@ -371,6 +371,7 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
       });
 
       server.middlewares.use('/api/explore/dataset', async (req: IncomingMessage, res: ServerResponse) => {
+        console.log('[vite middleware] /api/explore/dataset called, method:', req.method);
         if (req.method !== 'GET') {
           res.statusCode = 405;
           res.setHeader('Content-Type', 'application/json');
@@ -498,7 +499,7 @@ export default defineConfig(({ mode, command }) => {
   }
 
   const backendTarget = env.VITE_PERSONAL_STYLING_API_URL || 'http://localhost:4000';
-  const enableDevBackend = command === 'serve' && env.VITE_DISABLE_DEV_BACKEND !== 'true';
+  const enableDevBackend = (command === 'serve' || command === 'dev') && env.VITE_DISABLE_DEV_BACKEND !== 'true';
 
   const devBackendPlugin = createDevBackendPlugin(enableDevBackend);
 
