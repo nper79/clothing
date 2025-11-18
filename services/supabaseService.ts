@@ -1,9 +1,19 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import type { UserProfile, UserFeedback } from '../types';
 
+const readEnv = (key: string): string | undefined => {
+  if (typeof import.meta !== 'undefined' && (import.meta as any)?.env && (import.meta as any).env[key]) {
+    return (import.meta as any).env[key];
+  }
+  if (typeof process !== 'undefined' && process.env && process.env[key]) {
+    return process.env[key];
+  }
+  return undefined;
+};
+
 // Initialize Supabase client
-const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = readEnv('VITE_SUPABASE_URL') || '';
+const supabaseKey = readEnv('VITE_SUPABASE_ANON_KEY') || '';
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
 
 const clientUrl = isSupabaseConfigured ? supabaseUrl : 'https://placeholder.supabase.co';

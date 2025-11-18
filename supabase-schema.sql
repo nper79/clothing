@@ -76,3 +76,32 @@ CREATE POLICY "attrstats_owner_rw" ON user_attr_stats
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_outfits_tags_gin ON outfits USING GIN (tags);
+
+-- Credits ledger tables
+CREATE TABLE IF NOT EXISTS public.user_credits (
+  user_id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  credits integer NOT NULL DEFAULT 0,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS public.credit_transactions (
+  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
+  delta integer NOT NULL,
+  reason text NOT NULL,
+  metadata jsonb DEFAULT '{}'::jsonb,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.user_credits ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.credit_transactions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "user_can_view_credits"
+  ON public.user_credits
+  FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "user_can_view_credit_transactions"
+  ON public.credit_transactions
+  FOR SELECT
+  USING (auth.uid() = user_id);

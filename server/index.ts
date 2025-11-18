@@ -15,6 +15,14 @@ import {
 import { getRemixSignedUrl } from './imageStorage';
 import { readExploreDataset, writeExploreDataset } from './exploreDatasetStore';
 import { searchShoppingByImage } from './serperClient';
+import {
+  chargeForPersonalizedLooks,
+  chargeForRemix,
+  CreditError,
+  getCreditBalance,
+  getCreditPacks,
+  purchaseCreditPack,
+} from './creditsStore';
 
 const app = express();
 const port = Number(process.env.PORT || 4000);
@@ -39,7 +47,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.post('/api/personalized-looks', async (req, res) => {
-  const { userPhoto, gender, userPreferences, limit, lookIds } = req.body ?? {};
+  const { userId, userPhoto, gender, userPreferences, limit, lookIds } = req.body ?? {};
 
   if (!userPhoto || typeof userPhoto !== 'string') {
     return res.status(400).json({ error: 'Missing userPhoto. Provide a base64 data URL or a remote URL.' });
@@ -49,10 +57,15 @@ app.post('/api/personalized-looks', async (req, res) => {
     return res.status(400).json({ error: 'gender must be "male" or "female".' });
   }
 
+  if (!userId || typeof userId !== 'string') {
+    return res.status(400).json({ error: 'Missing user id.' });
+  }
+
   const normalizedLimit = typeof limit === 'number' ? limit : undefined;
   const normalizedLookIds = Array.isArray(lookIds) ? lookIds.map((id) => String(id)) : undefined;
 
   try {
+    await chargeForPersonalizedLooks(userId, normalizedLimit ?? 1);
     const looks = await generatePersonalizedLooks({
       userPhoto,
       gender,
@@ -63,6 +76,9 @@ app.post('/api/personalized-looks', async (req, res) => {
 
     res.json({ looks });
   } catch (error) {
+    if (error instanceof CreditError) {
+      return res.status(error.status).json({ error: error.message, code: 'INSUFFICIENT_CREDITS' });
+    }
     console.error('[server] Failed to generate looks', error);
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Failed to generate personalized looks',
@@ -71,7 +87,7 @@ app.post('/api/personalized-looks', async (req, res) => {
 });
 
 app.post('/api/remix-look', async (req, res) => {
-  const { userPhoto, prompt, referenceImage } = req.body ?? {};
+  const { userId, userPhoto, prompt, referenceImage } = req.body ?? {};
 
   if (!userPhoto || typeof userPhoto !== 'string') {
     return res.status(400).json({ error: 'Missing userPhoto. Provide a base64 data URL or a remote URL.' });
@@ -81,10 +97,18 @@ app.post('/api/remix-look', async (req, res) => {
     return res.status(400).json({ error: 'Missing prompt.' });
   }
 
+  if (!userId || typeof userId !== 'string') {
+    return res.status(400).json({ error: 'Missing user id.' });
+  }
+
   try {
+    await chargeForRemix(userId);
     const result = await remixLookWithPrompt(userPhoto, prompt, typeof referenceImage === 'string' ? referenceImage : undefined);
     res.json(result);
   } catch (error) {
+    if (error instanceof CreditError) {
+      return res.status(error.status).json({ error: error.message, code: 'INSUFFICIENT_CREDITS' });
+    }
     console.error('[server] Failed to remix look', error);
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Failed to remix look'
@@ -299,6 +323,46 @@ app.get('/api/remix-image', async (req, res) => {
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Failed to generate signed URL'
     });
+  }
+});
+
+app.get('/api/credits/packs', (_req, res) => {
+  res.json({ packs: getCreditPacks() });
+});
+
+app.get('/api/credits/balance', async (req, res) => {
+  const userId = typeof req.query.userId === 'string' ? req.query.userId : undefined;
+  if (!userId) {
+    return res.status(400).json({ error: 'Missing user id.' });
+  }
+
+  try {
+    const balance = await getCreditBalance(userId);
+    res.json({ balance });
+  } catch (error) {
+    console.error('[server] Failed to load credits', error);
+    res.status(500).json({ error: 'Failed to load credits' });
+  }
+});
+
+app.post('/api/credits/purchase', async (req, res) => {
+  const { userId, packId } = req.body ?? {};
+  if (!userId || typeof userId !== 'string') {
+    return res.status(400).json({ error: 'Missing user id.' });
+  }
+  if (!packId || typeof packId !== 'string') {
+    return res.status(400).json({ error: 'Missing credit pack id.' });
+  }
+
+  try {
+    const purchase = await purchaseCreditPack(userId, packId);
+    res.json(purchase);
+  } catch (error) {
+    if (error instanceof CreditError) {
+      return res.status(error.status).json({ error: error.message });
+    }
+    console.error('[server] Failed to purchase credits', error);
+    res.status(500).json({ error: 'Failed to purchase credits' });
   }
 });
 

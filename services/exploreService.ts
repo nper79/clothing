@@ -57,12 +57,18 @@ const photoKey = (userId: string) => `${PHOTO_STORAGE_PREFIX}${userId}`;
 
 export const ExploreService = {
   async getLooks(gender: 'male' | 'female'): Promise<ExploreLook[]> {
+    console.log(`[ExploreService] Fetching looks for gender: ${gender}`);
     const response = await fetch(`/api/explore/dataset?gender=${gender}`);
+    console.log(`[ExploreService] Response status: ${response.status}`);
+
     if (!response.ok) {
       const text = await response.text();
+      console.error(`[ExploreService] Error response:`, text);
       throw new Error(text || 'Failed to load explore dataset');
     }
+
     const payload = await response.json();
+    console.log(`[ExploreService] Received ${payload.looks?.length || 0} looks`);
     return payload.looks ?? [];
   },
 
@@ -217,9 +223,9 @@ export const ExploreService = {
     return likes;
   },
 
-  async remixLook(userPhotoUrl: string, look: ExploreLook) {
+  async remixLook(userId: string, userPhotoUrl: string, look: ExploreLook) {
     const imagePrompt = look.imagePrompt || look.prompt;
-    return PersonalStylingService.remixLook(userPhotoUrl, imagePrompt, {
+    return PersonalStylingService.remixLook(userId, userPhotoUrl, imagePrompt, {
       lookId: look.id,
       name: look.title,
       category: look.vibe,
@@ -244,7 +250,16 @@ export const ExploreService = {
   },
 
   getRemixes(userId: string): SavedRemix[] {
-    return readJson<SavedRemix[]>(remixKey(userId), []);
+    const stored = readJson<SavedRemix[]>(remixKey(userId), []);
+    return stored.map((entry) => {
+      if (entry.storagePath) {
+        return {
+          ...entry,
+          imageUrl: undefined,
+        };
+      }
+      return entry;
+    });
   },
 
   async getRemixImageUrl(path: string): Promise<string> {
@@ -265,7 +280,7 @@ export const ExploreService = {
       lookName: remix.lookName,
       gender: remix.gender,
       storagePath: remix.storagePath,
-      imageUrl: remix.imageUrl,
+      imageUrl: remix.storagePath ? undefined : remix.imageUrl,
       createdAt: new Date().toISOString(),
     };
     const updated = [entry, ...current].slice(0, 60);

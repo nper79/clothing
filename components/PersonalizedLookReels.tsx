@@ -2,19 +2,23 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, MessageSquare, Loader2, CheckCircle2, ChevronUp, ChevronDown } from 'lucide-react';
 import { PersonalLook, UserPreferences, PersonalStylingService } from '../services/personalStylingService';
+import { useAuth } from '../contexts/AuthContext';
 
 interface PersonalizedLookReelsProps {
+  userId: string;
   userPhotoUrl: string;
   gender: 'male' | 'female';
   onComplete?: (preferences: UserPreferences) => void;
 }
 
 export const PersonalizedLookReels: React.FC<PersonalizedLookReelsProps> = ({
+  userId,
   userPhotoUrl,
   gender,
   onComplete
 }) => {
   const navigate = useNavigate();
+  const { refreshCredits } = useAuth();
   const [looks, setLooks] = useState<PersonalLook[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,21 +37,29 @@ export const PersonalizedLookReels: React.FC<PersonalizedLookReelsProps> = ({
   const userPreferences = useMemo(() => PersonalStylingService.getUserPreferences(), []);
 
   useEffect(() => {
-    const generationKey = `${userPhotoUrl}_${gender}`;
+    const generationKey = `${userId}_${userPhotoUrl}_${gender}`;
     if (userPhotoUrl && gender && generationRef.current.generationKey !== generationKey) {
       generationRef.current.generationKey = generationKey;
       fetchLooks();
     }
-  }, [userPhotoUrl, gender]);
+  }, [userId, userPhotoUrl, gender]);
 
   const fetchLooks = async () => {
     if (generationRef.current.isGenerating) return;
     generationRef.current.isGenerating = true;
     setError(null);
 
+    if (!userId) {
+      setError('Please sign in to generate looks.');
+      setIsLoading(false);
+      generationRef.current.isGenerating = false;
+      return;
+    }
+
     try {
       setIsLoading(true);
       const generatedLooks = await PersonalStylingService.generatePersonalizedLooks(
+        userId,
         userPhotoUrl,
         gender,
         userPreferences
@@ -61,12 +73,19 @@ export const PersonalizedLookReels: React.FC<PersonalizedLookReelsProps> = ({
 
       setLooks(sorted.slice(0, 5));
       setActiveIndex(0);
+      await refreshCredits();
     } catch (err) {
       console.error(err);
-      setError('We could not generate looks right now. Please try again in a moment.');
+      const message = err instanceof Error ? err.message : 'We could not generate looks right now. Please try again in a moment.';
+      if (/Insufficient credits/i.test(message)) {
+        setError('You need more credits to generate new looks. Visit the Credits page to add more.');
+      } else {
+        setError(message);
+      }
     } finally {
       setIsLoading(false);
       generationRef.current.isGenerating = false;
+      await refreshCredits();
     }
   };
 

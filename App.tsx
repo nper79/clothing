@@ -23,6 +23,8 @@ import ExploreAdmin from './pages/ExploreAdmin';
 import RemixesPage from './pages/Remixes';
 import StyleQuiz from './pages/StyleQuiz';
 import HomePage from './pages/HomePage';
+import AuthPage from './pages/AuthPage';
+import CreditsPage from './pages/CreditsPage';
 import QuickTest from './QuickTest';
 import { generateStyleSuggestions, extractOutfitMetadata, detectGender } from './services/geminiService';
 import { initializeUserProfile, updateProfileFromFeedback, saveUserProfile, loadUserProfile } from './services/preferenceService';
@@ -673,6 +675,7 @@ const App: React.FC = () => {
           <Route path="/personal-styling" element={<PersonalStylingPage />} />
           <Route path="/style-quiz" element={<StyleQuiz />} />
           <Route path="/quick-test" element={<QuickTest />} />
+          <Route path="/auth" element={<AuthPage />} />
           <Route
             path="/explore"
             element={
@@ -694,6 +697,14 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <ExploreAdmin />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/credits"
+            element={
+              <ProtectedRoute>
+                <CreditsPage />
               </ProtectedRoute>
             }
           />

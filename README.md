@@ -25,3 +25,13 @@ View your app in AI Studio: https://ai.studio/apps/drive/1tX9pyJEodWZKfsHjZj_qZ7
    The Vite dev server now mounts the `/api/personalized-looks` endpoint, so uploads work without launching a second process.
 4. (Optional) If you need the standalone Express backend (for production-style testing or deployment), run:
    `npm run server`
+
+### Auth + Credits
+
+- Supabase Auth powers the login & registration flow. Populate `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_URL`, and `SUPABASE_SERVICE_ROLE_KEY` in `.env`.
+- Credits are stored in Supabase via the new `user_credits` and `credit_transactions` tables defined at the bottom of `supabase-schema.sql`. Apply those migrations and enable row level security.
+- Configure credit behavior with:
+  - `DEFAULT_STARTING_CREDITS` – free credits granted on first login (default `10`)
+  - `PERSONAL_LOOK_CREDIT_COST` – credits consumed per personal look request (default `2`)
+  - `REMIX_LOOK_CREDIT_COST` – credits consumed per explore remix (default `1`)
+- Users can top up through the Credits page (`/credits`). Each generation/remix automatically debits their balance on the server.

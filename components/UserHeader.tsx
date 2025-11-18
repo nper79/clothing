@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const UserHeader: React.FC = () => {
-  const { user, signOut } = useAuth();
+  const { user, credits, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -40,6 +40,12 @@ const UserHeader: React.FC = () => {
 
           {user && (
             <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate('/credits')}
+                className="px-4 py-2 rounded-full border border-white/20 text-sm text-gray-700 dark:text-gray-200 hover:border-white/40 transition"
+              >
+                Credits: <span className="font-semibold">{credits ?? 0}</span>
+              </button>
               <div className="flex items-center gap-3">
                 {user.photoURL ? (
                   <img

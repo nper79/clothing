@@ -18,15 +18,16 @@ type RemixReady = {
 };
 
 const ExplorePage: React.FC = () => {
-  const { user } = useAuth();
-  const userId = user?.id ?? 'guest';
+  const { user, credits, refreshCredits } = useAuth();
+  const userId = user?.id || null;
+  const storageUserId = user?.id ?? 'guest';
   const navigate = useNavigate();
   const [gender, setGender] = useState<'male' | 'female'>(ExploreService.getLatestUserGender());
   const [likes, setLikes] = useState(ExploreService.getLikes());
   const [looks, setLooks] = useState<ExploreLook[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [userPhoto, setUserPhoto] = useState<string | null>(() => ExploreService.getLatestUserPhoto(userId));
+  const [userPhoto, setUserPhoto] = useState<string | null>(() => ExploreService.getLatestUserPhoto(storageUserId));
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [pendingLook, setPendingLook] = useState<ExploreLook | null>(null);
   const [uploadPreview, setUploadPreview] = useState<string | null>(null);
@@ -59,8 +60,8 @@ const ExplorePage: React.FC = () => {
       })
       .catch((error) => {
         if (!cancelled) {
-          console.error(error);
-          setLoadError('Unable to load explore looks right now.');
+          console.error('[ExplorePage] Error loading looks:', error);
+          setLoadError(`Failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
       })
       .finally(() => {
@@ -73,8 +74,8 @@ const ExplorePage: React.FC = () => {
   }, [gender]);
 
   useEffect(() => {
-    setUserPhoto(ExploreService.getLatestUserPhoto(userId));
-  }, [userId]);
+    setUserPhoto(ExploreService.getLatestUserPhoto(storageUserId));
+  }, [storageUserId]);
 
   const handleLike = (look: ExploreLook) => {
     setLikes(ExploreService.likeLook(look));
@@ -104,14 +105,18 @@ const ExplorePage: React.FC = () => {
       showToast('Upload your own photo first to remix outfits.', 'error');
       return;
     }
+    if (!userId) {
+      showToast('Please sign in again to remix looks.', 'error');
+      return;
+    }
     setActiveTryOnId(look.id);
     showToast('Creating your remix...', 'info');
 
     try {
       const lookWithItems = await ExploreService.ensureLookItems(look);
-      const remix = await ExploreService.remixLook(photo, lookWithItems);
+      const remix = await ExploreService.remixLook(userId, photo, lookWithItems);
       if (remix.storagePath) {
-        ExploreService.saveRemix(userId, {
+        ExploreService.saveRemix(storageUserId, {
           lookId: lookWithItems.id,
           lookName: lookWithItems.title,
           gender: lookWithItems.gender,
@@ -166,9 +171,14 @@ const ExplorePage: React.FC = () => {
       showToast('Remix ready! Tap the notification to view it.', 'success');
     } catch (error) {
       console.error(error);
-      showToast(error instanceof Error ? error.message : 'Failed to remix look', 'error');
+      const message = error instanceof Error ? error.message : 'Failed to remix look';
+      const friendly = /Insufficient credits/i.test(message)
+        ? 'You need more credits to continue. Visit the Credits page to top up.'
+        : message;
+      showToast(friendly, 'error');
     } finally {
       setActiveTryOnId(null);
+      await refreshCredits();
     }
   };
 
@@ -213,7 +223,7 @@ const ExplorePage: React.FC = () => {
       setUploadError('Select a photo first.');
       return;
     }
-    ExploreService.setLatestUserPhoto(userId, uploadPreview);
+    ExploreService.setLatestUserPhoto(storageUserId, uploadPreview);
     setUserPhoto(uploadPreview);
     setIsPhotoModalOpen(false);
     const lookToRemix = pendingLook;
@@ -539,6 +549,21 @@ const ExplorePage: React.FC = () => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {user && (
+        <div className="fixed bottom-4 left-4 z-40 flex items-center gap-3 rounded-2xl border border-white/20 bg-black/70 backdrop-blur px-4 py-2 text-white shadow-lg">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.4em] text-white/50">Credits</p>
+            <p className="text-2xl font-semibold">{credits ?? 0}</p>
+          </div>
+          <button
+            onClick={() => navigate('/credits')}
+            className="text-xs px-3 py-1 rounded-full border border-white/30 hover:border-white/60 transition"
+          >
+            Manage
+          </button>
         </div>
       )}
 

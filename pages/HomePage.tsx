@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const HomePage: React.FC = () => {
-  const { user, signInWithGoogle, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handlePrimaryAction = async () => {
@@ -11,8 +11,7 @@ const HomePage: React.FC = () => {
       navigate('/explore');
       return;
     }
-    await signInWithGoogle();
-    navigate('/explore');
+    navigate('/auth');
   };
 
   const handleSignOut = async () => {

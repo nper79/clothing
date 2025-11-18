@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Trash2, Loader2, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -24,6 +24,38 @@ const RemixesPage: React.FC = () => {
   const [detailError, setDetailError] = useState<string | null>(null);
   const autoSelectHandled = useRef(false);
 
+  const refreshRemixImage = useCallback(
+    async (remix: SavedRemix) => {
+      if (!remix.storagePath) {
+        return;
+      }
+      try {
+        const imageUrl = await ExploreService.getRemixImageUrl(remix.storagePath);
+        setRemixes((current) =>
+          current.map((entry) => (entry.id === remix.id ? { ...entry, imageUrl } : entry))
+        );
+        setSelectedRemix((current) =>
+          current && current.id === remix.id ? { ...current, imageUrl } : current
+        );
+      } catch (error) {
+        console.error('[remixes] Failed to refresh remix image', error);
+        setRemixes((current) =>
+          current.map((entry) =>
+            entry.id === remix.id ? { ...entry, imageUrl: undefined } : entry
+          )
+        );
+      }
+    },
+    []
+  );
+
+  const handleImageError = useCallback(
+    (remix: SavedRemix) => {
+      refreshRemixImage(remix);
+    },
+    [refreshRemixImage]
+  );
+
   useEffect(() => {
     let cancelled = false;
 
@@ -40,7 +72,7 @@ const RemixesPage: React.FC = () => {
       try {
         const hydrated = await Promise.all(
           stored.map(async (remix) => {
-            if (remix.imageUrl || !remix.storagePath) {
+            if (!remix.storagePath) {
               return remix;
             }
             try {
@@ -207,6 +239,7 @@ const RemixesPage: React.FC = () => {
                         alt={selectedRemix.lookName}
                         className="w-full h-full object-cover"
                         style={{ aspectRatio: '9 / 16' }}
+                        onError={() => handleImageError(selectedRemix)}
                       />
                     ) : (
                       <div className="aspect-[9/16] flex items-center justify-center text-white/50 text-sm px-6 text-center">
@@ -286,7 +319,12 @@ const RemixesPage: React.FC = () => {
               >
                 <div className="w-full" style={{ aspectRatio: '9 / 16' }}>
                   {remix.imageUrl ? (
-                    <img src={remix.imageUrl} alt={remix.lookName} className="w-full h-full object-cover" />
+                    <img
+                      src={remix.imageUrl}
+                      alt={remix.lookName}
+                      className="w-full h-full object-cover"
+                      onError={() => handleImageError(remix)}
+                    />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-white/5 text-white/50 text-xs px-4 text-center">
                       Image expired. Tap "Try on" on the explore feed to refresh this look.
@@ -312,4 +350,3 @@ const RemixesPage: React.FC = () => {
 };
 
 export default RemixesPage;
-

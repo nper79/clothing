@@ -1,6 +1,6 @@
 // Novo serviço de autenticação Supabase
-import { supabase } from './supabaseService'
-import type { AuthUser } from '../types'
+import type { User } from '@supabase/supabase-js';
+import { supabase } from './supabaseService';
 
 export interface AuthUser {
   id: string;
@@ -10,86 +10,103 @@ export interface AuthUser {
   anonymous: boolean;
 }
 
-export interface AuthService {
-  signInWithGoogle(): Promise<AuthUser>;
-  signOut(): Promise<void>;
-  onAuthStateChanged(callback: (user: AuthUser | null) => void): () => void;
-  getCurrentUser(): Promise<AuthUser | null>;
-}
+const mapUser = (user: User | null | undefined): AuthUser | null => {
+  if (!user) {
+    return null;
+  }
 
-class SupabaseAuthService implements AuthService {
-  async signInWithGoogle(): Promise<AuthUser> {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}`,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          }
-        }
-      })
+  return {
+    id: user.id,
+    email: user.email ?? undefined,
+    name: (user.user_metadata?.full_name as string | undefined) || user.email?.split('@')[0],
+    photoURL: (user.user_metadata?.avatar_url as string | undefined) || undefined,
+    anonymous: false,
+  };
+};
 
-      if (error) throw error
+class SupabaseAuthService {
+  async signUpWithEmail(email: string, password: string, fullName?: string): Promise<AuthUser> {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+        emailRedirectTo: window.location.origin,
+      },
+    });
 
-      // OAuth redirect vai acontecer
-      throw new Error('Redirecting to Google OAuth...')
-    } catch (error) {
-      console.error('Google sign-in error:', error)
-      throw error
+    if (error) {
+      throw error;
+    }
+
+    const user = mapUser(data.user);
+    if (!user) {
+      throw new Error('Unable to create user account');
+    }
+    return user;
+  }
+
+  async signInWithEmail(email: string, password: string): Promise<AuthUser> {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    const user = mapUser(data.user);
+    if (!user) {
+      throw new Error('Invalid email or password');
+    }
+
+    return user;
+  }
+
+  async signInWithGoogle(): Promise<void> {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    });
+
+    if (error) {
+      console.error('Google sign-in error:', error);
+      throw error;
     }
   }
 
   async signOut(): Promise<void> {
-    try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
-    } catch (error) {
-      console.error('Sign out error:', error)
-      throw error
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      throw error;
     }
   }
 
   onAuthStateChanged(callback: (user: AuthUser | null) => void): () => void {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          const user: AuthUser = {
-            id: session.user.id,
-            email: session.user.email || undefined,
-            name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0],
-            photoURL: session.user.user_metadata?.avatar_url,
-            anonymous: false
-          }
-          callback(user)
-        } else {
-          callback(null)
-        }
-      }
-    )
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      callback(mapUser(session?.user));
+    });
 
-    return () => subscription.unsubscribe()
+    return () => subscription.unsubscribe();
   }
 
   async getCurrentUser(): Promise<AuthUser | null> {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-
-      if (!user) return null
-
-      return {
-        id: user.id,
-        email: user.email || undefined,
-        name: user.user_metadata?.full_name || user.email?.split('@')[0],
-        photoURL: user.user_metadata?.avatar_url,
-        anonymous: false
-      }
-    } catch (error) {
-      console.error('Get current user error:', error)
-      return null
-    }
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    return mapUser(user);
   }
 }
 
-export const authService = new SupabaseAuthService()
+export const authService = new SupabaseAuthService();

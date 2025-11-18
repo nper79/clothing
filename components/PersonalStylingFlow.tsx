@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PersonalStylingUpload } from './PersonalStylingUpload';
 import { PersonalizedLookReels } from './PersonalizedLookReels';
 import { PersonalStylingService, UserPreferences } from '../services/personalStylingService';
+import { useAuth } from '../contexts/AuthContext';
 
 type FlowStep = 'upload' | 'styling' | 'complete';
 
@@ -10,6 +11,7 @@ interface PersonalStylingFlowProps {
 }
 
 export const PersonalStylingFlow: React.FC<PersonalStylingFlowProps> = ({ onComplete }) => {
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState<FlowStep>('upload');
   const [userPhotoUrl, setUserPhotoUrl] = useState<string>('');
   const [userGender, setUserGender] = useState<'male' | 'female'>(() => {
@@ -46,8 +48,19 @@ export const PersonalStylingFlow: React.FC<PersonalStylingFlowProps> = ({ onComp
       return <PersonalStylingUpload onPhotoUploaded={handlePhotoUploaded} />;
 
     case 'styling':
+      if (!user) {
+        return (
+          <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
+            <div className="text-center space-y-4">
+              <h2 className="text-2xl font-semibold">Sign in required</h2>
+              <p className="text-white/60">You need to be signed in to generate personalized looks.</p>
+            </div>
+          </div>
+        );
+      }
       return (
         <PersonalizedLookReels
+          userId={user.id}
           userPhotoUrl={userPhotoUrl}
           gender={userGender}
           onComplete={handleStylingComplete}

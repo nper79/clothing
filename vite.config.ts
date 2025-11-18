@@ -2,6 +2,14 @@ import path from 'path';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+import {
+  chargeForPersonalizedLooks,
+  chargeForRemix,
+  CreditError,
+  getCreditBalance,
+  getCreditPacks,
+  purchaseCreditPack,
+} from './server/creditsStore';
 
 const MAX_BODY_SIZE = 35 * 1024 * 1024; // 35MB safety limit for data URLs
 
@@ -61,7 +69,12 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
           res.end(JSON.stringify(data));
         } catch (error) {
           console.error(`[vite dev backend] Failed to handle ${errorLabel}`, error);
-          const statusCode = (error instanceof Error && error.message === 'Payload too large') ? 413 : 500;
+          let statusCode = 500;
+          if (error instanceof Error && error.message === 'Payload too large') {
+            statusCode = 413;
+          } else if (error instanceof CreditError) {
+            statusCode = error.status;
+          }
           res.statusCode = statusCode;
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({
@@ -71,18 +84,24 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
       };
 
       server.middlewares.use('/api/personalized-looks', async (req: IncomingMessage, res: ServerResponse) => {
-        await handleJsonPost(
-          req,
-          res,
-          async (body) => {
-            const normalizedLimit = typeof body.limit === 'number' ? body.limit : undefined;
-            const normalizedLookIds = Array.isArray(body.lookIds) ? body.lookIds.map((value: unknown) => String(value)) : undefined;
+      await handleJsonPost(
+        req,
+        res,
+        async (body) => {
+          const normalizedLimit = typeof body.limit === 'number' ? body.limit : undefined;
+          const normalizedLookIds = Array.isArray(body.lookIds) ? body.lookIds.map((value: unknown) => String(value)) : undefined;
 
-            const { generatePersonalizedLooks } = await import('./server/personalStylingWorkflow');
-            const looks = await generatePersonalizedLooks({
-              ...body,
-              limit: normalizedLimit,
-              lookIds: normalizedLookIds
+          if (typeof body.userId !== 'string' || body.userId.trim().length === 0) {
+            throw new Error('Missing user id.');
+          }
+
+          await chargeForPersonalizedLooks(body.userId, normalizedLimit ?? 1);
+
+          const { generatePersonalizedLooks } = await import('./server/personalStylingWorkflow');
+          const looks = await generatePersonalizedLooks({
+            ...body,
+            limit: normalizedLimit,
+            lookIds: normalizedLookIds
             });
             return { looks };
           },
@@ -93,13 +112,19 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
       server.middlewares.use('/api/remix-look', async (req: IncomingMessage, res: ServerResponse) => {
         await handleJsonPost(
           req,
-          res,
-          async (body) => {
-            const { remixLookWithPrompt } = await import('./server/personalStylingWorkflow');
-            const referenceImage = typeof body.referenceImage === 'string' ? body.referenceImage : undefined;
-            const result = await remixLookWithPrompt(body.userPhoto, body.prompt, referenceImage);
-            return result;
-          },
+        res,
+        async (body) => {
+          if (typeof body.userId !== 'string' || body.userId.trim().length === 0) {
+            throw new Error('Missing user id.');
+          }
+
+          await chargeForRemix(body.userId);
+
+          const { remixLookWithPrompt } = await import('./server/personalStylingWorkflow');
+          const referenceImage = typeof body.referenceImage === 'string' ? body.referenceImage : undefined;
+          const result = await remixLookWithPrompt(body.userPhoto, body.prompt, referenceImage);
+          return result;
+        },
           '/api/remix-look'
         );
       });
@@ -135,6 +160,67 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
             error: error instanceof Error ? error.message : 'Failed to generate signed URL'
           }));
         }
+      });
+
+      server.middlewares.use('/api/credits/packs', (req: IncomingMessage, res: ServerResponse) => {
+        if (req.method !== 'GET') {
+          res.statusCode = 405;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+          return;
+        }
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ packs: getCreditPacks() }));
+      });
+
+      server.middlewares.use('/api/credits/balance', async (req: IncomingMessage, res: ServerResponse) => {
+        if (req.method !== 'GET') {
+          res.statusCode = 405;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+          return;
+        }
+
+        try {
+          const requestUrl = new URL(req.url ?? '', 'http://localhost');
+          const userId = requestUrl.searchParams.get('userId');
+          if (!userId) {
+            res.statusCode = 400;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: 'Missing user id.' }));
+            return;
+          }
+
+          const balance = await getCreditBalance(userId);
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ balance }));
+        } catch (error) {
+          console.error('[vite dev backend] Failed to read credits', error);
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Failed to load credits' }));
+        }
+      });
+
+      server.middlewares.use('/api/credits/purchase', async (req: IncomingMessage, res: ServerResponse) => {
+        await handleJsonPost(
+          req,
+          res,
+          async (body) => {
+            if (typeof body.userId !== 'string') {
+              throw new Error('Missing user id.');
+            }
+            if (typeof body.packId !== 'string') {
+              throw new Error('Missing credit pack id.');
+            }
+
+            const purchase = await purchaseCreditPack(body.userId, body.packId);
+            return purchase;
+          },
+          '/api/credits/purchase'
+        );
       });
 
       server.middlewares.use('/api/explore/prompts', async (req: IncomingMessage, res: ServerResponse) => {

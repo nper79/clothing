@@ -132,6 +132,7 @@ export class PersonalStylingService {
    * Generate personalized looks for user by delegating to the backend pipeline
    */
   static async generatePersonalizedLooks(
+    userId: string,
     userPhotoUrl: string,
     gender: 'male' | 'female',
     userPreferences?: UserPreferences,
@@ -158,6 +159,7 @@ export class PersonalStylingService {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          userId,
           userPhoto: userPhotoUrl,
           gender,
           userPreferences,
@@ -359,6 +361,7 @@ export class PersonalStylingService {
   }
 
   static async remixLook(
+    userId: string,
     userPhotoUrl: string,
     prompt: string,
     metadata?: Partial<PersonalLook> & { referenceImage?: string }
@@ -369,6 +372,7 @@ export class PersonalStylingService {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        userId,
         userPhoto: userPhotoUrl,
         prompt,
         referenceImage: metadata?.referenceImage,
