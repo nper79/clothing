@@ -192,12 +192,24 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
             return;
           }
 
+          // Add small delay to prevent 425 Too Early errors
+          await new Promise(resolve => setTimeout(resolve, 100));
+
           const balance = await getCreditBalance(userId);
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ balance }));
         } catch (error) {
           console.error('[vite dev backend] Failed to read credits', error);
+
+          // If it's a "Too Early" error, return 425
+          if (error instanceof Error && error.message.includes('Too Early')) {
+            res.statusCode = 425;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: 'Too Early - Please try again' }));
+            return;
+          }
+
           res.statusCode = 500;
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ error: 'Failed to load credits' }));
