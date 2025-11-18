@@ -55,11 +55,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       try {
-        console.log('[AuthContext] Fetching credits for user:', currentUser.id);
-        const balance = await CreditClient.getBalance(currentUser.id);
-        console.log('[AuthContext] Credits loaded successfully:', balance);
-        setCredits(balance);
-        return balance;
+        // Temporarily disabled for testing
+        // console.log('[AuthContext] Fetching credits for user:', currentUser.id);
+        // const balance = await CreditClient.getBalance(currentUser.id);
+        // console.log('[AuthContext] Credits loaded successfully:', balance);
+        // setCredits(balance);
+        // return balance;
       } catch (error) {
         console.error('[AuthContext] Failed to load credits:', error);
         // Don't set credits to null on error - try again later
@@ -85,7 +86,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const currentUser = await authService.getCurrentUser();
         if (!mounted) return;
         setUser(currentUser);
-        await fetchBalance(currentUser);
+        // Temporarily disabled credit system for testing
+        // await fetchBalance(currentUser);
       } catch (error) {
         console.error('Failed to load current user', error);
       } finally {
@@ -102,11 +104,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       : authService.onAuthStateChanged(async (nextUser) => {
           if (!mounted) return;
           setUser(nextUser);
-          if (nextUser) {
-            await fetchBalance(nextUser);
-          } else {
-            setCredits(null);
-          }
+          // Temporarily disabled credit system for testing
+          // if (nextUser) {
+          //   await fetchBalance(nextUser);
+          // } else {
+          //   setCredits(null);
+          // }
         });
 
     CreditClient.listPacks()
@@ -136,7 +139,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const createdUser = await authService.signUpWithEmail(email, password, fullName);
         setUseDemoSession(false);
         setUser(createdUser);
-        await fetchBalance(createdUser);
+        // Temporarily disabled credit system for testing
+        // await fetchBalance(createdUser);
       } finally {
         setLoading(false);
       }
@@ -151,7 +155,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const signedIn = await authService.signInWithEmail(email, password);
         setUseDemoSession(false);
         setUser(signedIn);
-        await fetchBalance(signedIn);
+        // Temporarily disabled credit system for testing
+        // await fetchBalance(signedIn);
       } finally {
         setLoading(false);
       }
@@ -180,7 +185,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       anonymous: true,
     };
     setUser(demoUser);
-    await fetchBalance(demoUser);
+    // Temporarily disabled credit system for testing
+    // await fetchBalance(demoUser);
   }, [fetchBalance]);
 
   const signOut = useCallback(async () => {
@@ -194,12 +200,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const purchaseCredits = useCallback(
     async (packId: string) => {
+      // Temporarily disabled credit system for testing
+      throw new Error('Credit system temporarily disabled for testing');
+      /*
       if (!user) {
         throw new Error('You need to be signed in to purchase credits.');
       }
       const result = await CreditClient.purchasePack(user.id, packId);
       setCredits(result.balance);
       return { balance: result.balance };
+      */
     },
     [user]
   );
