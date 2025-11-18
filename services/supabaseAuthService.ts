@@ -67,10 +67,14 @@ class SupabaseAuthService {
   }
 
   async signInWithGoogle(): Promise<void> {
+    console.log('[SupabaseAuth] Starting Google OAuth sign in...');
+    const redirectUrl = `${window.location.origin}`;
+    console.log('[SupabaseAuth] Redirect URL:', redirectUrl);
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}`,
+        redirectTo: redirectUrl,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',
@@ -79,9 +83,11 @@ class SupabaseAuthService {
     });
 
     if (error) {
-      console.error('Google sign-in error:', error);
+      console.error('[SupabaseAuth] OAuth error:', error);
       throw error;
     }
+
+    console.log('[SupabaseAuth] OAuth initiated successfully');
   }
 
   async signOut(): Promise<void> {

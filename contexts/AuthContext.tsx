@@ -153,8 +153,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 
   const signInWithGoogle = useCallback(async () => {
+    console.log('[AuthContext] signInWithGoogle called');
     setUseDemoSession(false);
-    await authService.signInWithGoogle();
+    try {
+      await authService.signInWithGoogle();
+      console.log('[AuthContext] signInWithGoogle completed');
+    } catch (error) {
+      console.error('[AuthContext] signInWithGoogle error:', error);
+      throw error;
+    }
   }, []);
 
   const signInAsDemo = useCallback(async () => {
