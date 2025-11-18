@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { DEFAULT_STARTING_CREDITS } from '../server/creditsStore';
 import { authService, type AuthUser } from '../services/supabaseAuthService';
 import { CreditClient, type CreditPack } from '../services/creditClient';
 
@@ -54,16 +55,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       try {
+        console.log('[AuthContext] Fetching credits for user:', currentUser.id);
         const balance = await CreditClient.getBalance(currentUser.id);
+        console.log('[AuthContext] Credits loaded successfully:', balance);
         setCredits(balance);
         return balance;
       } catch (error) {
-        console.error('Failed to load credits', error);
-        setCredits(null);
+        console.error('[AuthContext] Failed to load credits:', error);
+        // Don't set credits to null on error - try again later
+        // This prevents blocking the app if credit system has issues
+        if (credits === null) {
+          setCredits(DEFAULT_STARTING_CREDITS);
+        }
         return null;
       }
     },
-    [user]
+    [user, credits]
   );
 
   useEffect(() => {

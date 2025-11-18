@@ -4,6 +4,8 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const DEFAULT_STARTING_CREDITS = Number(process.env.DEFAULT_STARTING_CREDITS ?? '5');
+
+export { DEFAULT_STARTING_CREDITS };
 const PERSONAL_LOOK_CREDIT_COST = Math.max(Number(process.env.PERSONAL_LOOK_CREDIT_COST ?? '2'), 1);
 const REMIX_LOOK_CREDIT_COST = Math.max(Number(process.env.REMIX_LOOK_CREDIT_COST ?? '1'), 1);
 
