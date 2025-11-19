@@ -25,9 +25,31 @@ export const PersonalStylingFlow: React.FC<PersonalStylingFlowProps> = ({ onComp
   );
 
   const handlePhotoUploaded = (photoUrl: string, gender: 'male' | 'female') => {
-    setUserPhotoUrl(photoUrl);
-    setUserGender(gender);
-    setCurrentStep('styling');
+    console.log('[PersonalStylingFlow] handlePhotoUploaded called:', {
+      photoUrl: photoUrl.substring(0, 50) + '...',
+      gender
+    });
+
+    if (!photoUrl || !gender) {
+      console.error('[PersonalStylingFlow] Invalid data received:', { photoUrl: !!photoUrl, gender });
+      alert('Invalid photo data. Please try uploading again.');
+      return;
+    }
+
+    try {
+      setUserPhotoUrl(photoUrl);
+      setUserGender(gender);
+      console.log('[PersonalStylingFlow] Setting current step to styling...');
+
+      // Use a small timeout to ensure state updates are processed
+      setTimeout(() => {
+        setCurrentStep('styling');
+        console.log('[PersonalStylingFlow] Step changed to styling');
+      }, 100);
+    } catch (error) {
+      console.error('[PersonalStylingFlow] Error in handlePhotoUploaded:', error);
+      alert('Something went wrong. Please try again.');
+    }
   };
 
   const handleStylingComplete = (preferences: UserPreferences) => {

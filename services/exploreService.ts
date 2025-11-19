@@ -245,8 +245,44 @@ export const ExploreService = {
 
   setLatestUserPhoto(userId: string, dataUrl: string) {
     if (typeof window === 'undefined') return;
-    localStorage.setItem(photoKey(userId), dataUrl);
-    localStorage.setItem(LEGACY_PHOTO_KEY, dataUrl);
+
+    try {
+      // Clean up old photos first to free space
+      this.cleanupOldPhotos();
+
+      // Check if dataUrl is too large (>5MB)
+      const dataSizeKB = Math.round(dataUrl.length * 0.75 / 1024);
+      if (dataSizeKB > 5120) { // 5MB
+        console.warn('[ExploreService] Photo too large for localStorage:', dataSizeKB, 'KB');
+        throw new Error('Photo is too large to save locally');
+      }
+
+      // Check available space (rough estimate)
+      const storageUsage = JSON.stringify(localStorage).length;
+      const storageLimit = 5 * 1024 * 1024; // 5MB
+      const availableSpace = storageLimit - storageUsage;
+
+      if (dataUrl.length > availableSpace) {
+        console.warn('[ExploreService] Not enough space in localStorage');
+        this.clearAllPhotos(); // Emergency cleanup
+        throw new Error('Not enough storage space. Please clear your browser data.');
+      }
+
+      localStorage.setItem(photoKey(userId), dataUrl);
+      localStorage.setItem(LEGACY_PHOTO_KEY, dataUrl);
+      console.log('[ExploreService] Photo saved successfully, size:', dataSizeKB, 'KB');
+    } catch (error) {
+      console.error('[ExploreService] Failed to save photo:', error);
+      // Clear and retry once
+      this.clearAllPhotos();
+      try {
+        localStorage.setItem(photoKey(userId), dataUrl);
+        localStorage.setItem(LEGACY_PHOTO_KEY, dataUrl);
+      } catch (retryError) {
+        console.error('[ExploreService] Failed to save photo even after cleanup:', retryError);
+        throw retryError;
+      }
+    }
   },
 
   getRemixes(userId: string): SavedRemix[] {
@@ -298,5 +334,37 @@ export const ExploreService = {
       return 'female';
     }
     return (localStorage.getItem('latest_user_gender') as 'male' | 'female') || 'female';
+  },
+
+  cleanupOldPhotos() {
+    if (typeof window === 'undefined') return;
+
+    const photoKeys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('user_photo_')) {
+        photoKeys.push(key);
+      }
+    }
+
+    // Keep only the most recent 3 photos
+    photoKeys.sort().slice(0, -3).forEach(key => {
+      console.log('[ExploreService] Removing old photo:', key);
+      localStorage.removeItem(key);
+    });
+  },
+
+  clearAllPhotos() {
+    if (typeof window === 'undefined') return;
+
+    console.log('[ExploreService] Clearing all photos from localStorage');
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.startsWith('user_photo_') || key === 'latest_user_photo')) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(key => localStorage.removeItem(key));
   }
 };

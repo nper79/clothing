@@ -26,6 +26,8 @@ import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import CreditsPage from './pages/CreditsPage';
 import QuickTest from './QuickTest';
+import LookDetailPage from './pages/LookDetailCorrect';
+import OutfitBuilderPage from './pages/OutfitBuilderCorrect';
 import { generateStyleSuggestions, extractOutfitMetadata, detectGender } from './services/geminiService';
 import { initializeUserProfile, updateProfileFromFeedback, saveUserProfile, loadUserProfile } from './services/preferenceService';
 import { PreferenceServiceSupabase } from './services/preferenceServiceSupabase';
@@ -705,6 +707,22 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <CreditsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/look/:lookId"
+            element={
+              <ProtectedRoute>
+                <LookDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/outfit-builder"
+            element={
+              <ProtectedRoute>
+                <OutfitBuilderPage />
               </ProtectedRoute>
             }
           />

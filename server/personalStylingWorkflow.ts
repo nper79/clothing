@@ -633,6 +633,17 @@ Reference outfit summary: ${summaryPieces || 'modern outfit'}.
 Create a clean 2×4 fashion flat-lay grid on a neutral grey background.
 Each cell must contain ONE item, centered, evenly spaced, with soft shadow, shot as high-quality product photography. No model, no hands, no background elements.
 
+IMPORTANT: Show complete, full garments - NO CUTS! Ensure each clothing item is fully visible with proper margins.
+- For tops: Show entire neckline, sleeves, and hem
+- For bottoms: Show full waistband to hem
+- For dresses: Show complete garment from top to bottom
+- For outerwear: Display entire jacket/coat with all details
+- For shoes: Show complete pair, not cut off
+- CRITICAL: Make sure ALL items fit PROPERLY and FULLY inside each cell - do NOT let items touch or cross cell borders
+- IMPORTANT: Scale items SMALLER to ensure they fit completely - leave significant empty space around each item
+- FIRST COLUMN items (positions 1, 3, 5, 7): Make them especially smaller to guarantee they fit within their cells
+- Each item must be scaled appropriately to fit completely within its allocated space
+
 Use this exact order:
 
 ${slotBlock}
@@ -640,6 +651,12 @@ ${slotBlock}
 Strict rules:
 – The layout must be exactly 2×4.
 – All items must match the descriptions precisely.
+– Show COMPLETE items - no cropping or cutting off any part of the garments
+– IMPORTANT: Make items SMALLER rather than larger - better to have too much empty space than cut off items
+– Leave EXTRA padding around each item (at least 15% of cell size for safety)
+– CRITICAL: Ensure items fit COMPLETELY inside their cells without touching borders
+– FIRST COLUMN: Scale these items even smaller to prevent overflow
+– Scale items appropriately to fit fully within each individual cell space
 – Identical camera angle, fixed scale, consistent lighting.
 – No people, no mannequins, no props.
 – If a slot specifies leaving it empty, leave that cell blank with only the neutral grey background.`;
@@ -677,8 +694,16 @@ async function sliceGridCells(buffer: Buffer, gender: 'male' | 'female', lookId:
       const top = rowTops[row];
       const width = columnWidths[col];
       const height = rowHeights[row];
+
+      // Add padding to avoid cutting items at cell borders
+      const padding = Math.min(width, height) * 0.05; // 5% padding
+      const paddedLeft = Math.round(left + padding);
+      const paddedTop = Math.round(top + padding);
+      const paddedWidth = Math.round(width - padding * 2);
+      const paddedHeight = Math.round(height - padding * 2);
+
       const cellBuffer = await sharp(buffer)
-        .extract({ left, top, width, height })
+        .extract({ left: paddedLeft, top: paddedTop, width: paddedWidth, height: paddedHeight })
         .jpeg({ quality: 92 })
         .toBuffer();
       const url = await persistExploreAssetBuffer(cellBuffer, gender, lookId, `grid-cell-${row * 2 + col + 1}`, 'image/jpeg');
@@ -709,7 +734,7 @@ async function generateLookGridAssets(look: ExploreLook): Promise<{ gridImageUrl
     const arrayBuffer = await response.arrayBuffer();
     const baseBuffer = Buffer.from(arrayBuffer);
     const normalizedBuffer = await sharp(baseBuffer)
-      .resize(GRID_TEMPLATE_WIDTH, GRID_TEMPLATE_HEIGHT, { fit: 'cover' })
+      .resize(GRID_TEMPLATE_WIDTH, GRID_TEMPLATE_HEIGHT, { fit: 'contain', background: { r: 179, g: 179, b: 179 } })
       .jpeg({ quality: 94 })
       .toBuffer();
     const gridImageUrl = await persistExploreAssetBuffer(normalizedBuffer, look.gender, look.id, 'grid', 'image/jpeg');
