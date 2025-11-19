@@ -1,273 +1,292 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { LikedItem, Category } from '../types/lookBuilder';
-import { ArrowLeft, Heart, HeartOff, Sparkles, Filter, X } from 'lucide-react';
+import type { LikedItem } from '../types/lookBuilder';
+import { ArrowLeft, Sparkles, Trash2, Check, RefreshCw } from 'lucide-react';
+import { ExploreService } from '../services/exploreService';
+import { PersonalStylingService } from '../services/personalStylingService';
 
-const categories: Category[] = [
-  { id: 'headwear', name: 'Headwear', icon: '👒' },
-  { id: 'tops', name: 'Tops', icon: '👕' },
-  { id: 'bottoms', name: 'Bottoms', icon: '👖' },
-  { id: 'dresses', name: 'Dresses', icon: '👗' },
-  { id: 'outerwear', name: 'Outerwear', icon: '🧥' },
-  { id: 'footwear', name: 'Footwear', icon: '👟' },
-  { id: 'accessories', name: 'Accessories', icon: '👜' }
-];
-
-export default function OutfitBuilderCorrect() {
+const OutfitBuilderCorrect: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const [likedItems, setLikedItems] = useState<LikedItem[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedMap, setSelectedMap] = useState<Record<string, boolean>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isTryingOnSelection, setIsTryingOnSelection] = useState(false);
+  const [tryOnError, setTryOnError] = useState<string | null>(null);
 
-  // Load liked items when user changes
   useEffect(() => {
-    if (user) {
-      const savedLikedItems = localStorage.getItem(`likedItems_${user.id}`);
-      if (savedLikedItems) {
-        try {
-          setLikedItems(JSON.parse(savedLikedItems));
-        } catch (err) {
-          console.error('Failed to parse liked items:', err);
-          setLikedItems([]);
-        }
-      } else {
-        setLikedItems([]);
-      }
-    } else {
-      // Redirect to login if not authenticated
+    if (!user) {
       navigate('/auth');
       return;
+    }
+    const saved = localStorage.getItem(`likedItems_${user.id}`);
+    try {
+      setLikedItems(saved ? JSON.parse(saved) : []);
+    } catch (error) {
+      console.error('Failed to parse liked items', error);
+      setLikedItems([]);
     }
     setIsLoading(false);
   }, [user, navigate]);
 
-  const handleUnlikeItem = (itemId: string) => {
-    if (!user) return;
-
-    const updatedItems = likedItems.filter(item => item.id !== itemId);
-    setLikedItems(updatedItems);
-    localStorage.setItem(`likedItems_${user.id}`, JSON.stringify(updatedItems));
+  const toggleSelect = (itemId: string) => {
+    setSelectedMap((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
   };
 
-  const handleUnlikeAll = () => {
-    if (!user) return;
-    if (!confirm('Are you sure you want to remove all liked items?')) return;
+  const selectedItems = useMemo(
+    () => likedItems.filter((item) => selectedMap[item.id]),
+    [likedItems, selectedMap]
+  );
 
-    setLikedItems([]);
-    localStorage.setItem(`likedItems_${user.id}`, JSON.stringify([]));
+  const handleRemove = (itemId: string) => {
+    if (!user) return;
+    const updated = likedItems.filter((item) => item.id !== itemId);
+    setLikedItems(updated);
+    localStorage.setItem(`likedItems_${user.id}`, JSON.stringify(updated));
+    setSelectedMap((prev) => {
+      const clone = { ...prev };
+      delete clone[itemId];
+      return clone;
+    });
   };
 
-  const filteredItems = selectedCategory
-    ? likedItems.filter(item => item.category.id === selectedCategory.id)
-    : likedItems;
+  const handleClearBoard = () => {
+    setSelectedMap({});
+  };
 
-  // Group items by category
-  const itemsByCategory = categories.reduce((acc, category) => {
-    acc[category.id] = likedItems.filter(item => item.category.id === category.id);
-    return acc;
-  }, {} as Record<string, LikedItem[]>);
+  const buildSelectionPrompt = (items: LikedItem[]): string => {
+    const descriptions = items.map((item) => item.name || 'fashion piece');
+    const categories = Array.from(
+      new Set(
+        items
+          .map((item) => item.category?.name?.toLowerCase())
+          .filter((name): name is string => Boolean(name))
+      )
+    );
+    const list = descriptions.join(', ');
+    const summary = categories.length ? categories.join(', ') : 'fashion outfit';
+    const footwearNote = categories.some((cat) => cat.includes('shoe') || cat.includes('footwear'))
+      ? ''
+      : 'Include complementary footwear that matches the outfit.';
+
+    return `Make the person wear ${list}. Style the outfit as a cohesive ${summary} ensemble. ${footwearNote} FULL BODY IMAGE from head to toe with footwear clearly visible. Maintain the person's natural features and keep it a solo portrait.`;
+  };
+
+  const handleTryOnSelection = async () => {
+    if (!selectedItems.length || !user) return;
+    setTryOnError(null);
+
+    const userPhotoUrl = ExploreService.getLatestUserPhoto(user.id || 'guest');
+    if (!userPhotoUrl) {
+      setTryOnError('Upload a base photo in Explore to unlock try-ons.');
+      return;
+    }
+
+    const prompt = buildSelectionPrompt(selectedItems);
+    const boardId = `board_${Date.now()}`;
+
+    try {
+      setIsTryingOnSelection(true);
+      const customItems = selectedItems.map((item) => ({
+        id: item.id,
+        name: item.name || 'Saved item',
+        imageUrl: item.imageUrl,
+        category: item.category?.name,
+      }));
+      const itemImages = selectedItems
+        .map((item) => item.imageUrl)
+        .filter((url): url is string => Boolean(url));
+
+      const metadata = {
+        lookId: boardId,
+        name: 'Custom Outfit Board',
+        category: 'custom-board',
+        level: 'custom',
+        originalPrompt: prompt,
+        referenceImage: itemImages[0],
+      };
+
+      const remix = await PersonalStylingService.remixLook(
+        user.id,
+        userPhotoUrl,
+        prompt,
+        metadata,
+        itemImages
+      );
+      ExploreService.saveRemix(user.id, {
+        lookId: metadata.lookId,
+        lookName: metadata.name,
+        gender: undefined,
+        storagePath: remix.storagePath,
+        imageUrl: remix.styledPhotoUrl,
+        customItems,
+        customPrompt: prompt,
+      });
+      navigate('/remixes', { state: { remixLookId: metadata.lookId } });
+    } catch (error) {
+      console.error('Failed to try on selection', error);
+      setTryOnError(error instanceof Error ? error.message : 'Failed to try on selection.');
+    } finally {
+      setIsTryingOnSelection(false);
+    }
+  };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-400">Loading your collection...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-400 mb-4">Please sign in to view your outfit builder</p>
-          <button
-            onClick={() => navigate('/auth')}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          >
-            Sign In
-          </button>
+      <div className="min-h-screen bg-black text-white/70 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="h-12 w-12 rounded-full border-2 border-white/30 border-t-white mx-auto animate-spin" />
+          <p>Loading your collection...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      {/* Header */}
-      <div className="border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+    <div className="min-h-screen bg-black text-white px-4 pb-12">
+      <div className="mx-auto max-w-6xl space-y-8 py-10">
+        <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-4 backdrop-blur-sm flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <button
+            onClick={() => navigate('/explore')}
+            className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Explore
+          </button>
+          <div className="text-center flex-1">
+            <p className="text-xs uppercase tracking-[0.4em] text-white/40">Outfit builder</p>
+            <h1 className="text-2xl font-semibold text-white mt-1">My Items</h1>
+          </div>
+          <div className="text-sm text-white/60">{likedItems.length} saved</div>
+        </div>
+
+        {likedItems.length === 0 ? (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-10 text-center text-white/70">
+            <Sparkles className="h-8 w-8 mx-auto mb-4 text-white/50" />
+            <p className="text-lg font-semibold">You haven't saved any items yet.</p>
+            <p className="text-sm text-white/50 mt-1">Like pieces from the look detail pages and they will appear here.</p>
             <button
               onClick={() => navigate('/explore')}
-              className="flex items-center space-x-2 text-gray-400 hover:text-white"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/30 px-5 py-2 text-sm text-white/80 hover:text-white"
             >
-              <ArrowLeft className="h-5 w-5" />
-              <span>Back to Explore</span>
+              <Sparkles className="h-4 w-4" />
+              Explore looks
             </button>
-            <h1 className="text-xl font-bold">Outfit Builder</h1>
-            <div className="text-sm text-gray-400">
-              {likedItems.length} item{likedItems.length !== 1 ? 's' : ''}
-            </div>
           </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Stats */}
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold mb-2">Your Style Collection</h2>
-          <p className="text-gray-400">
-            Build your personal wardrobe by liking items from different looks
-          </p>
-        </div>
-
-        {/* Category Filters */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <Filter className="h-5 w-5 text-gray-400" />
-              <h3 className="text-lg font-semibold">Filter by Category</h3>
-            </div>
-            {selectedCategory && (
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className="flex items-center space-x-1 text-sm text-gray-400 hover:text-white"
-              >
-                <X className="h-4 w-4" />
-                <span>Clear</span>
-              </button>
-            )}
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className={`p-3 rounded-xl border transition-all text-center ${
-                !selectedCategory
-                  ? 'bg-blue-500 border-blue-500 text-white'
-                  : 'bg-white/5 border-white/10 hover:bg-white/10 text-gray-300'
-              }`}
-            >
-              <div className="text-2xl mb-1">👗</div>
-              <div className="text-xs font-medium">All Items</div>
-              <div className="text-xs opacity-70">{likedItems.length}</div>
-            </button>
-
-            {categories.map(category => {
-              const count = itemsByCategory[category.id]?.length || 0;
-              return (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`p-3 rounded-xl border transition-all text-center ${
-                    selectedCategory?.id === category.id
-                      ? 'bg-blue-500 border-blue-500 text-white'
-                      : 'bg-white/5 border-white/10 hover:bg-white/10 text-gray-300'
-                  } ${count === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  disabled={count === 0}
-                >
-                  <div className="text-2xl mb-1">{category.icon}</div>
-                  <div className="text-xs font-medium">{category.name}</div>
-                  <div className="text-xs opacity-70">{count}</div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Items Grid */}
-        <div className="mb-8">
-          {filteredItems.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="text-6xl mb-4 opacity-20">👗</div>
-              <h3 className="text-xl font-semibold text-gray-400 mb-2">
-                {selectedCategory ? `No ${selectedCategory.name.toLowerCase()} items yet` : 'No items in your collection'}
-              </h3>
-              <p className="text-gray-500 mb-6">
-                {selectedCategory
-                  ? 'Try liking some items from this category'
-                  : 'Start by liking items from explore looks'
-                }
-              </p>
-              <button
-                onClick={() => navigate('/explore')}
-                className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-              >
-                Explore Looks
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {filteredItems.map(item => (
-                <div
-                  key={item.id}
-                  className="group relative bg-white/5 rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all"
-                >
-                  <div className="aspect-square relative">
-                    <img
-                      src={item.imageUrl}
-                      alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                    {/* Category Badge */}
-                    <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                      {item.category.icon}
-                    </div>
-
-                    {/* Unlike Button */}
-                    <button
-                      onClick={() => handleUnlikeItem(item.id)}
-                      className="absolute bottom-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all hover:scale-110 hover:bg-red-600"
+        ) : (
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.6fr)_minmax(0,0.4fr)]">
+            <div className="space-y-4">
+              <p className="text-xs uppercase tracking-[0.4em] text-white/40">All liked items</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {likedItems.map((item) => {
+                  const itemName = item.name || 'Saved item';
+                  const categoryName = item.category?.name || 'Collection';
+                  return (
+                    <div
+                      key={item.id}
+                      className={`rounded-2xl border bg-white/5 overflow-hidden transition relative ${
+                        selectedMap[item.id] ? 'border-pink-400/60 shadow-lg shadow-pink-500/20' : 'border-white/10'
+                      }`}
                     >
-                      <HeartOff className="h-3 w-3" />
+                    <button
+                      onClick={() => toggleSelect(item.id)}
+                      className={`absolute top-3 left-3 rounded-full border px-2 py-1 text-xs font-medium flex items-center gap-1 transition ${
+                        selectedMap[item.id] ? 'bg-pink-500 border-pink-500 text-white' : 'bg-black/50 border-white/30 text-white/80'
+                      }`}
+                    >
+                      <Check className="h-3 w-3" />
+                      {selectedMap[item.id] ? 'Selected' : 'Select'}
                     </button>
-                  </div>
-
-                  <div className="p-3">
-                    <p className="text-sm font-medium truncate mb-1">{item.name}</p>
-                    <p className="text-xs text-gray-400 mb-2">{item.category.name}</p>
-                    <p className="text-xs text-gray-500 truncate">From: {item.lookTitle}</p>
-                  </div>
-                </div>
-              ))}
+                    <button
+                      onClick={() => handleRemove(item.id)}
+                      className="absolute top-3 right-3 rounded-full border border-white/20 bg-black/40 p-2 text-white/70 hover:text-white"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                    <div className="aspect-square overflow-hidden">
+                      <img src={item.imageUrl} alt={itemName} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="p-3">
+                      <p className="text-sm font-semibold text-white truncate">{itemName}</p>
+                      <p className="text-xs text-white/50 capitalize">{categoryName}</p>
+                      <p className="text-xs text-white/40">
+                        From {item.lookTitle || 'Explore look'}
+                      </p>
+                    </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          )}
-        </div>
 
-        {/* Actions */}
-        {likedItems.length > 0 && (
-          <div className="text-center space-y-4">
-            <div className="rounded-2xl border border-purple-500/30 bg-purple-500/10 p-6 max-w-md mx-auto">
-              <Sparkles className="h-8 w-8 text-purple-400 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold mb-2">Ready to build outfits?</h3>
-              <p className="text-sm text-gray-400 mb-4">
-                Mix and match your favorite items to create perfect looks
-              </p>
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.4em] text-white/40">Board</p>
+                  <p className="text-sm text-white/70">Selected items ({selectedItems.length})</p>
+                </div>
+                {selectedItems.length > 0 && (
+                  <button
+                    onClick={handleClearBoard}
+                    className="text-xs text-white/60 hover:text-white"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              {tryOnError && (
+                <div className="rounded-xl border border-red-400/40 bg-red-500/10 px-3 py-2 text-xs text-red-100">
+                  {tryOnError}
+                </div>
+              )}
+              <div className="flex-1 rounded-2xl border border-white/10 bg-black/30 p-4 min-h-[320px] grid grid-cols-2 gap-3 content-start">
+                {selectedItems.length === 0 ? (
+                  <p className="col-span-2 text-sm text-white/40 self-center text-center">
+                    Select items from the left to build an outfit.
+                  </p>
+                ) : (
+                  selectedItems.map((item) => {
+                    const itemName = item.name || 'Saved item';
+                    return (
+                      <div key={item.id} className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+                      <div className="aspect-square overflow-hidden">
+                        <img src={item.imageUrl} alt={itemName} className="w-full h-full object-cover" />
+                      </div>
+                      <p className="text-xs text-white/70 truncate px-2 py-1">{itemName}</p>
+                    </div>
+                    );
+                  })
+                )}
+              </div>
               <button
-                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 font-medium"
+                onClick={handleTryOnSelection}
+                disabled={!selectedItems.length || isTryingOnSelection}
+                className={`rounded-2xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 transition border ${
+                  selectedItems.length && !isTryingOnSelection
+                    ? 'border-white/40 text-white hover:border-white/70'
+                    : 'border-white/20 text-white/40 cursor-not-allowed'
+                }`}
               >
-                Create Outfit (Coming Soon)
+                {isTryingOnSelection ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    Rendering outfit...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4" />
+                    Try On Selection
+                  </>
+                )}
               </button>
             </div>
-
-            <button
-              onClick={handleUnlikeAll}
-              className="text-sm text-gray-500 hover:text-red-400 transition-colors"
-            >
-              Clear All Items
-            </button>
           </div>
         )}
       </div>
     </div>
   );
-}
+};
+
+export default OutfitBuilderCorrect;

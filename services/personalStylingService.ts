@@ -364,7 +364,8 @@ export class PersonalStylingService {
     userId: string,
     userPhotoUrl: string,
     prompt: string,
-    metadata?: Partial<PersonalLook> & { referenceImage?: string }
+    metadata?: Partial<PersonalLook> & { referenceImage?: string },
+    itemImages?: string[]
   ): Promise<PersonalLook> {
     const response = await fetch(this.getRemixUrl(), {
       method: 'POST',
@@ -376,6 +377,7 @@ export class PersonalStylingService {
         userPhoto: userPhotoUrl,
         prompt,
         referenceImage: metadata?.referenceImage,
+        itemImages,
         metadata
       })
     });

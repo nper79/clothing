@@ -1083,8 +1083,13 @@ Use precise fashion language, highlight footwear, and ensure full-body framing.`
   }
 }
 
-export async function remixLookWithPrompt(userPhoto: string, prompt: string, _referenceImage?: string) {
-  const imageInputs = [userPhoto];
+export async function remixLookWithPrompt(
+  userPhoto: string,
+  prompt: string,
+  referenceImage?: string,
+  itemImages: string[] = []
+) {
+  const imageInputs = [userPhoto, referenceImage, ...itemImages];
   const cleanedPrompt = stripSceneClauses(prompt.trim());
   const finalPrompt = `${cleanedPrompt} Apply this outfit to the provided person while keeping their exact face, pose, and body proportions unchanged. Do not introduce any new people or backgrounds. ${FRAMING_REQUIREMENTS}`;
   const styledPhotoUrl = await generateNanoBananaImage(finalPrompt, imageInputs);

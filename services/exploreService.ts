@@ -1,6 +1,13 @@
 import type { ExploreLook, ShopItem } from '../types/explore';
 import { PersonalStylingService } from './personalStylingService';
 
+export interface SavedRemixItem {
+  id: string;
+  name: string;
+  imageUrl?: string;
+  category?: string;
+}
+
 export interface SavedRemix {
   id: string;
   lookId: string;
@@ -9,12 +16,16 @@ export interface SavedRemix {
   storagePath?: string;
   createdAt: string;
   imageUrl?: string;
+  customItems?: SavedRemixItem[];
+  customPrompt?: string;
 }
 
 const LIKE_STORAGE_KEY = 'explore_likes';
 const REMIX_STORAGE_PREFIX = 'explore_remixes_';
 const PHOTO_STORAGE_PREFIX = 'latest_user_photo_';
 const LEGACY_PHOTO_KEY = 'latest_user_photo';
+const MAX_RECENT_PHOTOS = 3;
+const SIZE_LIMIT_BYTES = 4.5 * 1024 * 1024; // ~4.5MB to stay under the 5MB Web Storage limit
 
 type LikeMap = Record<string, boolean>;
 
@@ -246,42 +257,22 @@ export const ExploreService = {
   setLatestUserPhoto(userId: string, dataUrl: string) {
     if (typeof window === 'undefined') return;
 
+    const approxBytes = Math.ceil((dataUrl.length * 3) / 4);
+    if (approxBytes > SIZE_LIMIT_BYTES) {
+      throw new Error('Photo is too large to save locally. Please use a smaller image.');
+    }
+
+    const key = photoKey(userId);
+
     try {
-      // Clean up old photos first to free space
-      this.cleanupOldPhotos();
-
-      // Check if dataUrl is too large (>5MB)
-      const dataSizeKB = Math.round(dataUrl.length * 0.75 / 1024);
-      if (dataSizeKB > 5120) { // 5MB
-        console.warn('[ExploreService] Photo too large for localStorage:', dataSizeKB, 'KB');
-        throw new Error('Photo is too large to save locally');
-      }
-
-      // Check available space (rough estimate)
-      const storageUsage = JSON.stringify(localStorage).length;
-      const storageLimit = 5 * 1024 * 1024; // 5MB
-      const availableSpace = storageLimit - storageUsage;
-
-      if (dataUrl.length > availableSpace) {
-        console.warn('[ExploreService] Not enough space in localStorage');
-        this.clearAllPhotos(); // Emergency cleanup
-        throw new Error('Not enough storage space. Please clear your browser data.');
-      }
-
-      localStorage.setItem(photoKey(userId), dataUrl);
+      localStorage.setItem(key, dataUrl);
       localStorage.setItem(LEGACY_PHOTO_KEY, dataUrl);
-      console.log('[ExploreService] Photo saved successfully, size:', dataSizeKB, 'KB');
+      this.pruneRecentPhotos();
     } catch (error) {
-      console.error('[ExploreService] Failed to save photo:', error);
-      // Clear and retry once
-      this.clearAllPhotos();
-      try {
-        localStorage.setItem(photoKey(userId), dataUrl);
-        localStorage.setItem(LEGACY_PHOTO_KEY, dataUrl);
-      } catch (retryError) {
-        console.error('[ExploreService] Failed to save photo even after cleanup:', retryError);
-        throw retryError;
-      }
+      console.warn('[ExploreService] Storage quota hit while saving photo, clearing older photos.', error);
+      this.pruneRecentPhotos(true);
+      localStorage.setItem(key, dataUrl);
+      localStorage.setItem(LEGACY_PHOTO_KEY, dataUrl);
     }
   },
 
@@ -316,7 +307,9 @@ export const ExploreService = {
       lookName: remix.lookName,
       gender: remix.gender,
       storagePath: remix.storagePath,
-      imageUrl: remix.storagePath ? undefined : remix.imageUrl,
+      imageUrl: remix.imageUrl,
+      customItems: remix.customItems,
+      customPrompt: remix.customPrompt,
       createdAt: new Date().toISOString(),
     };
     const updated = [entry, ...current].slice(0, 60);
@@ -336,35 +329,35 @@ export const ExploreService = {
     return (localStorage.getItem('latest_user_gender') as 'male' | 'female') || 'female';
   },
 
-  cleanupOldPhotos() {
+  pruneRecentPhotos(forceCleanup = false) {
     if (typeof window === 'undefined') return;
 
-    const photoKeys = [];
+    const entries: Array<{ key: string; timestamp: number }> = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && key.startsWith('user_photo_')) {
-        photoKeys.push(key);
+      if (key && key.startsWith(PHOTO_STORAGE_PREFIX)) {
+        entries.push({ key, timestamp: Number(key.split('_').pop()) || 0 });
       }
     }
 
-    // Keep only the most recent 3 photos
-    photoKeys.sort().slice(0, -3).forEach(key => {
-      console.log('[ExploreService] Removing old photo:', key);
-      localStorage.removeItem(key);
-    });
+    entries.sort((a, b) => b.timestamp - a.timestamp);
+    const toRemove = forceCleanup
+      ? entries.slice(1) // keep only the newest
+      : entries.slice(MAX_RECENT_PHOTOS);
+
+    toRemove.forEach(({ key }) => localStorage.removeItem(key));
   },
 
   clearAllPhotos() {
     if (typeof window === 'undefined') return;
 
-    console.log('[ExploreService] Clearing all photos from localStorage');
-    const keysToRemove = [];
+    const keysToRemove: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && (key.startsWith('user_photo_') || key === 'latest_user_photo')) {
+      if (key && (key.startsWith(PHOTO_STORAGE_PREFIX) || key === LEGACY_PHOTO_KEY)) {
         keysToRemove.push(key);
       }
     }
-    keysToRemove.forEach(key => localStorage.removeItem(key));
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
   }
 };

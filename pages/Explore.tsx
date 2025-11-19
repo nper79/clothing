@@ -38,6 +38,27 @@ const ExplorePage: React.FC = () => {
   const [toast, setToast] = useState<{ message: string; type: 'info' | 'error' | 'success' } | null>(null);
   const toastTimerRef = useRef<number | null>(null);
 
+  const handleSaveUploadedPhoto = () => {
+    if (!uploadPreview) return;
+    try {
+      ExploreService.setLatestUserPhoto(storageUserId, uploadPreview);
+      setUserPhoto(uploadPreview);
+      showToast('Photo saved! You can now try on looks.', 'success');
+      setIsPhotoModalOpen(false);
+      setUploadPreview(null);
+      setUploadError(null);
+      if (pendingLook) {
+        handleRemix(pendingLook);
+        setPendingLook(null);
+      }
+    } catch (error) {
+      console.error('Failed to save photo', error);
+      setUploadError(
+        error instanceof Error ? error.message : 'Failed to save this photo. Try a smaller image.'
+      );
+    }
+  };
+
   const shuffleLooks = (items: ExploreLook[]) => {
     const copy = [...items];
     for (let i = copy.length - 1; i > 0; i--) {
@@ -234,6 +255,12 @@ const ExplorePage: React.FC = () => {
               Your remixes
             </button>
             <button
+              onClick={() => navigate('/outfit-builder')}
+              className="text-left rounded-xl border border-white/10 px-4 py-2 hover:border-white/40 hover:text-white transition"
+            >
+              My saved items
+            </button>
+            <button
               onClick={() => navigate('/style-quiz')}
               className="text-left rounded-xl border border-white/10 px-4 py-2 hover:border-white/40 hover:text-white transition"
             >
@@ -258,9 +285,14 @@ const ExplorePage: React.FC = () => {
                   </div>
                 )}
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs uppercase tracking-[0.4em] text-white/40">Your base photo</p>
-                <p className="font-semibold text-white">{user ? user.email : 'Wardrobe user'}</p>
+                <p
+                  className="font-semibold text-white truncate"
+                  title={user ? user.email : 'Wardrobe user'}
+                >
+                  {user ? user.email : 'Wardrobe user'}
+                </p>
                 <p className="text-xs text-white/50">Used for try-on renders</p>
               </div>
             </div>
@@ -614,83 +646,83 @@ const ExplorePage: React.FC = () => {
       {/* Photo Upload Modal */}
       {isPhotoModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6 text-gray-900 space-y-4 flex flex-col">
-            <h3 className="text-xl font-semibold">Upload your photo</h3>
-            <p className="text-sm text-gray-600">
-              We use this photo privately to render outfits on you. Files never leave this device except for the AI edit.
-            </p>
-
-            {uploadPreview ? (
-              <div className="space-y-4">
-                <div className="aspect-[9/16] rounded-2xl overflow-hidden bg-gray-100">
-                  <img src={uploadPreview} alt="Upload preview" className="w-full h-full object-cover" />
-                </div>
-                {uploadError && (
-                  <div className="p-3 bg-red-100 border border-red-300 rounded-lg">
-                    <p className="text-sm text-red-700">{uploadError}</p>
+          <div className="bg-white rounded-3xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
+            <div className="p-6 space-y-3">
+              <h3 className="text-xl font-semibold text-gray-900">Upload your photo</h3>
+              <p className="text-sm text-gray-600">
+                We use this photo privately to render outfits on you. Files never leave this device except for the AI edit.
+              </p>
+            </div>
+            <div className="flex-1 overflow-hidden px-6 pb-6">
+              {uploadPreview ? (
+                <div className="flex h-full flex-col gap-4">
+                  <div className="rounded-2xl bg-gray-100 overflow-hidden border border-gray-200 h-[55vh]">
+                    <img src={uploadPreview} alt="Upload preview" className="w-full h-full object-contain" />
                   </div>
-                )}
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => {
-                      setIsPhotoModalOpen(false);
-                      setUploadPreview(null);
-                      setUploadError(null);
-                      if (pendingLook) {
-                        handleRemix(pendingLook);
+                  {uploadError && (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+                      {uploadError}
+                    </div>
+                  )}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handleSaveUploadedPhoto}
+                      className="flex-1 px-4 py-2 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors"
+                    >
+                      Use This Photo
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsPhotoModalOpen(false);
+                        setUploadPreview(null);
+                        setUploadError(null);
                         setPendingLook(null);
-                      }
-                    }}
-                    className="flex-1 px-4 py-2 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors"
-                  >
-                    Use This Photo
-                  </button>
+                      }}
+                      className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex h-full flex-col gap-4">
+                  <label className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50 text-gray-500 hover:bg-gray-100 cursor-pointer">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          if (file.size > 5 * 1024 * 1024) {
+                            setUploadError('Image must be smaller than 5MB');
+                            return;
+                          }
+
+                          const reader = new FileReader();
+                          reader.onload = (ev) => setUploadPreview(ev.target?.result as string);
+                          reader.onerror = () => setUploadError('Failed to read image');
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="hidden"
+                    />
+                    <span className="text-sm font-medium">Click to choose a photo</span>
+                    <span className="text-xs text-gray-400 mt-1">Accepted: JPG, PNG, WebP (Max 5MB)</span>
+                  </label>
+                  {uploadError && (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+                      {uploadError}
+                    </div>
+                  )}
                   <button
-                    onClick={() => {
-                      setIsPhotoModalOpen(false);
-                      setUploadPreview(null);
-                      setUploadError(null);
-                      setPendingLook(null);
-                    }}
-                    className="flex-1 px-4 py-2 bg-white/10 text-gray-900 rounded-xl hover:bg-white/20 transition-colors"
+                    onClick={() => setIsPhotoModalOpen(false)}
+                    className="w-full px-4 py-2 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition-colors"
                   >
                     Cancel
                   </button>
                 </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      if (file.size > 5 * 1024 * 1024) {
-                        setUploadError('Image must be smaller than 5MB');
-                        return;
-                      }
-
-                      const reader = new FileReader();
-                      reader.onload = (e) => setUploadPreview(e.target?.result as string);
-                      reader.onerror = () => setUploadError('Failed to read image');
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                  className="w-full px-4 py-2 bg-white/10 border border-dashed border-white/30 rounded-xl text-white placeholder-gray-400 file:mr-2 file:placeholder:text-gray-400"
-                  placeholder="Choose an image or drag it here"
-                />
-                <p className="text-xs text-gray-400">
-                  Accepted: JPG, PNG, WebP (Max 5MB)
-                </p>
-                <button
-                  onClick={() => setIsPhotoModalOpen(false)}
-                  className="w-full px-4 py-2 bg-white/10 text-gray-300 rounded-xl hover:bg-white/20 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}

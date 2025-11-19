@@ -2,6 +2,1511 @@
   "male": [],
   "female": [
     {
+      "id": "explore_female_1763578891238_0",
+      "gender": "female",
+      "title": "Neon Rooftop Clean",
+      "description": "Ivory ziphoodie, slate cargo skirt, silver sneakers, charcoal cap.",
+      "vibe": "sporty",
+      "prompt": "Full-body vertical 9:16, shoes visible. Contemporary streetwear clean-girl athleisure. Model in ivory terry ziphoodie over pale sage rib tank and slate nylon cargo midi skirt with side slits, paired with metallic silver chunky sneakers and charcoal baseball cap, layered with a thin gunmetal chain. Natural dewy makeup, brushed brows, gloss; low pony with loose tendrils. Pose: relaxed weight-shift, one hand in pocket, soft smile. Shot on sunset rooftop lounge bathed in neon tube lighting with skyline backdrop, urban depth of field. Fabrics read terry, rib knit, matte nylon; sneakers reflective. Sculptural light gradients and neonedges; cool-to-warm color contrast, crisp detail.",
+      "imagePrompt": "Full-body vertical 9:16, shoes visible. Contemporary streetwear clean-girl athleisure. Model in ivory terry ziphoodie over pale sage rib tank and slate nylon cargo midi skirt with side slits, paired with metallic silver chunky sneakers and charcoal baseball cap, layered with a thin gunmetal chain. Natural dewy makeup, brushed brows, gloss; low pony with loose tendrils. Pose: relaxed weight-shift, one hand in pocket, soft smile. Shot on sunset rooftop lounge bathed in neon tube lighting with skyline backdrop, urban depth of field. Fabrics read terry, rib knit, matte nylon; sneakers reflective. Sculptural light gradients and neonedges; cool-to-warm color contrast, crisp detail. Scene: stormy coastline boardwalk with matte sky and dramatic waves. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "hoodie",
+          "label": "Ivory terry ziphoodie",
+          "searchQuery": "women ivory terry ziphoodie minimal athleisure clean fit",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-1-1763578907080.jpg",
+          "cachedProducts": [
+            {
+              "title": "Vintage Soft Oversized ZipHoodie | Gap Factory",
+              "link": "https://www.gapfactory.com/browse/product.do?pid=819070041",
+              "price": "$36",
+              "source": "www.gapfactory.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRhaNa6RFsL_Jwmt_yzCjOqFG9L888LtTOs-dV92BbVzZ0sW8O4",
+              "position": 5
+            },
+            {
+              "title": "Organic Cotton Double-Knit Zip SweaterHoodie | Banana Republic",
+              "link": "https://bananarepublic.gap.com/browse/product.do?pid=743046002",
+              "price": "$59",
+              "source": "bananarepublic.gap.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSEnI46g1Z3JlHtI_QVV7fi6-mWI7FvP6EdYk9q62NZEeFuRJrY",
+              "position": 6
+            },
+            {
+              "title": "Cozy Sweatfleece Boyfriend ZipHoodie | Aritzia INTL",
+              "link": "https://www.aritzia.com/intl/en/product/cozy-sweatfleece-boyfriend-zip-hoodie/123119120.html",
+              "price": "$98",
+              "source": "www.aritzia.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTApOnS81WmofMaehISzih8E2-g2T-0TuZqkOrSsvaiL1DzklW3",
+              "position": 7
+            },
+            {
+              "title": "Loose-Fit Hooded Jacket-Gray melange-Men | H&M US",
+              "link": "https://www2.hm.com/en_us/productpage.1308010008.html",
+              "price": "$30",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsTWkj5QHeReTFsiyJ7K8ge8PPQ_Gph5da7R7GorqaRcHYTxF9",
+              "position": 17
+            },
+            {
+              "title": "On Focus Pants | Bloomingdale's",
+              "link": "https://www.bloomingdales.com/shop/product/on-focus-pants?ID=5433384",
+              "price": "$130",
+              "source": "www.bloomingdales.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRZd6narzKEZZwc7Os7i1Y0nLSWTdtPPC_qnfR4NQPKlC6a7Nz9",
+              "position": 36
+            },
+            {
+              "title": "Loose Logo ZipHoodie | Old Navy",
+              "link": "https://oldnavy.gap.com/browse/product.do?pid=846608062",
+              "price": "$38",
+              "source": "oldnavy.gap.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRiB__SIz4tWsXJiCWk9UNOGhbTau2zE3J8vFpzvRVKEk7BRBEL",
+              "position": 37
+            }
+          ],
+          "cachedAt": "2025-11-19T19:01:57.349Z"
+        },
+        {
+          "id": "tank",
+          "label": "Pale sage ribbed tank",
+          "searchQuery": "women pale sage ribbed tank cotton stretch minimal",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-2-1763578907265.jpg",
+          "cachedProducts": [
+            {
+              "title": "TEXTURED KNIT TANK TOP-Light blue | ZARA United States",
+              "link": "https://www.zara.com/us/en/textured-knit-tank-top-p05536305.html",
+              "price": "$50",
+              "source": "www.zara.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcT6zmELKKuA_seKc7tD0vuJ0LmcbgeUPHY5hB2gy-YZqX8Q_Y98",
+              "position": 3
+            },
+            {
+              "title": "Cropped Rib-Knit Henley Tank Top for Girls | Old Navy",
+              "link": "https://oldnavy.gap.com/browse/product.do?pid=692785012",
+              "price": "$3",
+              "source": "oldnavy.gap.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRQFoouKs9dfk5Pysv8ZD2MNEe2WzS2rqFzLz5HPGc8ftpFsg_K",
+              "position": 9
+            },
+            {
+              "title": "Ribbed vest top-Light turquoise-Ladies | H&M",
+              "link": "https://www2.hm.com/en_asia1/productpage.1228446002.html",
+              "price": "NT$299",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrOoFF7VcgBr6iVLAjKp-__iEnI3HcL2ZP1x9TSzj4r4BdGbUM",
+              "position": 24
+            },
+            {
+              "title": "Ribbed Scoopneck Tank Top | Gap Factory",
+              "link": "https://www.gapfactory.com/browse/product.do?pid=434676091",
+              "price": "$15",
+              "source": "www.gapfactory.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQkOzqPSQAKUzXWIfME1fMFbAFFs7xEtSesWPMdkfn7rrR064_F",
+              "position": 39
+            },
+            {
+              "title": "Ribbed Scoopneck Tank Top | Gap Factory",
+              "link": "https://www.gapfactory.com/browse/product.do?pid=434676061",
+              "price": "$10",
+              "source": "www.gapfactory.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTB8SVCfpD5Jp3ErVvJcIPgzE27zic7M2_YfjS21eD3kfHzlrp5",
+              "position": 49
+            }
+          ],
+          "cachedAt": "2025-11-19T19:01:59.786Z"
+        },
+        {
+          "id": "skirt",
+          "label": "Slate nylon cargo midi skirt",
+          "searchQuery": "women slate nylon cargo midi skirt utility pockets",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-3-1763578907478.jpg",
+          "cachedProducts": [
+            {
+              "title": "G-STAR RAW Women's Viktoria Long Cargo Skirt, Blue (Faded Blue Papillon Gd D24386-d551-g336), 30W: Buy Online at Best Price in UAE-Amazon.ae",
+              "link": "https://www.amazon.ae/G-STAR-RAW-Viktoria-Papillon-D24386-d551-g336/dp/B0CB1ZNBT4",
+              "price": "AED 253",
+              "source": "www.amazon.ae",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSsScxpS_o4NqQeTJyqt4skGC4_lw-LMYbBvVWbWyo70F1t395n",
+              "position": 34
+            }
+          ],
+          "cachedAt": "2025-11-19T19:02:04.119Z"
+        },
+        {
+          "id": "shoes",
+          "label": "Metallic silver chunky sneakers",
+          "searchQuery": "women metallic silver chunky sneakers statement streetwear",
+          "category": "shoes",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-4-1763578907657.jpg",
+          "cachedProducts": [
+            {
+              "title": "Amazon.co.jp: KZSXX Women's Thick Bottom Sneakers, Lace-up Shoes, Sneakers, Low Cut, Slip-On, Lightweight, Simple, Stylish, Beautiful Legs, Slim Look, Easy to Walk, No Tired, Standing Work, Commute, Commute, No: Clothing, Shoes",
+              "link": "https://www.amazon.co.jp/-/en/Sneakers-Lace-up-Lightweight-Beautiful-Standing/dp/B0BT8VHPR8",
+              "price": "￥5,847",
+              "source": "www.amazon.co.jp",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSbpISnnOsfTaU4Gq1oK6Aw7LB-BHWWNrWWN8ZFyO8ONKpZAKQC",
+              "position": 48
+            }
+          ],
+          "cachedAt": "2025-11-19T19:02:11.175Z"
+        },
+        {
+          "id": "hat",
+          "label": "Charcoal cotton baseball cap",
+          "searchQuery": "women charcoal cotton baseball cap minimal streetwear",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-5-1763578907871.jpg",
+          "cachedProducts": [
+            {
+              "title": "Twill Cap-Dark gray-Kids | H&M US",
+              "link": "https://www2.hm.com/en_us/productpage.1270224004.html",
+              "price": "NT$299",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRMy7vZ98czTM_zM0XodTNbtqzon8HqIUh9oeAguiZk6XoJMoFq",
+              "position": 2
+            },
+            {
+              "title": "Buy Vintage Baseball Cap 100% Washed Twill Soft Cotton Adjustable Unisex Dad-Hat (Black) at Amazon.in",
+              "link": "https://www.amazon.in/Raylarnia-Vintage-Baseball-Adjustable-Dad-Hat/dp/B083N23YRF",
+              "price": "₹3,398",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSojGPWr6_9CEIJ9LByMgi1Bi9qu-D7jw6iHozkpjVNZSNljFTv",
+              "position": 17
+            },
+            {
+              "title": "Armycrew Oversized XXL Soft Crown Washed Cotton Twill Dad Baseball Hat-Black-2XL: Buy Online at Best Price in KSA-Souq is now Amazon.sa: Fashion",
+              "link": "https://www.amazon.sa/-/en/Armycrew-Oversized-Washed-Cotton-Baseball/dp/B08MT4RNZ3",
+              "price": "SAR 109",
+              "source": "www.amazon.sa",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSICy4_nlbF7ZXgQo60BZ44Iq2RPpsC_bmJI-NvzAyvjJ77ZZVm",
+              "position": 21
+            }
+          ],
+          "cachedAt": "2025-11-19T19:02:19.404Z"
+        },
+        {
+          "id": "jewelry",
+          "label": "Gunmetal slim chain necklace",
+          "searchQuery": "women gunmetal slim chain necklace minimal sleek",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-6-1763578908083.jpg",
+          "cachedProducts": [
+            {
+              "title": "2-pack necklace and bracelet-Black-Men | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.1294541002.html",
+              "price": "₹1,299",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdbThSToquXm3d5vcPaXR5piZl7GZrEmnlhSulIEcy8hiFTtkF",
+              "position": 2
+            },
+            {
+              "title": "2-pack necklace and bracelet-Silver-coloured-Men | H&M GB",
+              "link": "https://www2.hm.com/en_gb/productpage.1294541001.html",
+              "price": "₹1,299",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQeYweQCcy9zMNWzSB_6rb7JpyFM8_rI09EU85YJcwwBdR6ev8a",
+              "position": 10
+            },
+            {
+              "title": "Curb Chain, Metal Curb Chain Elegant Style Attractive Decorative for Necklaces (Silver Black): Amazon.in: Jewellery",
+              "link": "https://www.amazon.in/Elegant-Attractive-Decorative-Necklaces-Silver/dp/B0BHS9V6B8",
+              "price": "₹4,929",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR5GLemx_I3y-KbTwfb541a8huz_crHUwQcSJPxH48FuPKFAk6F",
+              "position": 11
+            },
+            {
+              "title": "Homxi Chains Necklace for Men,Chain Necklace Men 2mm Mens Chain Necklaces 18inch Chain Men Necklace Chain Sterling Silver Mens Silver Necklace Chain: Amazon.co.uk: Fashion",
+              "link": "https://www.amazon.co.uk/Homxi-Necklace-Choker-Sterling-Necklaces/dp/B0B2K1BF45",
+              "price": "£60",
+              "source": "www.amazon.co.uk",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTkNQ9oXDJxnm18qdRrJvTGmQg7N25Zk0ugFnkXI9GqgWkxiTzx",
+              "position": 13
+            },
+            {
+              "title": "Buy AUZENO Metal Hair Band for Men Women's Headband, Unisex Black Sports Headband for Men's Hair Band Hoop Clips Women Accessories Non Slip Wide Headwear Bandeau Outdoor (chain) at Amazon.in",
+              "link": "https://www.amazon.in/AUZENO-Headband-Accessories-Headwear-Bandeau/dp/B0BS1PK484",
+              "price": "₹177",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRcSBRvdVMSpkXFKP8czXUXo4ceoInTWC3Djvt7Kq6lOqR96iPK",
+              "position": 17
+            },
+            {
+              "title": "SILVIYA 925 Sterling Silver Python Chain for Men | Gift for Every Occassion | With Certificate of Authenticity and 925 Stamp | 6 Month Warranty: Amazon.in: Fashion",
+              "link": "https://www.amazon.in/SILVIYA-Sterling-Certificate-Authenticity-Warranty/dp/B0CPY4L3Z2",
+              "price": "₹2,335",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQL2HtyoQOK9Q9G-ghqs9_WG9-Ai3PCTm5LW8NtH_xiN4ogWNqC",
+              "position": 18
+            }
+          ],
+          "cachedAt": "2025-11-19T19:02:23.903Z"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0-1763578891238.jpg",
+      "styleTag": "street",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-1763578906386.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-1-1763578907080.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-2-1763578907265.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-3-1763578907478.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-4-1763578907657.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-5-1763578907871.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-6-1763578908083.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-7-1763578908277.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578891238_0/grid-cell-8-1763578908457.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763578740304_0",
+      "gender": "female",
+      "title": "Linen Tech Mix",
+      "description": "Stone linen blazer, slate barrel jeans, olive tech parka, white sneakers.",
+      "vibe": "weekend chic",
+      "prompt": "Full-body, vertical 9:16, shoes visible. A woman wears a stone-beige linen blazer over a chalk-white rib tank, layered beneath a moss-olive technical parka with matte finish. Bottoms are slate-gray barrel-leg denim with a soft lived-in wash; footwear is crisp white leather low-top sneakers. Hair is loose natural waves; makeup is dewy skin with soft taupe eye. Pose is relaxed mid-stride, one hand tucking blazer lapel, casual confidence. Shot inside a monochrome cyclorama studio with sculptural light gradients and softedge shadows, neutral palette emphasizing textures and fabrics.",
+      "imagePrompt": "Full-body, vertical 9:16, shoes visible. A woman wears a stone-beige linen blazer over a chalk-white rib tank, layered beneath a moss-olive technical parka with matte finish. Bottoms are slate-gray barrel-leg denim with a soft lived-in wash; footwear is crisp white leather low-top sneakers. Hair is loose natural waves; makeup is dewy skin with soft taupe eye. Pose is relaxed mid-stride, one hand tucking blazer lapel, casual confidence. Shot inside a monochrome cyclorama studio with sculptural light gradients and softedge shadows, neutral palette emphasizing textures and fabrics. Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "outerwear",
+          "label": "Moss-olive technical parka",
+          "searchQuery": "women's moss olive technical parka waterproof taped seams 2025",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-1-1763578769460.jpg"
+        },
+        {
+          "id": "blazer",
+          "label": "Stone-beige linen blazer",
+          "searchQuery": "women's stone beige linen blazer lightweight relaxed tailoring",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-2-1763578769715.jpg",
+          "cachedProducts": [
+            {
+              "title": "MANGO Women's Oversized 100% Wool Coat-Macy's",
+              "link": "https://www.macys.com/shop/product/mango-womens-oversized-100-wool-coat?ID=18326276",
+              "price": "$230",
+              "source": "www.macys.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQUkG7lmXFePF44DwxYpXGzEYUIC0ETYIT40nOCtDY70njtmszd",
+              "position": 3
+            },
+            {
+              "title": "Boyfriend Italian Flannel Blazer | Banana Republic",
+              "link": "https://bananarepublic.gap.com/browse/product.do?pid=822506002",
+              "price": "$270",
+              "source": "bananarepublic.gap.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQAnSmzLGjVjI5qfrSn8_Oxi-yWhCZXrUKuHeshJInw8UkYh-WK",
+              "position": 18
+            },
+            {
+              "title": "Loose Fit Blazer-Beige-Ladies | H&M AU",
+              "link": "https://www2.hm.com/en_au/productpage.1263321003.html",
+              "price": "$45",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTu3mrCCXqv64wS1_dSl4QsNPWG2p1eWRG7Qc6ORtzk9wji6gr1",
+              "position": 21
+            },
+            {
+              "title": "WASHED 100% LINEN SUIT BLAZER-Mink | ZARA UAE-Dubai/Sharjah/Ajman/UAQ/Fujairah",
+              "link": "https://www.zara.com/ae/en/washed-100-linen-suit-blazer-p09621135.html",
+              "price": "$179",
+              "source": "www.zara.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSIueBvSB8sKff1TUUzeyw6fV-aBWIAdhSGwCVpgmrBX4R5bZuR",
+              "position": 32
+            },
+            {
+              "title": "Oversized silk-blend jacket-Light green-Ladies | H&M MY",
+              "link": "https://www2.hm.com/en_my/productpage.1043463006.html",
+              "price": "MYR 550",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQM4vDjUFRA0SrktcG6cWynDbV_NEK1cOe8rxT6-AxV3ATKTLkX",
+              "position": 57
+            }
+          ],
+          "cachedAt": "2025-11-19T18:59:47.910Z"
+        },
+        {
+          "id": "top",
+          "label": "Chalk-white rib cotton tank",
+          "searchQuery": "women's white rib cotton tank minimalist summer base layer",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-3-1763578769951.jpg",
+          "cachedProducts": [
+            {
+              "title": "The Lodge Pant™-Crepette™ | Aritzia US",
+              "link": "https://www.aritzia.com/us/en/product/pantalon-lodge/118495007.html",
+              "price": "$138",
+              "source": "www.aritzia.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXh393hqgAA_mSIWbMV2huQESvO24A9UOskPhI3wTtewsXkUMK",
+              "position": 8
+            },
+            {
+              "title": "Ribbed Scoopneck Tank Top | Gap Factory",
+              "link": "https://www.gapfactory.com/browse/product.do?pid=735553101",
+              "price": "$14",
+              "source": "www.gapfactory.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS3Gq0JtIqtJTTf9O7nZ-Kn1akA0xq7M6x-F0YU59lwlsCJWuIW",
+              "position": 9
+            },
+            {
+              "title": "Seamless vest top-White-Ladies | H&M HK",
+              "link": "https://www2.hm.com/en_hk/productpage.0841960004.html",
+              "price": "HK$80",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSNglGu_q8fHeaxn4SeNYMsnud_vjMxwajJN7NO5nZCyBTb3O0W",
+              "position": 12
+            },
+            {
+              "title": "Buy Fruit of the Loom Boys' Cotton Tank Top Undershirt (Multipack), Boys-10 Pack-White, X-Small at Amazon.in",
+              "link": "https://www.amazon.in/Fruit-Loom-Cotton-Undershirt-Multipack/dp/B07JKB1L7V",
+              "price": "₹11,108",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRMORoZX4EoXxp2G-WAGGbbxWAsDJmlkMjQGOhl5eIpXG_ExF2m",
+              "position": 57
+            }
+          ],
+          "cachedAt": "2025-11-19T18:59:49.797Z"
+        },
+        {
+          "id": "bottom",
+          "label": "Slate-gray barrel-leg denim",
+          "searchQuery": "women's slate gray barrel leg jeans modern denim",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-4-1763578770141.jpg",
+          "cachedProducts": [
+            {
+              "title": "Slim Standard Jean | Banana Republic Factory",
+              "link": "https://bananarepublicfactory.gapfactory.com/browse/product.do?pid=411322001",
+              "price": "$31",
+              "source": "bananarepublicfactory.gapfactory.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTW9NZrOsBVdAj1NhRW9fYE0mOZ0Beho5Ybexo6p_cgE0_1RBh2",
+              "position": 8
+            },
+            {
+              "title": "The Slim Jean | Banana Republic",
+              "link": "https://bananarepublic.gap.com/browse/product.do?pid=814532002",
+              "price": "$20",
+              "source": "bananarepublic.gap.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSZPySjc3dfOdBhvh9WHN5NVunnoo9mbM9MSuei1s85tTBWwodq",
+              "position": 12
+            },
+            {
+              "title": "COTTON ON Men's Cropped Fit Graphic T-Shirt-Macy's",
+              "link": "https://www.macys.com/shop/product/cotton-on-mens-cropped-fit-graphic-t-shirt?ID=24481601&swatchColor=White",
+              "price": "$35",
+              "source": "www.macys.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRy8NFJ35FBeQtY15OTk-7MLXmKRiaWn2-yLWHkSd-7YrYrnyVe",
+              "position": 13
+            },
+            {
+              "title": "Shaping Skinny Regular Jeans-Dark grey-Ladies | H&M HK",
+              "link": "https://www2.hm.com/en_hk/productpage.0731160021.html",
+              "price": "HK$449",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRnrdOXQGoXkjk6-batUrQGI5qn3FzgwhZBQGn25gj25Ej1-LlZ",
+              "position": 21
+            },
+            {
+              "title": "Slim Straight Cropped Jeans-Dark grey-Men | H&M HK",
+              "link": "https://www2.hm.com/en_hk/productpage.0716654003.html",
+              "price": "HK$179",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTpOfO56twSWZIRYb8AuW1UaJ4xLfd_NpQAFQ2337l23NkOWsVY",
+              "position": 29
+            },
+            {
+              "title": "11\" High-Rise Skinny Jeans in Levin Wash: Retro PocketEdition | Madewell",
+              "link": "https://www.madewell.com/p/womens/clothing/jeans/slim-skinny-jeans/11-high-rise-skinny-jeans-in-levin-wash-retro-pocket-edition/NA868/",
+              "price": "$90",
+              "source": "www.madewell.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSNbfUmolG1LEapGxgDSlRomz61WcewAxLx4wJHof7YytIScYiQ",
+              "position": 31
+            }
+          ],
+          "cachedAt": "2025-11-19T18:59:54.616Z"
+        },
+        {
+          "id": "shoes",
+          "label": "White leather low-top sneakers",
+          "searchQuery": "women's white leather low top sneakers minimal court",
+          "category": "shoes",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-5-1763578770329.jpg",
+          "cachedProducts": [
+            {
+              "title": "Kenneth Cole New York Men's Liam Sneaker, White, 12 Wide: Amazon.com.mx: Ropa, Zapatos yAccesorios",
+              "link": "https://www.amazon.com.mx/Kenneth-Cole-York-Mens-Sneaker/dp/B09J273XL3",
+              "price": "2808 MXN",
+              "source": "www.amazon.com.mx",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTAWU_Bm3-urcrkmhqw6hi36_Au3qb2WctP-UJupTw9VNeIA0UY",
+              "position": 47
+            },
+            {
+              "title": "Noltrom | Par deagujetas resistentes Unisex. Cordones para tenis ozapatos con variedad de tamaños ycolores. Shoe laces. (Blanco, 100cm): Amazon.com.mx: Ropa, Zapatos yAccesorios",
+              "link": "https://www.amazon.com.mx/Noltrom-agujetas-resistentes-Cordones-variedad/dp/B0B27G13YF",
+              "price": "119 MXN",
+              "source": "www.amazon.com.mx",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQ80NyFkYQMDC1E301-aVteAqcmzZNA-ILBwornJdUoQJiaeh7N",
+              "position": 59
+            },
+            {
+              "title": "Polo Ralph Lauren Jermain IiLeather Sneakers | Shopbop",
+              "link": "https://www.shopbop.com/jermain-leather-sneakers-polo-ralph/vp/v=1/1556761098.htm",
+              "price": "148 US$",
+              "source": "www.shopbop.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIMjBwSlyfHHh4D-REUIymZxwJb1QMXHbOEX5bWIIlJnWGyvtc",
+              "position": 60
+            }
+          ],
+          "cachedAt": "2025-11-19T18:59:57.184Z"
+        },
+        {
+          "id": "accessory",
+          "label": "Walnut-brown structured leather tote",
+          "searchQuery": "women's brown structured leather tote everyday polished",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-6-1763578770516.jpg",
+          "cachedProducts": [
+            {
+              "title": "Tote Bag-Dark brown-Ladies | H&M PH",
+              "link": "https://www2.hm.com/en_ph/productpage.1306782002.html",
+              "price": "$50",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSdR9PuxM-njF5E0wpCy3brSHzS5eOXAwXM8R8tljY5VJenVrUI",
+              "position": 2
+            },
+            {
+              "title": "Shopper-Brown-Ladies | H&M",
+              "link": "https://www2.hm.com/en_asia3/productpage.0473507006.html",
+              "price": "NT$799",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOu826em_LSd_3jOLuaDenr34b2ris6WEH84bFqgwHHqJlXOyc",
+              "position": 15
+            },
+            {
+              "title": "쇼퍼백-브라운-여성 | H&M KR",
+              "link": "https://www2.hm.com/ko_kr/productpage.0473507006.html",
+              "price": "₩17,900",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQkwVs8NgrUz8GoFT7Bf9u2GyVZ-tpJwAvgC8B34YcMOz4hCtAK",
+              "position": 21
+            },
+            {
+              "title": "Shopper-Brown-Ladies | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.0473507006.html",
+              "price": "₹1,499",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTGsLdbhF5cOJ3F5q_jer2lSJ-sFRsbPcil_x9jwllM4qdjdxwl",
+              "position": 43
+            }
+          ],
+          "cachedAt": "2025-11-19T19:00:05.478Z"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0-1763578740304.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-1763578768765.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-1-1763578769460.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-2-1763578769715.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-3-1763578769951.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-4-1763578770141.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-5-1763578770329.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-6-1763578770516.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-7-1763578770719.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763578740304_0/grid-cell-8-1763578770901.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763547766167_0",
+      "gender": "female",
+      "title": "Citrus Linen Ease",
+      "description": "Butter linen blazer, white tank, citrus trousers, tan ballet flats, oversized tote",
+      "vibe": "weekend chic",
+      "prompt": "Full-body, vertical 9:16. Shoes visible. Model in a butter-yellow linen blazer over a crisp white ribbed tank, paired with citrus-green linen wide-leg trousers and tan leather ballet flats, carrying a camel oversized tote; gold sculptural hoop earrings. Soft dewy makeup with peach gloss, loose low bun with face-framing tendrils. Relaxed, natural stance with one hand in pocket, gentle smile. Shot inside a monochrome cyclorama studio with sculptural light gradients, airy minimal palette; fabrics read breezy linen and smooth leather; quiet luxury with a dopamine color pop.",
+      "imagePrompt": "Full-body, vertical 9:16. Shoes visible. Model in a butter-yellow linen blazer over a crisp white ribbed tank, paired with citrus-green linen wide-leg trousers and tan leather ballet flats, carrying a camel oversized tote; gold sculptural hoop earrings. Soft dewy makeup with peach gloss, loose low bun with face-framing tendrils. Relaxed, natural stance with one hand in pocket, gentle smile. Shot inside a monochrome cyclorama studio with sculptural light gradients, airy minimal palette; fabrics read breezy linen and smooth leather; quiet luxury with a dopamine color pop. Scene: brutalist concrete stairwell washed in magenta gels. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "blazer",
+          "label": "Butter-yellow linen tailored blazer",
+          "searchQuery": "women butter yellow linen blazer lightweight relaxed tailoring",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-1-1763547789583.jpg",
+          "cachedProducts": [
+            {
+              "title": "Single-breasted jacket-Light yellow-Ladies | H&M HK",
+              "link": "https://www2.hm.com/en_hk/productpage.0849361004.html",
+              "price": "HK$349",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRRTvOBgNeGSBIY7zGmTd2-X-rOix7G5GRfQrFtmm0VKoqZuBT7",
+              "position": 4
+            },
+            {
+              "title": "Single-breasted blazer-Yellow-Ladies | H&M",
+              "link": "https://www2.hm.com/en_asia1/productpage.1128669012.html",
+              "price": "HK$299",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS76QRbhiJCQGQhO2PkSyd1h6MEtJNwtXBdKURH-FyIaoQcYLBA",
+              "position": 17
+            }
+          ],
+          "cachedAt": "2025-11-19T10:23:13.899Z"
+        },
+        {
+          "id": "top",
+          "label": "White ribbed cotton tank",
+          "searchQuery": "women white ribbed cotton tank minimalist basics",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-2-1763547789818.jpg",
+          "cachedProducts": [
+            {
+              "title": "Buy Skin Women's Racer Back Tank, White, Large at Amazon.in",
+              "link": "https://www.amazon.in/Skin-Womens-Racer-Back-Tank/dp/B082S4YQDH",
+              "price": "₹18,515",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS1P5hlL48xedrPYxgC8si5VczoUuy21NewdY3U_xkG44XRHcJz",
+              "position": 18
+            },
+            {
+              "title": "Jockey Women's Modal Tank Top 1535_Black_S: Amazon.in: Fashion",
+              "link": "https://www.amazon.in/Jockey-Womens-Combed-Regular-Treatment/dp/B0CKGL18TK",
+              "price": "₹339",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTbXNRIfJjiNjPHRchnVvketBiPqWGuR1r7Rj0FLzouKJWBoiDB",
+              "position": 29
+            },
+            {
+              "title": "Buy Groversons Paris Beauty Round Neck Camisole for Women (CM01003-WHITE-32) at Amazon.in",
+              "link": "https://www.amazon.in/Groversons-Paris-Beauty-Camisole-CM01003/dp/B0BRSDSR9S",
+              "price": "₹349",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQIh4j5akd-74sqisFvdTRjFHbt2SR9qbxvoVwhnnWg1OGLLUtD",
+              "position": 56
+            }
+          ],
+          "cachedAt": "2025-11-19T10:23:18.657Z"
+        },
+        {
+          "id": "pants",
+          "label": "Citrus-green linen wide-leg trousers",
+          "searchQuery": "women citrus green linen wide leg trousers breathable",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-3-1763547790008.jpg",
+          "cachedProducts": [
+            {
+              "title": "Philosophy diLorenzo Serafini Pleated Trousers | Shopbop",
+              "link": "https://www.shopbop.com/trousers-philosophy-di-lorenzo-serafini/vp/v=1/1549721480.htm",
+              "price": "$795",
+              "source": "www.shopbop.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSenOB5AvJh-KSaldZ9hYj3tiSPY6iDCLUL9cydCFwKXJtA8TCL",
+              "position": 54
+            }
+          ],
+          "cachedAt": "2025-11-19T10:23:27.393Z"
+        },
+        {
+          "id": "shoes",
+          "label": "Tan leather ballet flats",
+          "searchQuery": "women tan leather ballet flats minimalist rounded toe",
+          "category": "shoes",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-4-1763547790211.jpg",
+          "cachedProducts": [
+            {
+              "title": "Lauren Ralph Lauren Women's Emellie Ballet Flats-Macy's",
+              "link": "https://www.macys.com/shop/product/lauren-ralph-lauren-womens-emellie-ballet-flats?ID=24096164",
+              "price": "$93",
+              "source": "www.macys.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTHfx2NsYOUn9XkJpgvis2atJAo5RuzzDF3kteq2YMVqdkzomLv",
+              "position": 14
+            }
+          ],
+          "cachedAt": "2025-11-19T10:23:29.598Z"
+        },
+        {
+          "id": "bag",
+          "label": "Camel oversized leather tote",
+          "searchQuery": "women camel oversized leather tote quiet luxury",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-5-1763547790402.jpg",
+          "cachedProducts": [
+            {
+              "title": "Apryl Laptop Tote Bag for Women 15.6 Inch-Large Work Bags with Zip Compartments-PU Leather Office Purse Computer Briefcase-Light Brown: Buy Online at Best Price in UAE-Amazon.ae",
+              "link": "https://www.amazon.ae/Apryl-Laptop-Tote-Women-15-6/dp/B0CZ6ZWN4W",
+              "price": "AED 469",
+              "source": "www.amazon.ae",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcShQ_ntQQ3Zou4bjjiveQ562zZ1DIFgOaMnmNYdpI3Z2bp5H6Sr",
+              "position": 36
+            },
+            {
+              "title": "HOXIS Oversize Vegan Leather Tote Women Weekender Bag Shopper Handbag Travel Purse, Brown, Medium: Buy Online at Best Price in KSA-Souq is now Amazon.sa: Fashion",
+              "link": "https://www.amazon.sa/-/en/HOXIS-Oversize-Leather-Weekender-Shopper/dp/B09QSXJNYT",
+              "price": "SAR 243",
+              "source": "www.amazon.sa",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQnEVLq9WnEamoHcGQyaICGBxc6JWt1vtRD1CoPjfpSd3eEjDd1",
+              "position": 42
+            }
+          ],
+          "cachedAt": "2025-11-19T10:23:36.995Z"
+        },
+        {
+          "id": "earrings",
+          "label": "Gold sculptural hoop earrings",
+          "searchQuery": "women gold sculptural hoop earrings statement minimal",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-6-1763547790592.jpg",
+          "cachedProducts": [
+            {
+              "title": "ADORNIA 14K Gold-Plated Domed Oval Hoop Earrings-Macy's",
+              "link": "https://www.macys.com/shop/product/adornia-14k-gold-plated-domed-oval-hoop-earrings?ID=18087003",
+              "price": "$26",
+              "source": "www.macys.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTLUCF1VsKfaPdR05Nkut21TxF9emaH9B-Oqmj_FBEUKl-TV2T3",
+              "position": 5
+            }
+          ],
+          "cachedAt": "2025-11-19T10:23:56.130Z"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0-1763547766167.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-1763547788977.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-1-1763547789583.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-2-1763547789818.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-3-1763547790008.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-4-1763547790211.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-5-1763547790402.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-6-1763547790592.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-7-1763547790875.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763547766167_0/grid-cell-8-1763547791067.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763546555956_0",
+      "gender": "female",
+      "title": "Rooftop Soft Tailor",
+      "description": "Ivory linen blazer, sand knit tank, slate denim, tan slingbacks",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body, vertical 9:16 shot with shoes visible. Model in an ivory linen blazer over a sand rib-knit tank, paired with slate-wash straight-leg denim and tan leather slingback pumps. Add a pale gold micro-buckle belt and a caramel structured mini-bag. Hair in a low brushed espresso bun; makeup dewy with soft taupe liner and peach gloss. Pose relaxed, one hand pocket, gentle stride. Scene: sunset rooftop lounge bathed in neon tube lighting with skyline backdrop; warm/cool light mix creating sculptural highlights on linen texture and denim grain.",
+      "imagePrompt": "Full-body, vertical 9:16 shot with shoes visible. Model in an ivory linen blazer over a sand rib-knit tank, paired with slate-wash straight-leg denim and tan leather slingback pumps. Add a pale gold micro-buckle belt and a caramel structured mini-bag. Hair in a low brushed espresso bun; makeup dewy with soft taupe liner and peach gloss. Pose relaxed, one hand pocket, gentle stride. Scene: nighttime city street with reflective asphalt and blurred headlights. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "blazer",
+          "label": "Ivory linen single-breasted blazer",
+          "searchQuery": "women ivory linen blazer single breasted relaxed tailoring",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-1-1763546577306.jpg",
+          "cachedProducts": [
+            {
+              "title": "Oversized linen-blend blazer-Light beige-Ladies | H&M",
+              "link": "https://www2.hm.com/en_asia3/productpage.1221908001.html",
+              "price": "NT$1,799",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRUEVSEtXRgDv7PVOSyDLmzmfpmsadXGMFbode4Bx_Recg3wbOv",
+              "position": 10
+            },
+            {
+              "title": "Women's Light beige Gathered-Sleeve Jacket | H&M CA",
+              "link": "https://www2.hm.com/en_ca/productpage.1287882007.html",
+              "price": "$55",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwnn4QuSQDU9zLX-Lf6uumEvdrQ_K7r5uCzUsp2JjqCkjGAAux",
+              "position": 19
+            },
+            {
+              "title": "Oversized Cotton Blazer | Banana Republic",
+              "link": "https://bananarepublic.gap.com/browse/product.do?pid=449682002",
+              "price": "$51",
+              "source": "bananarepublic.gap.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQf-TnOQuNoxPIQLau1eqxWux01sCw_5__cgNCOIpJ97qOHoizP",
+              "position": 24
+            },
+            {
+              "title": "Women's Light beige Linen-blend Blazer-Regular fit-Regular length-Single-breasted | H&M CA",
+              "link": "https://www2.hm.com/en_ca/productpage.1156526001.html",
+              "price": "CA$49",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXHheMKTi8xGsMl4WyeLzp7ZrR6h4J7lSmv6fKaNxB-QAdzxRZ",
+              "position": 55
+            },
+            {
+              "title": "DER TAILLIERTE SMOKING-BLAZER-CREMEFARBEN | COS",
+              "link": "https://www.cos.com/de-de/women/womenswear/coatsjackets/blazers/product/the-waisted-tuxedo-blazer-cream-1104587002",
+              "price": "€250",
+              "source": "www.cos.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQALgCweG616sO4XSfIYRW6Z6XursNvJCUu-xstT0gcemNSnajd",
+              "position": 57
+            }
+          ],
+          "cachedAt": "2025-11-19T10:03:04.717Z"
+        },
+        {
+          "id": "top",
+          "label": "Sand rib-knit tank top",
+          "searchQuery": "women sand rib knit tank minimal stretch top",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-2-1763546577524.jpg",
+          "cachedProducts": [
+            {
+              "title": "Top enmezcla de seda-Beige oscuro-MUJER | H&M ES",
+              "link": "https://www2.hm.com/es_es/productpage.1171752007.html",
+              "price": "26 €",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRRZ2JsoMOgd1S1t4sw1_Wp3J0W-tH7PPipTG_ADCffsgZeEjjt",
+              "position": 3
+            },
+            {
+              "title": "Polera sin mangas acanalada-H&M CL",
+              "link": "https://secure.cl.hm.com/1257593020/p",
+              "price": "6990 CLP",
+              "source": "secure.cl.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRewhMX3EkDQgSkJ6Iz2do_1m0HIcpYNy0gazkQgJbt86EF0xR5",
+              "position": 8
+            },
+            {
+              "title": "PACK PIJAMA RIB LIMITED EDITION-Marino | ZARA Chile",
+              "link": "https://www.zara.com/cl/es/pack-pijama-rib-limited-edition-p04442313.html",
+              "price": "37.990 CLP",
+              "source": "www.zara.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcShx3Gt7I6gA7cXD1lIpfqGSizosJMwvsH_SZIqERrzH9LbvVBJ",
+              "position": 9
+            },
+            {
+              "title": "Camiseta detirantes en canalé-Beige-MUJER | H&M ES",
+              "link": "https://www2.hm.com/es_es/productpage.1243195004.html",
+              "price": "8 €",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl6o6PefkE5pO7CVtOuLW_cx_jB_a-Bt6Hqxlhfuns_RBDJ5Cx",
+              "position": 14
+            },
+            {
+              "title": "MAMA Ribbed vest top-Beige-Ladies | H&M HK",
+              "link": "https://www2.hm.com/en_hk/productpage.1173812004.html",
+              "price": "129 HKD",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSu1TyAu6AiXCF10yH21cFMTr4ds8kds4WZWViXV9Qx50HBZa_B",
+              "position": 23
+            },
+            {
+              "title": "Top de punto-Beige-MUJER | H&M ES",
+              "link": "https://www2.hm.com/es_es/productpage.1226266003.html",
+              "price": "18 €",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTPBvBJ3vbcXUsFmlGev2Q5FoV_7qgFaB9jlHnmy1u-DgtWuZ80",
+              "position": 25
+            }
+          ],
+          "cachedAt": "2025-11-19T10:03:10.429Z"
+        },
+        {
+          "id": "bottom",
+          "label": "Slate-wash straight-leg denim jeans",
+          "searchQuery": "women slate wash straight leg denim mid rise",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-3-1763546577713.jpg",
+          "cachedProducts": [
+            {
+              "title": "Buy GAP Boy's Slim Jeans (442319352_Blue at Amazon.in",
+              "link": "https://www.amazon.in/GAP-442319352_blue-Boys-Slim-Jeans/dp/B0FFJ3PLQP",
+              "price": "₹1,199",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTSOMZ4USJnfwWUgjgNtsEaE6fhzzxnqh_GRmS_LRpx36RhtGJY",
+              "position": 1
+            },
+            {
+              "title": "GapFlex All Temp Slim Taper Jeans | Gap Factory",
+              "link": "https://www.gapfactory.com/browse/product.do?pid=679667001",
+              "price": "$55",
+              "source": "www.gapfactory.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQm7Wlv6yJEmXxErylGsL_Ls9z8I0qqIyKUgaAEcl5l26GtBUYL",
+              "position": 11
+            },
+            {
+              "title": "Buy Peter England Men's Slim Jeans (PJDNASTF305299_Blue at Amazon.in",
+              "link": "https://www.amazon.in/Peter-England-Mens-Slim-Jeans/dp/B0F548PW7P",
+              "price": "₹2,274",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYMg4l9gfk6m1Mp50pridWfIMNLdQ81fSbQlqUz9K5GzIJok5w",
+              "position": 23
+            },
+            {
+              "title": "Athletic Straight Jeans | Gap",
+              "link": "https://www.gap.com/browse/product.do?pid=429437002",
+              "price": "$55",
+              "source": "www.gap.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlbd_rkDeVwBe2OZcjdiv2mudCe2lBFQyd2IWGdh9zJ9yV1uEr",
+              "position": 28
+            }
+          ],
+          "cachedAt": "2025-11-19T10:03:23.834Z"
+        },
+        {
+          "id": "shoes",
+          "label": "Tan leather slingback pumps",
+          "searchQuery": "women tan leather slingback pumps mid heel",
+          "category": "shoes",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-4-1763546577914.jpg",
+          "cachedProducts": [
+            {
+              "title": "Buy Trary Women's Pointed Toe High Heel Dress Pump Shoes New PUBrown 08 at Amazon.in",
+              "link": "https://www.amazon.in/Trary-Womens-Pointed-Dress-Shoes/dp/B086K3CT7N",
+              "price": "₹16,502",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR4qjCshQJ5pwIx4eqsRxYnjOG0uaWrb8ZxCJ5IG2bZiOVjMwvN",
+              "position": 39
+            }
+          ],
+          "cachedAt": "2025-11-19T10:03:33.607Z"
+        },
+        {
+          "id": "belt",
+          "label": "Pale gold micro-buckle belt",
+          "searchQuery": "women pale gold belt slim metallic minimal",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-5-1763546578084.jpg"
+        },
+        {
+          "id": "bag",
+          "label": "Caramel structured mini top-handle bag",
+          "searchQuery": "women caramel leather mini top handle bag structured",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-6-1763546578251.jpg",
+          "cachedProducts": [
+            {
+              "title": "Buy MAGLIN Elegant Tan Structured Handbag for Women | Premium PULeather Top Handle Bag with Gold Lock | Stylish Office & Casual Shoulder Purse at Amazon.in",
+              "link": "https://www.amazon.in/dp/B0FXXHZTDL",
+              "price": "₹1,599",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQLNdUnaoPY0PlV9oaQNDkccxLPdgIFeDTStHhBVckUyYpBNTHC",
+              "position": 8
+            },
+            {
+              "title": "Buy VELPASO Droviza Satchel For Women With Adjustable Detachable Crossbody Sling Strap (Beige) at Amazon.in",
+              "link": "https://www.amazon.in/VELPASO-Droviza-Adjustable-Detachable-Crossbody/dp/B0DYVLJP1J",
+              "price": "₹2,019",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSevcfnWZSMQ0zo9XSEzlUMCXZXiUhNTcH23xmdEVPvd18ahDkf",
+              "position": 19
+            }
+          ],
+          "cachedAt": "2025-11-19T10:04:15.026Z"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0-1763546555956.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-1763546576917.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-1-1763546577306.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-2-1763546577524.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-3-1763546577713.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-4-1763546577914.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-5-1763546578084.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-6-1763546578251.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-7-1763546579561.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763546555956_0/grid-cell-8-1763546579722.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763545265051_0",
+      "gender": "female",
+      "title": "Quad Quiet Luxury",
+      "description": "Crisp blue oxford, cream pleated mini, navy tennis sweater, black loafers.",
+      "vibe": "weekend chic",
+      "prompt": "Full-body, vertical 9:16, shoes visible. Collegiate heritage look with a light-blue cotton oxford shirt tucked into a cream pleated mini skirt, navy cable-knit tennis sweater draped over shoulders with white tipping, chocolate leather moto belt, black calf leather penny loafers with subtle shine, and beige ribbed crew socks. Add small gold sculptural hoop earrings and a tan oversized pebble-leather tote. Hair in a low glossy chestnut ponytail; makeup fresh with rosy blush and satin lip. Pose relaxed, one hand holding tote, slight step forward, confident yet approachable energy. Shot in a manicured brick campus quad with clipped hedges and limestone halls, late-afternoon sun creating soft shadows; color-true daylight, gentle bounce.",
+      "imagePrompt": "Full-body, vertical 9:16, shoes visible. Collegiate heritage look with a light-blue cotton oxford shirt tucked into a cream pleated mini skirt, navy cable-knit tennis sweater draped over shoulders with white tipping, chocolate leather moto belt, black calf leather penny loafers with subtle shine, and beige ribbed crew socks. Add small gold sculptural hoop earrings and a tan oversized pebble-leather tote. Hair in a low glossy chestnut ponytail; makeup fresh with rosy blush and satin lip. Pose relaxed, one hand holding tote, slight step forward, confident yet approachable energy. Shot in a manicured brick campus quad with clipped hedges and limestone halls, late-afternoon sun creating soft shadows; color-true daylight, gentle bounce. Scene: shot inside a monochrome cyclorama studio with sculptural light gradients. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "top",
+          "label": "Light-blue cotton oxford shirt",
+          "searchQuery": "women light-blue cotton oxford shirt crisp collegiate",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-1-1763545290023.jpg",
+          "cachedProducts": [
+            {
+              "title": "BASIC OXFORD SHIRT-Light blue | ZARA UAE-Dubai/Sharjah/Ajman/UAQ/Fujairah",
+              "link": "https://www.zara.com/ae/en/basic-oxford-shirt-p01630602.html",
+              "price": "$26",
+              "source": "www.zara.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPq62sBQWYUggtsEVhLKBJgi0qpxbAkAtzyWENU8CW2ep3C8uV",
+              "position": 2
+            },
+            {
+              "title": "Oxford Shirt-Light blue-Ladies | H&M US",
+              "link": "https://www2.hm.com/en_us/productpage.0925212004.html",
+              "price": "$25",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw-sy_S29_dQ4Lg1Pp2IickAGhHuhN5KTz1xhz-QSzl9lL08dQ",
+              "position": 7
+            },
+            {
+              "title": "Organic Cotton Oxford Crop Big Shirt | Gap",
+              "link": "https://www.gap.com/browse/product.do?pid=702890042",
+              "price": "$55",
+              "source": "www.gap.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQI0EKyhI9fdSNABILM3sR2OXPMdSzWo5dKgiYj-M5bHI02hPH4",
+              "position": 9
+            },
+            {
+              "title": "Easy Y-Neck Button-Up Shirt | Madewell",
+              "link": "https://www.madewell.com/p/womens/new/new-arrivals/easy-y-neck-button-up-shirt-in-poplin/NY989/",
+              "price": "$98",
+              "source": "www.madewell.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRsC4kLAIEQWbxeHfOLa35akjkmCKUup_Aot6t_g467Un4A5Hwg",
+              "position": 11
+            },
+            {
+              "title": "PAIGE Federal Slim Straight Leg Jeans | Nordstrom",
+              "link": "https://www.nordstrom.com/s/paige-federal-slim-straight-leg-jeans-regular-big/8007251",
+              "price": "$209",
+              "source": "www.nordstrom.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQIsomd_jJD6sVe9dbkoUCZyUkIL4umeGXuCKHHmXW4d0xVFKDG",
+              "position": 13
+            },
+            {
+              "title": "COTTON VOILE SHIRT-Indigo | ZARA United States",
+              "link": "https://www.zara.com/us/en/cotton-voile-shirt-p07545429.html",
+              "price": "$80",
+              "source": "www.zara.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQbmH1_0yAq7amXLyj6ZURPFXGiKwi4Dv8thfq5A0K-oskCRmrb",
+              "position": 16
+            }
+          ],
+          "cachedAt": "2025-11-19T09:41:34.275Z"
+        },
+        {
+          "id": "sweater",
+          "label": "Navy cable-knit tennis sweater with white tipping",
+          "searchQuery": "women navy cable-knit tennis sweater white trim preppy",
+          "category": "sweater",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-2-1763545290216.jpg",
+          "cachedProducts": [
+            {
+              "title": "Clubhouse Cable Sweater | Banana Republic Factory",
+              "link": "https://bananarepublicfactory.gapfactory.com/browse/product.do?pid=407454001",
+              "price": "$56",
+              "source": "bananarepublicfactory.gapfactory.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQwByFUzm8eyQ5tTSXZKVquWM0Neftckse3k6YBFIYz5kbs2vnn",
+              "position": 15
+            },
+            {
+              "title": "CashSoft Varsity Cable-Knit Sweater | Gap",
+              "link": "https://www.gap.com/browse/product.do?pid=483806012",
+              "price": "$35",
+              "source": "www.gap.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQACHmCCj5bplOkJ5m-lpdopF4dTw--hLJZz8ScdaC5EPu8vnmm",
+              "position": 16
+            },
+            {
+              "title": "FRENCHMAUVE Pamela Oversized Sweater | Anthropologie",
+              "link": "https://www.anthropologie.com/shop/frenchmauve-pamela-oversized-sweater",
+              "price": "$20",
+              "source": "www.anthropologie.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWzTsiAXe2aD-DIOS6TNDxCCYLdNXtrdvW4Sp5d80lgs1koihm",
+              "position": 32
+            },
+            {
+              "title": "Ralph Lauren Cotton Boxy Cable Knit Sweater | Bloomingdale's",
+              "link": "https://www.bloomingdales.com/shop/product/polo-ralph-lauren-cotton-boxy-cable-knit-sweater?ID=4961373",
+              "price": "$298",
+              "source": "www.bloomingdales.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRCL2xmG6ANi5SE2ujtc7kLCXx-YQt3WXA3YIjOs_z--OP3BmjK",
+              "position": 54
+            }
+          ],
+          "cachedAt": "2025-11-19T09:41:45.338Z"
+        },
+        {
+          "id": "bottom",
+          "label": "Cream pleated mini skirt",
+          "searchQuery": "women cream pleated mini skirt twill collegiate",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-3-1763545290465.jpg",
+          "cachedProducts": [
+            {
+              "title": "School Uniform Pleated Knit Skort for Girls | Old Navy",
+              "link": "https://oldnavy.gap.com/browse/product.do?pid=423699002",
+              "price": "$10",
+              "source": "oldnavy.gap.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQ8MFgNTIjYCWS34IREPAe5jNqQHBnqvBKplPyypVU2RLOJ7ibv",
+              "position": 36
+            },
+            {
+              "title": "The Children's Place Girls' Uniform Skort, Pack of Two, SANDY, 8: Amazon.ae: Fashion",
+              "link": "https://www.amazon.ae/Childrens-Place-Girls-Uniform-Skort/dp/B08HMHW26X",
+              "price": "AED 115",
+              "source": "www.amazon.ae",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQTjJGzH3VOcFQ9OTWkVDOfHcor_FoCDi91WDDiIpISXikNKwNR",
+              "position": 40
+            }
+          ],
+          "cachedAt": "2025-11-19T09:41:47.560Z"
+        },
+        {
+          "id": "belt",
+          "label": "Chocolate leather moto belt with silver buckle",
+          "searchQuery": "women chocolate leather moto belt silver buckle minimal",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-4-1763545290690.jpg",
+          "cachedProducts": [
+            {
+              "title": "Classic Faux-Leather Belt | Old Navy",
+              "link": "https://oldnavy.gap.com/browse/product.do?pid=684678002&vid=1&pr_rd_page=4",
+              "price": "$10",
+              "source": "oldnavy.gap.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwlnY-eHdLvXTUH-9X-pkkVnRxSzbKj1x5sXNKHsVr5UPxosSq",
+              "position": 9
+            },
+            {
+              "title": "Perfect Leather Belt | Banana Republic",
+              "link": "https://bananarepublic.gap.com/browse/product.do?pid=809869002",
+              "price": "$43",
+              "source": "bananarepublic.gap.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSct5WVkEN-_zy4DcGDb_Qhjpk9o337FkXF_ryv-kpkMslljJHZ",
+              "position": 33
+            }
+          ],
+          "cachedAt": "2025-11-19T09:41:52.120Z"
+        },
+        {
+          "id": "bag",
+          "label": "Tan oversized pebble-leather tote",
+          "searchQuery": "women tan oversized leather tote pebble minimal luxe",
+          "category": "bag",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-5-1763545290915.jpg",
+          "cachedProducts": [
+            {
+              "title": "Bolso shopper-Beige-MUJER | H&M ES",
+              "link": "https://www2.hm.com/es_es/productpage.1212011001.html",
+              "price": "11 €",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQQ0tW9ONPsFODdGASa6n80ml4atwj8w4ZwapQUkR6TKeEsXn5I",
+              "position": 2
+            },
+            {
+              "title": "DKNY Park Slope EWTote, Bolsa deMano Mujer, Borgoña, One Size: Amazon.es: Moda",
+              "link": "https://www.amazon.es/DKNY-Slope-Bolsa-Mujer-Talla/dp/B0D9ZKN41T",
+              "price": "290 €",
+              "source": "www.amazon.es",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-Li7fwmTAo-EViZKoTNFti1vkqhJ49lZgfvZbH0bvzXWs-6zJ",
+              "position": 46
+            }
+          ],
+          "cachedAt": "2025-11-19T09:41:56.009Z"
+        },
+        {
+          "id": "shoes",
+          "label": "Black calf leather penny loafers",
+          "searchQuery": "women black leather penny loafers polished collegiate",
+          "category": "shoes",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-6-1763545291097.jpg"
+        },
+        {
+          "id": "jewelry",
+          "label": "Gold sculptural hoop earrings",
+          "searchQuery": "women gold sculptural hoop earrings modern minimal",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-7-1763545291263.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0-1763545265051.jpg",
+      "styleTag": "preppy",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-1763545289373.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-1-1763545290023.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-2-1763545290216.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-3-1763545290465.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-4-1763545290690.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-5-1763545290915.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-6-1763545291097.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-7-1763545291263.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763545265051_0/grid-cell-8-1763545291499.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763544818227_0",
+      "gender": "female",
+      "title": "Neon Pier Ease",
+      "description": "Olive bomber, creamhoodie, barrel denim, gum sneakers, silver hoops.",
+      "vibe": "streetwear",
+      "prompt": "Full-body vertical 9:16 shot of a woman in an olive matte nylon MA-1 bomber layered over a cream fleecehoodie, paired with light-wash barrel-leg denim with a soft puddle hem and white calf socks, finished with tan-gum chunky leather sneakers. Hair in loose chestnut low bun under a black cotton dad cap; dewy neutral makeup with soft brown liner. Casual hands-in-pocket pose, relaxed energy. Scene: windswept Mediterranean pier with terracotta planters and sea mist, cool daylight with soft overcast, subtle depth of field. Shoes visible, textures clear, urban-coastal vibe with faint graffiti on a nearby low wall.",
+      "imagePrompt": "Full-body vertical 9:16 shot of a woman in an olive matte nylon MA-1 bomber layered over a cream fleecehoodie, paired with light-wash barrel-leg denim with a soft puddle hem and white calf socks, finished with tan-gum chunky leather sneakers. Hair in loose chestnut low bun under a black cotton dad cap; dewy neutral makeup with soft brown liner. Casual hands-in-pocket pose, relaxed energy. Shoes visible, textures clear, urban-coastal vibe with faint graffiti on a nearby low wall. Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "jacket",
+          "label": "Olive MA-1 bomber jacket",
+          "searchQuery": "women olive bomber jacket matte nylon ribbed cuffs streetwear",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-1-1763544843597.jpg",
+          "cachedProducts": [
+            {
+              "title": "Madewell xAlpha Industries MA-1 Flight Jacket | Madewell",
+              "link": "https://www.madewell.com/p/mens/clothing/jackets/madewell-x-alpha-industries-ma-1-flight-jacket/NR665/",
+              "price": "$150",
+              "source": "www.madewell.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSDJT7HfSFEbc8XpSoWn0E1qDYO0hBEsdXrYE5jsKZqIsCdzVXZ",
+              "position": 9
+            }
+          ],
+          "cachedAt": "2025-11-19T09:34:08.137Z"
+        },
+        {
+          "id": "top",
+          "label": "Cream fleecehoodie",
+          "searchQuery": "women creamhoodie cotton fleece oversized minimal street",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-2-1763544843844.jpg",
+          "cachedProducts": [
+            {
+              "title": "Loose Fit Hoodie-White-Men | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.0970819103.html",
+              "price": "₹1,499",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSmprQ4fpUdf4ADCLe72vt9G4XzGDzyKXdx4KysMCIgj8NgsW4D",
+              "position": 1
+            },
+            {
+              "title": "Buy COZY & COVE 'sMensFull Sleeves Pure Warm CottonHoodies Warm Fabric| Trendy wearHoodie with 75 Cotton and 25 Polyester for Mens-M-Off White at Amazon.in",
+              "link": "https://www.amazon.in/COZY-COVE-Sleeves-Hoodies-Polyester/dp/B0FVLY2HBV",
+              "price": "₹710",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQav_Stn7Zmq30sa6Lp5hOxbPHTbKuTg8Mos-sTSVzVGVLHJpzv",
+              "position": 4
+            },
+            {
+              "title": "Hoodie-Cream-Kids | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.1260436003.html",
+              "price": "₹1,399",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSeRJb1BNMWnr5Ii8Ujql7MRAyLIrXkJTcNiulKiTZHivomnMCN",
+              "position": 7
+            },
+            {
+              "title": "Regular Fit Hoodie-Cream-Men | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.1103620012.html",
+              "price": "₹2,099",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTIfD-ImezKFcjy7ADGOU5FHZL47xOdydMpfG26Dk4xaE-s5aeV",
+              "position": 10
+            },
+            {
+              "title": "Men's Sports Sweatshirts andHoodies 400g Cotton Padded Comfortable Soft Fabric Abrasion and Durable Pure White in 5 Sizes and 13 Colours (Color: White, Size: Medium): Amazon.de: Fashion",
+              "link": "https://www.amazon.de/-/en/Sweatshirts-Hoodies-Comfortable-Abrasion-Durable/dp/B08Y6DDNXH",
+              "price": "€46",
+              "source": "www.amazon.de",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTagiCO1S0O0Q3d5DO52w58R-t_apqtICVc0lYNWvT2f7zs0WEF",
+              "position": 17
+            },
+            {
+              "title": "Buy TDOC Premium Cotton Fleece SweatshirtHoodie for Men Beige at Amazon.in",
+              "link": "https://www.amazon.in/TDOC-Premium-Cotton-Fleece-Sweatshirt/dp/B0D93SHL3G",
+              "price": "₹495",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSay9stIr0AqTp1-mznKTuc5_cC95nHNGTOs3SI5pjlMOUK0Pfp",
+              "position": 18
+            }
+          ],
+          "cachedAt": "2025-11-19T09:34:13.566Z"
+        },
+        {
+          "id": "bottom",
+          "label": "Light-wash barrel-leg denim",
+          "searchQuery": "women light wash barrel leg jeans rigid denim 2025",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-3-1763544844062.jpg",
+          "cachedProducts": [
+            {
+              "title": "The Perfect Vintage Jean | Madewell",
+              "link": "https://www.madewell.com/p/womens/clothing/jeans/slim-skinny-jeans/the-perfect-vintage-jean-in-hickman-wash/NV406/?ccode=DM8630",
+              "price": "$148",
+              "source": "www.madewell.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT8Dn5o6Uby9vtqUHtK21GQTWhN0oMakdIT_om_DdKns5ilU-5",
+              "position": 7
+            },
+            {
+              "title": "High-Rise Stovepipe Jeans | Madewell",
+              "link": "https://www.madewell.com/p/womens/clothing/jeans/slim-skinny-jeans/high-rise-stovepipe-jeans-in-custer-wash/NV405/?ccode=DM8492",
+              "price": "$128",
+              "source": "www.madewell.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcT4DNYL8OOf_BPNN0TbyFdVu6y-XiIeZL5XZftscmoT00jkgGnh",
+              "position": 33
+            },
+            {
+              "title": "AGOLDE Low Rise Slim Leg Jeans in Kindle | Bloomingdale's",
+              "link": "https://www.bloomingdales.com/shop/product/agolde-low-rise-slim-leg-jeans-in-kindle?ID=5777183",
+              "price": "$248",
+              "source": "www.bloomingdales.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSvfGA1Urw16cOFX9whYiFxSdLN1pZ45Y4bf6eKF0l4ClpSDKNh",
+              "position": 37
+            },
+            {
+              "title": "Joe's The Brixton Slim Straight Leg Jeans | Nordstrom",
+              "link": "https://www.nordstrom.com/s/joes-the-brixton-slim-straight-leg-jeans-izel-regular-big/7750795?color=IZEL/7750795",
+              "price": "$198",
+              "source": "www.nordstrom.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgE9RTonLQzmw20hQYC0Q7hCfmSL2eARPs-nbdwcGdg_tysTUj",
+              "position": 51
+            }
+          ],
+          "cachedAt": "2025-11-19T09:34:19.775Z"
+        },
+        {
+          "id": "footwear",
+          "label": "Tan-gum chunky leather sneakers",
+          "searchQuery": "women tan gum sole leather sneakers chunky streetwear",
+          "category": "footwear",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-4-1763544844381.jpg",
+          "cachedProducts": [
+            {
+              "title": "REFRESH Women's 172404 Casual Shoes, fuchsia, 37 EU: Buy Online at Best Price in UAE-Amazon.ae",
+              "link": "https://www.amazon.ae/REFRESH-Womens-172404-Casual-fuchsia/dp/B0DP2JNP5K",
+              "price": "AED 182",
+              "source": "www.amazon.ae",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQ_acdR887miQk1jiinVczySWFCmxUo6m66ePAjK4IZgxyl0MYG",
+              "position": 18
+            }
+          ],
+          "cachedAt": "2025-11-19T09:34:24.088Z"
+        },
+        {
+          "id": "accessory",
+          "label": "Black cotton dad cap",
+          "searchQuery": "women black cotton dad cap minimalist street style",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-5-1763544844593.jpg",
+          "cachedProducts": [
+            {
+              "title": "Washed-look denim cap-Black-Ladies | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.1212624001.html",
+              "price": "₹999",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_i1X1o4z21j2daHTDRPUGvsBmxBIW0koq660IbPE5OS3UhE5H",
+              "position": 2
+            },
+            {
+              "title": "WASHED CAP-Dark khaki | ZARA United Kingdom",
+              "link": "https://www.zara.com/uk/en/washed-cap-p03920398.html",
+              "price": "₹1,750",
+              "source": "www.zara.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSFGD64iGXDSwqo1CvClNgb_5IgfFBIud7udBLL8Y7YHrzHgcvB",
+              "position": 5
+            },
+            {
+              "title": "Cotton twill cap-Black-Ladies | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.1210714001.html",
+              "price": "₹699",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQ-O9jkjiNf4nPUfUfOGnwSgn6XTfuT1jk0PsTPJ4Z7Nozsp8Hk",
+              "position": 10
+            },
+            {
+              "title": "Cotton twill cap-Black-Kids | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.1236843001.html",
+              "price": "₹499",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdb8PhALWzAQH24BnccVzFJE4B7QMeGtPU5ISn_fUhMmI-rL1T",
+              "position": 17
+            },
+            {
+              "title": "Buy Gelante Baseball Caps Dad Hats 100% Cotton Polo Style Plain Blank Adjustable Size. 1801-Black at Amazon.in",
+              "link": "https://www.amazon.in/Gelante-Baseball-Cotton-Adjustable-1801-Black/dp/B07DY7LXNS",
+              "price": "₹6,829",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSnznicGCcMFjFjZQ6rdSu6GncoYBRMhMsIumKjTa4-7uoLlvzW",
+              "position": 35
+            },
+            {
+              "title": "Linen cap-Black-Ladies | H&M",
+              "link": "https://www2.hm.com/en_asia3/productpage.1174801001.html",
+              "price": "NT$699",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRv1IHQDg_BgKIQ62JfOy6h6eOjpqCAS6Q8KgBoR2m2Z9in9tHM",
+              "position": 54
+            }
+          ],
+          "cachedAt": "2025-11-19T09:34:41.097Z"
+        },
+        {
+          "id": "jewelry",
+          "label": "Polished silver hoop earrings",
+          "searchQuery": "women silver hoop earrings polished medium modern",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-6-1763544844818.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0-1763544818227.jpg",
+      "styleTag": "street",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-1763544842756.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-1-1763544843597.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-2-1763544843844.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-3-1763544844062.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-4-1763544844381.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-5-1763544844593.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-6-1763544844818.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-7-1763544845116.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544818227_0/grid-cell-8-1763544845309.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763544559582_0",
+      "gender": "female",
+      "title": "Tomato Boardroom",
+      "description": "Cherry silk blouse, charcoal pencil skirt, camel trench, black pumps.",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body, vertical 9:16 shot with shoes visible. Subject in a camel gabardine trench layered over a cherry-red silk blouse tucked into a charcoal wool pencil skirt; sheer black tights and black leather pointed pumps; slim black leather moto belt, petite gold sculptural earrings, and a oxblood oversized leather tote. Hair: sleek low bun; makeup: clean-girl glow with tomato-red lip. Pose energy: composed mid-stride commute. Environment: modern office lobby with travertine walls and steel accents, shot inside a monochrome cyclorama studio with sculptural light gradients mimicking lobby reflections; crisp directional lighting, soft shadows, polished floor reflections.",
+      "imagePrompt": "Full-body, vertical 9:16 shot with shoes visible. Subject in a camel gabardine trench layered over a cherry-red silk blouse tucked into a charcoal wool pencil skirt; sheer black tights and black leather pointed pumps; slim black leather moto belt, petite gold sculptural earrings, and a oxblood oversized leather tote. Hair: sleek low bun; makeup: clean-girl glow with tomato-red lip. Pose energy: composed mid-stride commute. Environment: modern office lobby with travertine walls and steel accents, shot inside a monochrome cyclorama studio with sculptural light gradients mimicking lobby reflections; crisp directional lighting, soft shadows, polished floor reflections. Scene: brutalist concrete stairwell washed in magenta gels. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "coat",
+          "label": "Camel gabardine trench coat",
+          "searchQuery": "women camel trench coat gabardine belted office classic",
+          "category": "coat",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-1-1763544585824.jpg"
+        },
+        {
+          "id": "top",
+          "label": "Cherry-red silk blouse",
+          "searchQuery": "women cherry red silk blouse soft drape office",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-2-1763544586500.jpg",
+          "cachedProducts": [
+            {
+              "title": "SMLYSNEW Shirts for women Draped Collar Shoulder Pads Satin Blouse (Color: Burgundy, Size: S): Buy Online at Best Price in UAE-Amazon.ae",
+              "link": "https://www.amazon.ae/SMLYSNEW-Shirts-Draped-Collar-Shoulder/dp/B0BZKT7DXB",
+              "price": "AED 267",
+              "source": "www.amazon.ae",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQbP9vQVR9y2Rp7n6zMcq1QRDHW0DA2vsFA5f6QlpdHyzzi3yRk",
+              "position": 17
+            }
+          ],
+          "cachedAt": "2025-11-19T09:29:59.201Z"
+        },
+        {
+          "id": "skirt",
+          "label": "Charcoal wool pencil skirt",
+          "searchQuery": "women charcoal wool pencil skirt tailored office",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-3-1763544586736.jpg",
+          "cachedProducts": [
+            {
+              "title": "Carly Skirt-(Re)ssential | Aritzia CA",
+              "link": "https://www.aritzia.com/en/fr/product/jupe-carly/128384009.html",
+              "price": "CA$128",
+              "source": "www.aritzia.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTqz43uwCGH1sbsI1IyBzP8kdHaIId2uIwCLDsWZtISdoyK5wSc",
+              "position": 2
+            },
+            {
+              "title": "Hgvcfcv Women Elegant Runched High Waist Stretchy Short Pencil Bodycon Skirt Elegant Office Lady Slim Fit Workwear, Blue, X-Small: Amazon.ca: Clothing, Shoes & Accessories",
+              "link": "https://www.amazon.ca/Hgvcfcv-Elegant-Runched-Stretchy-Workwear/dp/B0CM643KRP",
+              "price": "CA$54",
+              "source": "www.amazon.ca",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQUiBUbmDHZNU406o8Z0rKoSCN5nLFJZUUSfC9akUuXLATtKVYC",
+              "position": 17
+            }
+          ],
+          "cachedAt": "2025-11-19T09:30:07.962Z"
+        },
+        {
+          "id": "shoes",
+          "label": "Black leather pointed pumps",
+          "searchQuery": "women black leather pointed pumps sleek office",
+          "category": "shoes",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-4-1763544586948.jpg"
+        },
+        {
+          "id": "bag",
+          "label": "Oxblood oversized leather tote",
+          "searchQuery": "women oxblood leather oversized tote structured office",
+          "category": "bag",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-5-1763544587168.jpg",
+          "cachedProducts": [
+            {
+              "title": "Giani Bernini Pebble Extra Large Tote, Exclusively at Macy's-Macy's",
+              "link": "https://www.macys.com/shop/product/giani-bernini-pebble-extra-large-tote-exclusively-at-macys?ID=24171994",
+              "price": "$50",
+              "source": "www.macys.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSU_Bax1e2TGjoEWLM8e7gnJpJhy-LYJeh2oKthQPrRyMyi1uSJ",
+              "position": 9
+            }
+          ],
+          "cachedAt": "2025-11-19T09:30:31.443Z"
+        },
+        {
+          "id": "jewelry",
+          "label": "Gold sculptural hoop earrings",
+          "searchQuery": "women gold sculptural hoop earrings minimal modern",
+          "category": "accessory",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-6-1763544587379.jpg",
+          "cachedProducts": [
+            {
+              "title": "Macy's Small Polished Tube Hoop Earrings in 10k Gold and White Gold-Macy's",
+              "link": "https://www.macys.com/shop/product/small-polished-tube-hoop-earrings-in-10k-gold-white-gold?ID=403920",
+              "price": "$88",
+              "source": "www.macys.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQA9PjufKWu3H5-MFPTDAEwVCS7FEhvyNvvX3eCPTTaXHsNxTyZ",
+              "position": 5
+            }
+          ],
+          "cachedAt": "2025-11-19T09:30:36.626Z"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0-1763544559582.jpg",
+      "styleTag": "work",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-1763544585138.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-1-1763544585824.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-2-1763544586500.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-3-1763544586736.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-4-1763544586948.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-5-1763544587168.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-6-1763544587379.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-7-1763544587583.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763544559582_0/grid-cell-8-1763544587757.jpg"
+      ]
+    },
+    {
       "id": "explore_female_1763305159168_0",
       "gender": "female",
       "title": "Pier Wool Layers",
@@ -911,6 +2416,51 @@
         "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-6-1763253887227.jpg",
         "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-7-1763253887406.jpg",
         "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763058637599_0/grid-cell-8-1763253887570.jpg"
+      ],
+      "imagePrompt": "Full-body 9:16, coloreditorial. Model in a matte charcoal nylon parka with boxy dropped shoulders and light padding over an oversized heather-gray cottonhoodie with thick drawcords; a crisp white cotton longline tee peeks below. Bottoms are saturated cobalt cotton-twill straight-leg utility cargos with clean stacked mid-thigh pockets, cropped hem. Footwear are chunky white-and-gum leather skate runners with beige suede toe caps. Accessories include sculptural polished-silver hoop earrings, a slim polished-silver curb chain, a black resin-and-rubber sports watch, and a graphite canvas crossbody worn snug under the parka. Setting: rain-soaked neon alley by a foggy riverside boardwalk, puddle reflections and soft city lights in haze. Vertical 9:16, waist-height camera, confident mid-motion pose, footwearfully visible, vivid natural lighting, full color.",
+      "items": [
+        {
+          "id": "outerwear",
+          "label": "Charcoal nylon parka, boxy dropped-shoulder",
+          "searchQuery": "women charcoal nylon parka boxy dropped shoulder padded",
+          "category": "outerwear",
+          "gender": "female"
+        },
+        {
+          "id": "top",
+          "label": "Heather-gray oversizedhoodie",
+          "searchQuery": "women heather gray cotton oversizedhoodie thick drawcords",
+          "category": "top",
+          "gender": "female"
+        },
+        {
+          "id": "base-layer",
+          "label": "White longline tee",
+          "searchQuery": "women white cotton longline tee minimalist layering",
+          "category": "top",
+          "gender": "female"
+        },
+        {
+          "id": "bottom",
+          "label": "Cobalt cotton-twill utility cargos",
+          "searchQuery": "women cobalt cotton twill utility cargo pants straight",
+          "category": "bottom",
+          "gender": "female"
+        },
+        {
+          "id": "footwear",
+          "label": "White-and-gum skate runners with suede toe",
+          "searchQuery": "women white gum sole leather skate sneakers suede toe",
+          "category": "footwear",
+          "gender": "female"
+        },
+        {
+          "id": "accessory",
+          "label": "Polished-silver sculptural hoop earrings",
+          "searchQuery": "women polished silver sculptural hoop earrings statement",
+          "category": "accessories",
+          "gender": "female"
+        }
       ]
     },
     {
@@ -1331,6 +2881,58 @@
         "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-6-1763254021457.jpg",
         "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-7-1763254021646.jpg",
         "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763051435443_6/grid-cell-8-1763254021836.jpg"
+      ],
+      "imagePrompt": "Full-body vertical 9:16 editorial shot on a rooftop track at golden hour with a city skyline and breezy atmosphere, camera at waist height. Model wears a light chrome nylon windbreaker with subtle sheen, a white ribbed mock-neck top, soft blue denim petal-hem barrel jeans, and off-white chunky runners with reflective silver accents. Accessories include sculptural chrome metal earrings, a black technical nylon belt bag, and a slim black leather moto belt. Hair is sleek half-up; makeup is dewy with clear gloss and groomed brows. Confident mid-motion pose; footwearfully visible; moody matte sky hinting at a stormy coastline backdrop.",
+      "items": [
+        {
+          "id": "outerwear",
+          "label": "Light chrome nylon windbreaker",
+          "searchQuery": "women chrome nylon windbreaker sporty sheen lightweight",
+          "category": "outerwear",
+          "gender": "female"
+        },
+        {
+          "id": "top",
+          "label": "White ribbed mock-neck top",
+          "searchQuery": "women white ribbed mock neck top minimal",
+          "category": "top",
+          "gender": "female"
+        },
+        {
+          "id": "bottom",
+          "label": "Soft blue denim petal-hem barrel jeans",
+          "searchQuery": "women soft blue denim petal hem barrel jeans",
+          "category": "bottom",
+          "gender": "female"
+        },
+        {
+          "id": "footwear",
+          "label": "Off-white chunky runners with reflective accents",
+          "searchQuery": "women off white chunky sneakers reflective sporty",
+          "category": "footwear",
+          "gender": "female"
+        },
+        {
+          "id": "accessory1",
+          "label": "Sculptural chrome metal earrings",
+          "searchQuery": "women chrome sculptural metal earrings modern",
+          "category": "accessories",
+          "gender": "female"
+        },
+        {
+          "id": "accessory2",
+          "label": "Black technical nylon belt bag",
+          "searchQuery": "women black technical nylon belt bag sporty",
+          "category": "accessories",
+          "gender": "female"
+        },
+        {
+          "id": "accessory3",
+          "label": "Slim black leather moto belt",
+          "searchQuery": "women slim black leather moto belt minimal",
+          "category": "accessories",
+          "gender": "female"
+        }
       ]
     },
     {

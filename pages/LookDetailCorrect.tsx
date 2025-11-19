@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ExploreService } from '../services/exploreService';
 import { LikedItem, Category } from '../types/lookBuilder';
-import { ArrowLeft, Heart, HeartOff, Sparkles, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Heart, RefreshCw, Sparkles } from 'lucide-react';
 
 interface Look {
   id: string;
@@ -25,16 +25,16 @@ interface Look {
 }
 
 const categories: Category[] = [
-  { id: 'headwear', name: 'Headwear', icon: '👒' },
-  { id: 'tops', name: 'Tops', icon: '👕' },
-  { id: 'bottoms', name: 'Bottoms', icon: '👖' },
-  { id: 'dresses', name: 'Dresses', icon: '👗' },
-  { id: 'outerwear', name: 'Outerwear', icon: '🧥' },
-  { id: 'footwear', name: 'Footwear', icon: '👟' },
-  { id: 'accessories', name: 'Accessories', icon: '👜' }
+  { id: 'headwear', name: 'Headwear', icon: '' },
+  { id: 'tops', name: 'Tops', icon: '' },
+  { id: 'bottoms', name: 'Bottoms', icon: '' },
+  { id: 'dresses', name: 'Dresses', icon: '' },
+  { id: 'outerwear', name: 'Outerwear', icon: '' },
+  { id: 'footwear', name: 'Footwear', icon: '' },
+  { id: 'accessories', name: 'Accessories', icon: '' }
 ];
 
-export default function LookDetailCorrect() {
+const LookDetailCorrect: React.FC = () => {
   const { lookId } = useParams<{ lookId: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -46,21 +46,16 @@ export default function LookDetailCorrect() {
   const [error, setError] = useState<string | null>(null);
   const [hasLoaded, setHasLoaded] = useState(false);
 
-  // Load liked items when user changes
   useEffect(() => {
     if (user) {
-      const savedLikedItems = localStorage.getItem(`likedItems_${user.id}`);
-      if (savedLikedItems) {
-        setLikedItems(JSON.parse(savedLikedItems));
-      } else {
-        setLikedItems([]);
-      }
+      const saved = localStorage.getItem(`likedItems_${user.id}`);
+      setLikedItems(saved ? JSON.parse(saved) : []);
     } else {
       setLikedItems([]);
     }
   }, [user]);
 
-  const loadLook = React.useCallback(async () => {
+  const loadLook = useCallback(async () => {
     if (!lookId || hasLoaded) return;
 
     try {
@@ -72,25 +67,22 @@ export default function LookDetailCorrect() {
         ExploreService.getLooks('female')
       ]);
 
-      const allLooks = [...maleLooks, ...femaleLooks];
-      const foundLook = allLooks.find(l => l.id === lookId);
-
-      if (!foundLook) {
+      const dataset = [...maleLooks, ...femaleLooks];
+      const found = dataset.find((entry) => entry.id === lookId);
+      if (!found) {
         setError('Look not found');
         return;
       }
+      setLook(found);
 
-      setLook(foundLook);
-
-      // Also get detailed look with items
       try {
-        const detailedLook = await ExploreService.getLookWithItems(lookId);
-        setLook(detailedLook);
+        const detailed = await ExploreService.getLookWithItems(lookId);
+        setLook(detailed);
       } catch (err) {
-        console.log('Could not load detailed look items');
+        console.warn('Could not load detailed look items', err);
       }
     } catch (err) {
-      console.error('Failed to load look:', err);
+      console.error('Failed to load look', err);
       setError('Failed to load look');
       setHasLoaded(false);
     } finally {
@@ -102,7 +94,7 @@ export default function LookDetailCorrect() {
     if (!hasLoaded) {
       loadLook();
     }
-  }, [lookId, hasLoaded, loadLook]);
+  }, [loadLook, hasLoaded]);
 
   useEffect(() => {
     setHasLoaded(false);
@@ -113,24 +105,16 @@ export default function LookDetailCorrect() {
 
   const categorizeItem = (itemName: string): Category => {
     const name = itemName.toLowerCase();
-    if (name.includes('hat') || name.includes('cap') || name.includes('beanie') || name.includes('head')) {
-      return categories.find(c => c.id === 'headwear')!;
-    } else if (name.includes('coat') || name.includes('jacket') || name.includes('blazer')) {
-      return categories.find(c => c.id === 'outerwear')!;
-    } else if (name.includes('dress') || name.includes('gown')) {
-      return categories.find(c => c.id === 'dresses')!;
-    } else if (name.includes('pants') || name.includes('trousers') || name.includes('jeans') || name.includes('skirt')) {
-      return categories.find(c => c.id === 'bottoms')!;
-    } else if (name.includes('shoes') || name.includes('boots') || name.includes('sneakers') || name.includes('heels')) {
-      return categories.find(c => c.id === 'footwear')!;
-    } else if (name.includes('bag') || name.includes('purse') || name.includes('scarf') || name.includes('belt') || name.includes('jewelry')) {
-      return categories.find(c => c.id === 'accessories')!;
-    } else {
-      return categories.find(c => c.id === 'tops')!;
-    }
+    if (name.includes('hat') || name.includes('cap') || name.includes('beanie')) return categories[0];
+    if (name.includes('coat') || name.includes('jacket') || name.includes('blazer')) return categories[4];
+    if (name.includes('dress')) return categories[3];
+    if (name.includes('pants') || name.includes('trousers') || name.includes('jeans') || name.includes('skirt')) return categories[2];
+    if (name.includes('shoe') || name.includes('boot') || name.includes('sneaker') || name.includes('heel')) return categories[5];
+    if (name.includes('bag') || name.includes('purse') || name.includes('scarf') || name.includes('belt') || name.includes('jewel')) return categories[6];
+    return categories[1];
   };
 
-  const handleLikeItem = async (itemIndex: number, itemName: string, imageUrl: string) => {
+  const handleLikeItem = (itemIndex: number, itemName: string, imageUrl: string) => {
     if (!user) {
       alert('Please sign in to like items');
       return;
@@ -138,53 +122,42 @@ export default function LookDetailCorrect() {
 
     const itemId = `${lookId}_${itemIndex}`;
     const category = categorizeItem(itemName);
+    const existingIndex = likedItems.findIndex((item) => item.id === itemId);
 
-    const existingItemIndex = likedItems.findIndex(item => item.id === itemId);
-
-    if (existingItemIndex >= 0) {
-      const updatedItems = likedItems.filter(item => item.id !== itemId);
-      setLikedItems(updatedItems);
-      localStorage.setItem(`likedItems_${user.id}`, JSON.stringify(updatedItems));
+    if (existingIndex >= 0) {
+      const updated = likedItems.filter((item) => item.id !== itemId);
+      setLikedItems(updated);
+      localStorage.setItem(`likedItems_${user.id}`, JSON.stringify(updated));
     } else {
       const newItem: LikedItem = {
         id: itemId,
         name: itemName,
-        imageUrl: imageUrl,
-        category: category,
+        imageUrl,
+        category,
         lookId: lookId!,
         lookTitle: look?.title || '',
         likedAt: new Date().toISOString()
       };
-      const updatedItems = [...likedItems, newItem];
-      setLikedItems(updatedItems);
-      localStorage.setItem(`likedItems_${user.id}`, JSON.stringify(updatedItems));
+      const updated = [...likedItems, newItem];
+      setLikedItems(updated);
+      localStorage.setItem(`likedItems_${user.id}`, JSON.stringify(updated));
     }
   };
 
-  const isItemLiked = (itemIndex: number) => {
-    const itemId = `${lookId}_${itemIndex}`;
-    return likedItems.some(item => item.id === itemId);
-  };
+  const isItemLiked = (index: number) =>
+    likedItems.some((item) => item.id === `${lookId}_${index}` && item.lookId === lookId);
 
   const handleTryOnLook = async () => {
-    if (!user) {
+    if (!user || !look) {
       alert('Please sign in to try on looks');
       return;
     }
-
     setIsTryingOn(true);
-
     try {
-      // Implement try on functionality
-      // For now, simulate the process
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
-      // Here you would integrate with your try-on API
-      // For example: const result = await TryOnAPI.tryOnLook(look.id, user.id);
-
-      alert('Try on completed! 🎉');
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+      alert('Try on completed!');
     } catch (err) {
-      console.error('Try on failed:', err);
+      console.error('Try on failed', err);
       alert('Failed to try on look. Please try again.');
     } finally {
       setIsTryingOn(false);
@@ -192,29 +165,24 @@ export default function LookDetailCorrect() {
   };
 
   const handleLikeLook = () => {
-    if (!user) {
+    if (!user || !look) {
       alert('Please sign in to like looks');
       return;
     }
-
-    // Toggle like status
     const newIsLiked = !look.isLiked;
-    setLook(prev => prev ? { ...prev, isLiked: newIsLiked } : null);
-
-    // Update likes count
-    const newLikesCount = newIsLiked ? (look?.likes || 0) + 1 : Math.max((look?.likes || 0) - 1, 0);
-    setLook(prev => prev ? { ...prev, likes: newLikesCount } : null);
-
-    // Update in ExploreService
+    const newLikesCount = newIsLiked ? (look.likes || 0) + 1 : Math.max((look.likes || 0) - 1, 0);
+    setLook({ ...look, isLiked: newIsLiked, likes: newLikesCount });
     ExploreService.likeLook(look);
   };
 
+  const likesCount = look?.likes ?? 0;
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-400">Loading look...</p>
+      <div className="min-h-screen bg-black text-white/70 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="h-12 w-12 rounded-full border-2 border-white/20 border-t-white mx-auto animate-spin" />
+          <p>Loading look...</p>
         </div>
       </div>
     );
@@ -222,13 +190,14 @@ export default function LookDetailCorrect() {
 
   if (error || !look) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-400 mb-4">{error || 'Look not found'}</p>
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <p className="text-red-300">{error || 'Look not found'}</p>
           <button
             onClick={() => navigate('/explore')}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2 text-sm text-white/80 hover:text-white hover:border-white/40 transition"
           >
+            <ArrowLeft className="h-4 w-4" />
             Back to Explore
           </button>
         </div>
@@ -236,178 +205,150 @@ export default function LookDetailCorrect() {
     );
   }
 
+  const likedItemsForLook = likedItems.filter((item) => item.lookId === look.id);
+
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      {/* Header */}
-      <div className="border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <button
-              onClick={() => navigate('/explore')}
-              className="flex items-center space-x-2 text-gray-400 hover:text-white"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              <span>Back to Explore</span>
-            </button>
-            <h1 className="text-xl font-bold">{look.title}</h1>
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={handleLikeLook}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  look.isLiked
-                    ? 'bg-green-500 text-white hover:bg-green-600'
-                    : 'bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white'
-                }`}
-              >
-                <Heart className={`h-4 w-4 ${look.isLiked ? 'fill-current' : ''}`} />
-                <span>{look.isLiked ? 'Saved' : 'Like'}</span>
-                <span className="ml-1">({look.likes})</span>
-              </button>
-            </div>
+    <div className="min-h-screen bg-black text-white px-4 pb-12">
+      <div className="mx-auto max-w-6xl space-y-8 py-10">
+        <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-4 backdrop-blur-sm flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <button
+            onClick={() => navigate('/explore')}
+            className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Explore
+          </button>
+          <div className="text-center flex-1">
+            <p className="text-xs uppercase tracking-[0.4em] text-white/40">Look detail</p>
+            <h1 className="text-2xl font-semibold text-white mt-1">{look.title}</h1>
           </div>
+          <button
+            onClick={handleLikeLook}
+            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
+              look.isLiked ? 'border-emerald-400 text-emerald-200 bg-emerald-500/10' : 'border-white/20 text-white/70 hover:text-white'
+            }`}
+          >
+            <Heart className={`h-4 w-4 ${look.isLiked ? 'fill-current' : ''}`} />
+            {look.isLiked ? 'Saved' : likesCount > 0 ? `Like (${likesCount})` : 'Like'}
+          </button>
         </div>
-      </div>
 
-      {/* Main Content - Like Remix Layout */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)]">
-          {/* Left - Model Photo */}
-          <div>
-            <div className="rounded-3xl border border-white/10 bg-white/5 overflow-hidden">
-              <img
-                src={look.imageUrl}
-                alt={look.title}
-                className="w-full h-full object-cover"
-                style={{ aspectRatio: '9 / 16' }}
-              />
-            </div>
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.55fr)_minmax(0,0.45fr)]">
+          <div className="rounded-[2.25rem] overflow-hidden border border-white/10 bg-white/5 shadow-[0_0_60px_rgba(15,23,42,0.4)]">
+            <img
+              src={look.imageUrl}
+              alt={look.title}
+              className="w-full h-full object-cover"
+              style={{ aspectRatio: '9 / 16' }}
+            />
           </div>
 
-          {/* Right - Look Details & Items */}
-          <div className="space-y-4">
-            {/* Action Buttons */}
-            <div className="flex gap-3">
+          <div className="space-y-6">
+            <div className="grid gap-3 sm:grid-cols-3">
               <button
                 onClick={() => navigate('/explore')}
-                className="flex-1 px-4 py-3 border border-white/20 text-white rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center space-x-2"
+                className="rounded-2xl border border-white/30 bg-white/5 px-4 py-3 text-sm text-white/80 hover:text-white hover:border-white/60 transition flex items-center justify-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
-                <span>Back</span>
+                Back
               </button>
               <button
-                onClick={() => handleTryOnLook()}
+                onClick={handleTryOnLook}
                 disabled={!user || isTryingOn}
-                className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                className={`rounded-2xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 border transition ${
+                  !user || isTryingOn
+                    ? 'border-amber-200 text-amber-200/80 bg-amber-400/10 cursor-not-allowed'
+                    : 'border-white/30 text-white/90 hover:text-white hover:border-white/60 bg-white/5'
+                }`}
               >
                 {isTryingOn ? (
                   <>
                     <RefreshCw className="h-4 w-4 animate-spin" />
-                    <span>Trying on...</span>
+                    Trying on...
                   </>
                 ) : (
                   <>
                     <Sparkles className="h-4 w-4" />
-                    <span>Try On</span>
+                    Try On
                   </>
                 )}
               </button>
               <button
                 onClick={() => navigate('/outfit-builder')}
-                className="flex-1 px-4 py-3 border border-purple-500/30 bg-purple-500/10 text-purple-300 rounded-xl hover:bg-purple-500/20 transition-colors flex items-center justify-center space-x-2"
+                className="rounded-2xl border border-white/30 bg-white/5 px-4 py-3 text-sm text-white/80 hover:text-white hover:border-white/60 transition flex items-center justify-center gap-2"
               >
                 <Sparkles className="h-4 w-4" />
-                <span>My Items</span>
+                My Items
               </button>
             </div>
 
-            {/* Liked Items Summary */}
-            {likedItems.length > 0 && (
-              <div className="rounded-3xl border border-green-500/30 bg-green-500/10 p-4">
-                <p className="text-sm font-medium text-green-300 mb-2">
-                  💚 You have {likedItems.length} liked item{likedItems.length > 1 ? 's' : ''} from this look!
+            {likedItemsForLook.length > 0 && (
+              <div className="rounded-3xl border border-emerald-400/30 bg-emerald-500/10 p-4 text-sm text-emerald-100">
+                <p className="font-semibold">
+                  You have {likedItemsForLook.length} liked item
+                  {likedItemsForLook.length > 1 ? 's' : ''} from this look.
                 </p>
                 <button
                   onClick={() => navigate('/outfit-builder')}
-                  className="text-sm text-green-400 hover:text-green-300 underline"
+                  className="mt-2 text-emerald-200 underline text-xs hover:text-emerald-100"
                 >
                   View all liked items →
                 </button>
               </div>
             )}
 
-            {/* Individual Items - Google Shopping Style */}
             {look.items && look.items.length > 0 && (
               <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-                <p className="text-xs uppercase tracking-[0.3em] text-white/50 mb-4">Individual Items (Click to Like)</p>
+                <p className="text-xs uppercase tracking-[0.4em] text-white/40 mb-4">Individual items - tap to like</p>
                 <div className="grid grid-cols-2 gap-4">
                   {look.items.map((item, index) => {
-                    // Check if we have a valid image for this item
                     const imageUrl = look.gridCellUrls?.[index];
-                    const hasImage = imageUrl && imageUrl.trim() !== '';
+                    if (!imageUrl || !imageUrl.trim()) return null;
                     const itemName = item.description || item.searchQuery || `Item ${index + 1}`;
                     const category = categorizeItem(itemName);
-                    const isLiked = isItemLiked(index);
-
-                    // Only show items that have images
-                    if (!hasImage) return null;
-
+                    const liked = isItemLiked(index);
                     return (
-                      <div
+                      <button
+                        type="button"
                         key={index}
-                        className={`group relative bg-white/5 rounded-xl border transition-all cursor-pointer overflow-hidden hover:border-white/20 ${
-                          isLiked
-                            ? 'border-red-500/30 bg-red-500/5'
-                            : 'border-white/10 hover:bg-white/10'
-                        }`}
                         onClick={() => handleLikeItem(index, itemName, imageUrl)}
+                        className={`text-left rounded-2xl border transition-all overflow-hidden bg-slate-900/40 hover:border-white/40 ${
+                          liked ? 'border-pink-400/50' : 'border-white/10'
+                        }`}
                       >
-                        {/* Item Image - Square */}
-                        <div className="aspect-square relative overflow-hidden rounded-t-xl">
+                        <div className="relative aspect-square overflow-hidden">
                           <img
                             src={imageUrl}
                             alt={itemName}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            style={{
-                              objectPosition: 'center',
-                              scale: '1.1' // Zoom in slightly to crop edges
-                            }}
+                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                           />
-
-                          {/* Like Button Overlay */}
-                          <div className="absolute top-2 right-2">
-                            <div className={`rounded-full p-2 backdrop-blur-sm transition-colors ${
-                              isLiked
-                                ? 'bg-red-500/90 text-white'
-                                : 'bg-black/50 text-white opacity-0 group-hover:opacity-100'
-                            }`}>
-                              <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
-                            </div>
+                          <div
+                            className={`absolute top-2 right-2 rounded-full p-2 backdrop-blur-md ${
+                              liked ? 'bg-pink-500 text-white' : 'bg-black/60 text-white/70'
+                            }`}
+                          >
+                            <Heart className={`h-4 w-4 ${liked ? 'fill-current' : ''}`} />
                           </div>
                         </div>
-
-                        {/* Item Name */}
                         <div className="p-3">
-                          <p className="text-sm font-medium text-white truncate leading-tight">{itemName}</p>
-                          <p className="text-xs text-gray-400 mt-1 capitalize">{category.name}</p>
+                          <p className="text-sm font-medium text-white truncate">{itemName}</p>
+                          <p className="text-xs text-white/50 capitalize">{category.name}</p>
                         </div>
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
               </div>
             )}
 
-            {/* Style Tips */}
-            <div className="rounded-3xl border border-purple-500/30 bg-purple-500/10 p-4">
-              <p className="text-sm font-medium text-purple-200 mb-2">
-                💡 Style Tip
-              </p>
-              <p className="text-xs text-white/70 mb-3">
-                Like individual items to build your personal collection. Use the Outfit Builder to mix and match your favorite pieces!
+            <div className="rounded-3xl border border-purple-500/30 bg-purple-500/10 p-4 text-sm text-white/80">
+              <p className="font-semibold text-purple-100 mb-2">Style tip</p>
+              <p className="text-xs text-white/70">
+                Save the pieces you love and visit the Outfit Builder to remix them with new discoveries. Your liked items feed the AI so every new look feels closer to your taste.
               </p>
               <button
                 onClick={() => navigate('/outfit-builder')}
-                className="text-xs text-purple-400 hover:text-purple-300 underline font-medium"
+                className="mt-3 inline-flex items-center gap-1 text-xs text-purple-200 underline hover:text-purple-100"
               >
                 Go to Outfit Builder →
               </button>
@@ -417,4 +358,6 @@ export default function LookDetailCorrect() {
       </div>
     </div>
   );
-}
+};
+
+export default LookDetailCorrect;

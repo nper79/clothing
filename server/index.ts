@@ -87,7 +87,7 @@ app.post('/api/personalized-looks', async (req, res) => {
 });
 
 app.post('/api/remix-look', async (req, res) => {
-  const { userId, userPhoto, prompt, referenceImage } = req.body ?? {};
+  const { userId, userPhoto, prompt, referenceImage, itemImages } = req.body ?? {};
 
   if (!userPhoto || typeof userPhoto !== 'string') {
     return res.status(400).json({ error: 'Missing userPhoto. Provide a base64 data URL or a remote URL.' });
@@ -103,7 +103,14 @@ app.post('/api/remix-look', async (req, res) => {
 
   try {
     await chargeForRemix(userId);
-    const result = await remixLookWithPrompt(userPhoto, prompt, typeof referenceImage === 'string' ? referenceImage : undefined);
+    const normalizedItemImages =
+      Array.isArray(itemImages) ? itemImages.filter((url) => typeof url === 'string') : undefined;
+    const result = await remixLookWithPrompt(
+      userPhoto,
+      prompt,
+      typeof referenceImage === 'string' ? referenceImage : undefined,
+      normalizedItemImages
+    );
     res.json(result);
   } catch (error) {
     if (error instanceof CreditError) {

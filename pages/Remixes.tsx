@@ -72,7 +72,7 @@ const RemixesPage: React.FC = () => {
       try {
         const hydrated = await Promise.all(
           stored.map(async (remix) => {
-            if (!remix.storagePath) {
+            if (!remix.storagePath || remix.imageUrl) {
               return remix;
             }
             try {
@@ -146,7 +146,29 @@ const RemixesPage: React.FC = () => {
       // ... shopping code removed ...
       */
     } catch (error) {
-      setDetailError(error instanceof Error ? error.message : 'Failed to load remix details');
+      if (remix.customItems?.length) {
+        const fallbackGender = remix.gender ?? 'female';
+        setSelectedLook({
+          id: remix.lookId,
+          gender: fallbackGender,
+          title: remix.lookName,
+          description: remix.customPrompt || 'Custom outfit board',
+          prompt: remix.customPrompt || '',
+          imageUrl: remix.imageUrl || '',
+          vibe: 'Custom',
+          items: remix.customItems.map((item, index) => ({
+            id: item.id || `custom_${index}`,
+            label: item.name || `Item ${index + 1}`,
+            searchQuery: item.name || `Item ${index + 1}`,
+            category: item.category || 'custom',
+            gender: fallbackGender,
+            gridCellUrl: item.imageUrl,
+          })),
+        });
+        setDetailError(null);
+      } else {
+        setDetailError(error instanceof Error ? error.message : 'Failed to load remix details');
+      }
     } finally {
       setIsDetailLoading(false);
     }
