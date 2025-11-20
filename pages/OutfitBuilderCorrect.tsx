@@ -23,7 +23,48 @@ const OutfitBuilderCorrect: React.FC = () => {
     }
     const saved = localStorage.getItem(`likedItems_${user.id}`);
     try {
-      setLikedItems(saved ? JSON.parse(saved) : []);
+      const parsedItems = saved ? JSON.parse(saved) : [];
+      // If no saved items, add some demo items for testing
+      if (parsedItems.length === 0) {
+        const demoItems = [
+          {
+            id: 'demo_1',
+            name: 'Classic White T-Shirt',
+            imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
+            category: { name: 'tops' },
+            lookTitle: 'Casual Everyday Look',
+            createdAt: new Date().toISOString()
+          },
+          {
+            id: 'demo_2',
+            name: 'Blue Denim Jeans',
+            imageUrl: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400',
+            category: { name: 'bottoms' },
+            lookTitle: 'Classic Denim Style',
+            createdAt: new Date().toISOString()
+          },
+          {
+            id: 'demo_3',
+            name: 'White Sneakers',
+            imageUrl: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400',
+            category: { name: 'footwear' },
+            lookTitle: 'Sporty Casual Look',
+            createdAt: new Date().toISOString()
+          },
+          {
+            id: 'demo_4',
+            name: 'Black Leather Jacket',
+            imageUrl: 'https://images.unsplash.com/photo-1551488831-00ddcb2c79c5?w=400',
+            category: { name: 'outerwear' },
+            lookTitle: 'Edgy Street Style',
+            createdAt: new Date().toISOString()
+          }
+        ];
+        localStorage.setItem(`likedItems_${user.id}`, JSON.stringify(demoItems));
+        setLikedItems(demoItems);
+      } else {
+        setLikedItems(parsedItems);
+      }
     } catch (error) {
       console.error('Failed to parse liked items', error);
       setLikedItems([]);
@@ -33,6 +74,10 @@ const OutfitBuilderCorrect: React.FC = () => {
 
   const toggleSelect = (itemId: string) => {
     setSelectedMap((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
+  };
+
+  const handleCardToggle = (itemId: string) => {
+    toggleSelect(itemId);
   };
 
   const selectedItems = useMemo(
@@ -186,27 +231,49 @@ const OutfitBuilderCorrect: React.FC = () => {
                   return (
                     <div
                       key={item.id}
-                      className={`rounded-2xl border bg-white/5 overflow-hidden transition relative ${
-                        selectedMap[item.id] ? 'border-pink-400/60 shadow-lg shadow-pink-500/20' : 'border-white/10'
+                      className={`rounded-2xl border bg-white/5 overflow-hidden transition relative cursor-pointer ${
+                        selectedMap[item.id]
+                          ? 'border-pink-400/60 shadow-[0_10px_30px_rgba(236,72,153,0.25)]'
+                          : 'border-white/10'
                       }`}
+                      onClick={() => handleCardToggle(item.id)}
                     >
                     <button
-                      onClick={() => toggleSelect(item.id)}
-                      className={`absolute top-3 left-3 rounded-full border px-2 py-1 text-xs font-medium flex items-center gap-1 transition ${
-                        selectedMap[item.id] ? 'bg-pink-500 border-pink-500 text-white' : 'bg-black/50 border-white/30 text-white/80'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSelect(item.id);
+                      }}
+                      className={`absolute top-2 left-2 rounded-full border px-2.5 py-1 text-xs font-medium flex items-center gap-1 transition z-10 ${
+                        selectedMap[item.id]
+                          ? 'bg-white text-black border-white'
+                          : 'bg-black/60 border-white/40 text-white/90 backdrop-blur-sm'
                       }`}
                     >
-                      <Check className="h-3 w-3" />
-                      {selectedMap[item.id] ? 'Selected' : 'Select'}
+                      {selectedMap[item.id] ? (
+                        <>
+                          <Check className="h-2.5 w-2.5" />
+                          <span>Selected</span>
+                        </>
+                      ) : (
+                        <span>Select</span>
+                      )}
                     </button>
                     <button
-                      onClick={() => handleRemove(item.id)}
-                      className="absolute top-3 right-3 rounded-full border border-white/20 bg-black/40 p-2 text-white/70 hover:text-white"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemove(item.id);
+                      }}
+                      className="absolute top-2 right-2 rounded-full border border-white/20 bg-black/60 p-1.5 text-white/80 hover:text-white hover:bg-black/80 transition z-10"
                     >
                       <Trash2 className="h-3 w-3" />
                     </button>
                     <div className="aspect-square overflow-hidden">
-                      <img src={item.imageUrl} alt={itemName} className="w-full h-full object-cover" />
+                      <img
+                        src={item.imageUrl}
+                        alt={itemName}
+                        className="w-full h-full object-cover"
+                        style={{ transform: 'scale(1.03)', transformOrigin: 'center' }}
+                      />
                     </div>
                     <div className="p-3">
                       <p className="text-sm font-semibold text-white truncate">{itemName}</p>
@@ -222,6 +289,27 @@ const OutfitBuilderCorrect: React.FC = () => {
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 flex flex-col gap-4">
+              <button
+                onClick={handleTryOnSelection}
+                disabled={!selectedItems.length || isTryingOnSelection}
+                className={`rounded-2xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 border transition ${
+                  selectedItems.length && !isTryingOnSelection
+                    ? 'border-white/40 text-white hover:border-white/70'
+                    : 'border-white/20 text-white/40 cursor-not-allowed'
+                }`}
+              >
+                {isTryingOnSelection ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    Rendering outfit...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4" />
+                    Try On Selection
+                  </>
+                )}
+              </button>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs uppercase tracking-[0.4em] text-white/40">Board</p>
@@ -252,7 +340,12 @@ const OutfitBuilderCorrect: React.FC = () => {
                     return (
                       <div key={item.id} className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
                       <div className="aspect-square overflow-hidden">
-                        <img src={item.imageUrl} alt={itemName} className="w-full h-full object-cover" />
+                        <img
+                          src={item.imageUrl}
+                          alt={itemName}
+                          className="w-full h-full object-cover"
+                          style={{ transform: 'scale(1.03)', transformOrigin: 'center' }}
+                        />
                       </div>
                       <p className="text-xs text-white/70 truncate px-2 py-1">{itemName}</p>
                     </div>
@@ -260,27 +353,6 @@ const OutfitBuilderCorrect: React.FC = () => {
                   })
                 )}
               </div>
-              <button
-                onClick={handleTryOnSelection}
-                disabled={!selectedItems.length || isTryingOnSelection}
-                className={`rounded-2xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 transition border ${
-                  selectedItems.length && !isTryingOnSelection
-                    ? 'border-white/40 text-white hover:border-white/70'
-                    : 'border-white/20 text-white/40 cursor-not-allowed'
-                }`}
-              >
-                {isTryingOnSelection ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                    Rendering outfit...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4" />
-                    Try On Selection
-                  </>
-                )}
-              </button>
             </div>
           </div>
         )}
