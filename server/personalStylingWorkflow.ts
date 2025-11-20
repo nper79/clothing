@@ -12,8 +12,6 @@ import sharp, { type OverlayOptions } from 'sharp';
 const GPT5_MODEL = 'openai/gpt-5';
 const REVE_MODEL = 'reve/edit-fast:f0253eb7b26cc2416ad98c20492fbe4b842e09d808318fdf9e7caeffa9ae78f5';
 const NANO_BANANA_MODEL = 'google/nano-banana';
-const IMAGE_CAPTION_MODEL = 'nateraw/vit-gpt2-image-captioning';
-const VISION_CHAT_MODEL = 'yorickvp/llava-1.5-7b';
 const DEFAULT_LOOK_LIMIT = 1;
 const GRID_TEMPLATE_WIDTH = 1344;
 const GRID_TEMPLATE_HEIGHT = 2048;
@@ -746,64 +744,6 @@ async function generateLookGridAssets(look: ExploreLook): Promise<{ gridImageUrl
   }
 }
 
-async function generateRawCaption(imageData: string): Promise<string> {
-  try {
-    const normalized = await normalizeImageInput(imageData);
-    const output = await runReplicateModel(IMAGE_CAPTION_MODEL, {
-      image: normalized,
-    });
-    const text = extractPromptText(output);
-    return text || 'fashion look with layered outfit';
-  } catch (error) {
-    console.error('[server] Failed to caption reference image', error);
-    return 'fashion look with layered outfit';
-  }
-}
-
-async function generateVisionDescription(imageData: string): Promise<string> {
-  try {
-    const normalized = await normalizeImageInput(imageData);
-    const output = await runReplicateModel(VISION_CHAT_MODEL, {
-      image: normalized,
-      prompt:
-        'Describe every clothing item, fabric, color, fit, accessories, and overall vibe in this outfit photo. Mention footwear and environment cues. Keep under 120 words.',
-    });
-    const text = extractPromptText(output);
-    return text || 'fashion outfit with layered streetwear pieces';
-  } catch (error) {
-    console.error('[server] Failed to run vision description model', error);
-    return 'fashion outfit with layered streetwear pieces';
-  }
-}
-
-async function describeReferenceLook(baseCaption: string): Promise<string> {
-  const prompt = `You are a senior fashion editor.
-
-Here is a short machine caption of an outfit photo:
-"${baseCaption}"
-
-Expand this into a vivid fashion write-up covering:
-- Garment stack from outer layers to shoes (colors, silhouettes, fabrics, fit).
-- Styling details (scarves, belts, accessories, hair/makeup, bags).
-- Mood / vibe / setting cues (city street, café, office, etc.).
-- Who would wear it (demographic / scenario).
-
-Make it precise, full-color, under 180 words.`;
-
-  try {
-  const output = await runReplicateModel(GPT5_MODEL, {
-    prompt,
-    max_tokens: 512,
-    temperature: 0.35,
-  });
-    const text = extractPromptText(output);
-    return text || fallbackCaption;
-  } catch (error) {
-    console.error('[server] Failed to describe reference look with GPT-5', error);
-    return fallbackCaption;
-  }
-}
-
 async function generateEditPrompt(basePrompt: string, preferences?: UserPreferences): Promise<string> {
   const gptPrompt = `You are a professional fashion stylist and AI image editing expert.
 
@@ -1182,120 +1122,35 @@ interface ReferenceInspiredOptions {
 
 type StoredReference = {
   url: string;
-  description: string;
+  prompt: ExplorePrompt;
 };
 
 async function storeReferenceImages(
   gender: 'male' | 'female',
-  images: string[]
+  images: string[],
+  styleTag?: string
 ): Promise<StoredReference[]> {
   const stored: StoredReference[] = [];
   for (let i = 0; i < images.length; i++) {
     const label = `ref_${i}`;
     const url = await persistReferenceImage(images[i], gender, label);
-    const [visionDescription, backupCaption] = await Promise.all([
-      generateVisionDescription(images[i]),
-      generateRawCaption(images[i]),
-    ]);
-    const combinedCaption = `${visionDescription}. Backup: ${backupCaption}`;
-    const detailedDescription = await describeReferenceLook(combinedCaption);
+    const placeholder: ExploreLook = {
+      id: `reference_${Date.now()}_${i}`,
+      gender,
+      title: `Reference look ${i + 1}`,
+      description: 'Uploaded inspiration look',
+      prompt: '',
+      imageUrl: url,
+      vibe: styleTag ? `reference ${styleTag}` : 'reference inspiration',
+      styleTag,
+    };
+    const promptSpec = await generateSingleLookSpec(placeholder, styleTag);
     stored.push({
       url,
-      description: detailedDescription,
+      prompt: promptSpec,
     });
   }
   return stored;
-}
-
-async function generateReferenceInspiredPrompts(
-  gender: 'male' | 'female',
-  referenceDescriptions: string[],
-  count: number,
-  styleTag?: string
-): Promise<ExplorePrompt[]> {
-  const descriptionsBlock = referenceDescriptions
-    .map((description, index) => `Ref ${index + 1}: ${description}`)
-    .join('\n\n');
-
-  const sceneIdeas = [
-    'corner cafe patio with bistro tables',
-    'corporate lobby with marble floors',
-    'tree-lined European street with storefronts',
-    'city rooftop at sunset',
-    'artist loft with canvases and ladders',
-    'weekend farmers market stall',
-    'vintage convertible car on a boulevard',
-    'foggy riverside boardwalk',
-    'library reading room with warm lamps',
-    'fashion show backstage area',
-  ];
-
-  const vibeList = gender === 'female'
-    ? ['weekend chic', 'minimal luxe', 'sporty', 'boho', 'evening glamour', 'streetwear', 'resort']
-    : ['smart casual', 'minimal street', 'athleisure', 'tailored', 'utility', 'retro sport', 'creative studio'];
-
-  const styleDirective = getStyleDirective(styleTag);
-  const trendNotes = pickRandomItems(GLOBAL_TRENDS, 2).join(' ');
-
-  const prompt = `You are a senior fashion editor creating new outfits for an Instagram explore feed targeting ${gender} audiences.
-Study these reference summaries to understand the silhouettes, palettes, fabrics, and vibes the user loves (pay attention to trouser width, scarf volume, layering proportions, etc.):
-${descriptionsBlock}
-
-Design ${count} distinct new looks that feel like they belong to the same mood board while still offering variety. Stay wearable and modern.
-
-Rules:
-1. Pull forward key ideas from the inspiration breakdowns (palettes, textures, layering, silhouette proportions like wide-leg trousers, oversized scarves, belted coats) without copying literally.
-2. Half of the looks should feel realistic for daily wear, half can push into bolder statement territory. Keep them cohesive with the references.
-3. "description" must stay under 14 words, highlight the hero pieces, and read naturally.
-4. "prompt" must describe clothing layers, fabrics, footwear, hair/makeup, and a unique environment. Mention that it is a full-body 9:16 shot with visible footwear. Explicitly state that the render is full-color, rich, and never black-and-white.
-5. Every garment mention (in "prompt" and in each item entry) must explicitly include a color descriptor so nothing is left ambiguous.
-6. Assign a different environment to each look by choosing from or inspired by this list (avoid repeats): ${sceneIdeas.join(', ')}.
-${styleDirective ? `7. Apply this aesthetic focus: ${styleDirective.instructions}` : '7. Balance seasonal practicality with the references (outerwear if the inspiration shows cool weather, etc.).'}
-
-Trend cues to weave in: ${trendNotes}
-
-Return ONLY a valid JSON array (no commentary). Response MUST begin with "[" and end with "]". Each entry must look like:
-{
-  "title": "2-4 word name",
-  "description": "max 14 words",
-  "vibe": "choose from: ${vibeList.join(', ')}",
-  "image_prompt": "detailed image generation prompt",
-  "items": [
-    {
-      "id": "jacket",
-      "label": "Olive MA-1 bomber jacket",
-      "search_query": "women's olive MA-1 bomber jacket matte nylon ribbed cuffs",
-      "category": "jacket",
-      "gender": "${gender}"
-    }
-  ]
-}
-Make items 4-6 entries, covering tops, bottoms, footwear, outerwear, accessories, each with descriptive search queries that include explicit colors.
-Do not mention the image URLs in the output.`;
-
-  const output = await runReplicateModel(GPT5_MODEL, {
-    prompt,
-    max_tokens: 1024,
-    temperature: 0.7,
-  });
-
-  const raw = extractPromptText(output);
-  const jsonMatch = raw.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) {
-    console.warn('[server] GPT-5 reference prompt response was not JSON. Falling back to existing library.');
-    return getFallbackExplorePrompts(gender, count, styleTag);
-  }
-
-  try {
-    const parsed = JSON.parse(jsonMatch[0]) as unknown[];
-    if (!Array.isArray(parsed) || parsed.length === 0) {
-      throw new Error('Empty array');
-    }
-    return parsed.map((spec) => normalizePromptSpec(spec, gender, styleTag));
-  } catch (error) {
-    console.error('[server] Failed to parse GPT-5 reference prompts, using fallback library.', error);
-    return getFallbackExplorePrompts(gender, count, styleTag);
-  }
 }
 
 export async function generateExploreLooksFromReferences(options: ReferenceInspiredOptions): Promise<ExploreLook[]> {
@@ -1306,25 +1161,19 @@ export async function generateExploreLooksFromReferences(options: ReferenceInspi
   const limitedImages = referenceImages.slice(0, 8);
   let storedReferences: StoredReference[];
   try {
-    storedReferences = await storeReferenceImages(gender, limitedImages);
+    storedReferences = await storeReferenceImages(gender, limitedImages, styleTag);
   } catch (error) {
     console.error('[server] Failed to persist or describe reference images, using inline data URIs.', error);
-    storedReferences = limitedImages.map((dataUrl) => ({
+    const fallbackPrompts = getFallbackExplorePrompts(gender, limitedImages.length, styleTag);
+    storedReferences = limitedImages.map((dataUrl, index) => ({
       url: dataUrl,
-      description: 'Reference fashion look (fallback)',
+      prompt: fallbackPrompts[index % fallbackPrompts.length],
     }));
   }
 
-  const referenceDescriptions = storedReferences.map((item) => item.description);
-
   const dataset = await readExploreDataset();
-  const targetCount = limitedImages.length;
-  const prompts = await generateReferenceInspiredPrompts(
-    gender,
-    referenceDescriptions,
-    targetCount,
-    styleTag
-  );
+  const targetCount = Math.min(limitedImages.length, Math.max(1, Number(count) || limitedImages.length));
+  const prompts = storedReferences.map((item) => item.prompt).slice(0, targetCount);
   const generated: ExploreLook[] = [];
   const scenes = SCENE_PRESETS[gender];
   const seenKeys = new Set<string>(
@@ -1459,47 +1308,369 @@ export async function regenerateAllLookGrids(
   return updated;
 }
 
+type SegmentedPiece = Record<string, unknown>;
+
+interface SegmentedLookResponse {
+  overall_style?: string;
+  top?: Record<string, SegmentedPiece>;
+  bottom?: Record<string, SegmentedPiece>;
+  accessories?: Record<string, SegmentedPiece>;
+  footwear?: Record<string, SegmentedPiece>;
+  hair?: Record<string, unknown>;
+  makeup?: Record<string, unknown>;
+  color_palette?: unknown;
+}
+
+const SEGMENT_DETAIL_KEYS = [
+  'print',
+  'pattern',
+  'detail',
+  'fit',
+  'silhouette',
+  'purpose',
+  'style',
+  'vibe',
+  'hem_detail',
+  'waist',
+  'extra_embellishment',
+  'length',
+  'placement',
+];
+
+const SEGMENT_PROMPT_SUFFIX =
+  'Full body fashion photo in rich color, 9:16 framing, entire outfit and shoes clearly visible, natural cinematic lighting.';
+
+const clampTitleLength = (value: string, maxLength = 20): string => {
+  if (!value) return '';
+  if (value.length <= maxLength) {
+    return value;
+  }
+  const truncated = value.slice(0, Math.max(0, maxLength - 3)).trimEnd();
+  return `${truncated}...`;
+};
+
+const humanizeSegmentKey = (key: string): string =>
+  key
+    .split(/[_-]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ')
+    .trim() || 'Item';
+
+const segmentValueToText = (value: unknown): string | undefined => {
+  if (!value) return undefined;
+  if (typeof value === 'string' || typeof value === 'number') {
+    const text = String(value).trim();
+    return text.length ? text : undefined;
+  }
+  if (Array.isArray(value)) {
+    const parts = value
+      .map((entry) => (typeof entry === 'string' || typeof entry === 'number' ? String(entry).trim() : undefined))
+      .filter((entry): entry is string => Boolean(entry));
+    return parts.length ? parts.join(' ') : undefined;
+  }
+  if (typeof value === 'object') {
+    const entries = Object.entries(value as Record<string, unknown>)
+      .map(([key, entry]) => {
+        const normalized = segmentValueToText(entry);
+        return normalized ? `${humanizeSegmentKey(key)} ${normalized}` : undefined;
+      })
+      .filter((entry): entry is string => Boolean(entry));
+    return entries.length ? entries.join(', ') : undefined;
+  }
+  return undefined;
+};
+
+const buildSegmentLabel = (pieceKey: string, piece: SegmentedPiece): string | null => {
+  const typeText = segmentValueToText(piece.type) ?? humanizeSegmentKey(pieceKey);
+  const colorText = segmentValueToText(piece.color ?? (piece as any).colors);
+  const materialText = segmentValueToText(piece.material);
+  const baseParts = [colorText, materialText, typeText].filter(Boolean);
+  if (!baseParts.length) {
+    return null;
+  }
+  return baseParts.join(' ').replace(/\s+/g, ' ').trim();
+};
+
+const buildSegmentDetail = (piece: SegmentedPiece): string | undefined => {
+  const details = SEGMENT_DETAIL_KEYS.map((key) => segmentValueToText(piece[key as keyof SegmentedPiece])).filter(
+    (entry): entry is string => Boolean(entry)
+  );
+  return details.length ? details.join('; ') : undefined;
+};
+
+const buildShopItemFromSegment = (
+  idPrefix: string,
+  pieceKey: string,
+  piece: SegmentedPiece,
+  gender: 'male' | 'female'
+): ShopItem | null => {
+  const label = buildSegmentLabel(pieceKey, piece);
+  if (!label) {
+    return null;
+  }
+  const typeText = segmentValueToText(piece.type) ?? humanizeSegmentKey(pieceKey);
+  const vibeText = segmentValueToText(piece.vibe ?? piece.style ?? piece.fit);
+  const colorText = segmentValueToText(piece.color ?? (piece as any).colors);
+  const materialText = segmentValueToText(piece.material);
+  const searchParts = [gender, colorText, materialText, typeText, vibeText]
+    .filter((entry): entry is string => Boolean(entry))
+    .map((entry) => entry.replace(/\s+/g, ' ').trim());
+
+  const searchQuery = searchParts.length ? searchParts.join(' ') : `${gender} ${typeText}`;
+
+  return {
+    id: sanitizeText(`${idPrefix}_${pieceKey}`),
+    label: sanitizeText(label),
+    searchQuery: sanitizeText(searchQuery),
+    category: sanitizeText(humanizeSegmentKey(pieceKey)),
+    gender,
+  };
+};
+
+const describeSectionPieces = (
+  sectionLabel: string,
+  section?: Record<string, SegmentedPiece>,
+  gender: 'male' | 'female'
+): { sentences: string[]; items: ShopItem[] } => {
+  if (!section || typeof section !== 'object') {
+    return { sentences: [], items: [] };
+  }
+  const sentences: string[] = [];
+  const items: ShopItem[] = [];
+  let index = 0;
+
+  for (const [pieceKey, rawPiece] of Object.entries(section)) {
+    if (!rawPiece || typeof rawPiece !== 'object') {
+      index += 1;
+      continue;
+    }
+    const label = buildSegmentLabel(pieceKey, rawPiece);
+    if (!label) {
+      index += 1;
+      continue;
+    }
+    const detail = buildSegmentDetail(rawPiece);
+    const formatted = detail ? `${sectionLabel} - ${label} (${detail})` : `${sectionLabel} - ${label}`;
+    sentences.push(sanitizeText(formatted));
+    const item = buildShopItemFromSegment(`${sectionLabel.toLowerCase()}_${index}`, pieceKey, rawPiece, gender);
+    if (item) {
+      items.push(item);
+    }
+    index += 1;
+  }
+
+  return { sentences, items };
+};
+
+const describeFreeformSegment = (label: string, segment?: unknown): string | null => {
+  if (!segment) {
+    return null;
+  }
+  const text = segmentValueToText(segment);
+  if (!text) {
+    return null;
+  }
+  return `${label}: ${text}`;
+};
+
+const convertSegmentedLookToPrompt = (
+  spec: SegmentedLookResponse,
+  look: ExploreLook,
+  styleTag?: string
+): ExplorePrompt => {
+  const sections = [
+    describeSectionPieces('Top', spec.top, look.gender),
+    describeSectionPieces('Bottom', spec.bottom, look.gender),
+    describeSectionPieces('Accessories', spec.accessories, look.gender),
+    describeSectionPieces('Footwear', spec.footwear, look.gender),
+  ];
+  const sentences = sections.flatMap((section) => section.sentences);
+  const items = sections.flatMap((section) => section.items);
+
+  const paletteText =
+    Array.isArray(spec.color_palette) && spec.color_palette.length
+      ? `Palette focuses on ${spec.color_palette.map((entry) => sanitizeText(String(entry))).join(', ')}.`
+      : null;
+  const hairText = describeFreeformSegment('Hair', spec.hair);
+  const makeupText = describeFreeformSegment('Makeup', spec.makeup);
+
+  const promptParts = [
+    spec.overall_style ? `Overall style: ${spec.overall_style}.` : null,
+    ...sentences.map((sentence) => `${sentence}.`),
+    hairText ? `${hairText}.` : null,
+    makeupText ? `${makeupText}.` : null,
+    paletteText,
+    'Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background.',
+  ].filter((entry): entry is string => Boolean(entry));
+
+  const prompt = promptParts.join(' ');
+
+  const shortDescription = [spec.overall_style, sentences[0]].filter(Boolean).join(' - ');
+
+  const baseTitle = spec.overall_style ?? look.title ?? 'Reference Look';
+  const sanitizedTitle = sanitizeText(baseTitle);
+  const title = clampTitleLength(sanitizedTitle);
+
+  return {
+    title,
+    description: sanitizeText(shortDescription || spec.overall_style || look.description || 'Reference look'),
+    vibe: sanitizeText(spec.overall_style ?? look.vibe ?? 'reference inspiration'),
+    prompt: sanitizeText(prompt || SEGMENT_PROMPT_SUFFIX),
+    imagePrompt: sanitizeText(prompt || SEGMENT_PROMPT_SUFFIX),
+    items: items.length ? items : undefined,
+    styleTag,
+  };
+};
+
+const isSegmentedLookResponse = (value: unknown): value is SegmentedLookResponse => {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+  const candidate = value as Record<string, unknown>;
+  return Boolean(
+    typeof candidate.overall_style === 'string' ||
+      candidate.top ||
+      candidate.bottom ||
+      candidate.accessories ||
+      candidate.footwear
+  );
+};
+
 async function generateSingleLookSpec(
   look: ExploreLook,
   styleTag?: string
 ): Promise<ExplorePrompt> {
-  const prompt = `You are a fashion stylist turning a single look summary into structured data.
-Return ONLY a JSON object with this shape:
+  const prompt = `segment this look into a json format like this (fill in as appropriate). Return ONLY valid JSON, no prose, no comments:
+
 {
-  "title": "...",
-  "description": "...",
-  "vibe": "...",
-  "image_prompt": "...",
-  "items": [
-    {
-      "id": "top",
-      "label": "Camel cashmere turtleneck",
-      "search_query": "women's camel cashmere turtleneck relaxed fit",
-      "category": "top",
-      "gender": "${look.gender}"
+  "overall_style": "Harajuku-inspired alt-pop mix with punk, Y2K, and kawaii elements. Highly eclectic, layered textures and bold patterns.",
+  "top": {
+    "base_top": {
+      "type": "sleeveless tank top",
+      "color": "black",
+      "print": "hot pink graphic print with abstract tech/robotic motifs",
+      "fit": "tight and fitted",
+      "vibe": "Y2K cyber-punk"
+    },
+    "layer": {
+      "type": "tulle bolero / shoulder ruffle piece",
+      "color": "bright red",
+      "material": "layered tulle",
+      "silhouette": "voluminous, exaggerated shoulders",
+      "vibe": "theatrical, Harajuku-inspired"
     }
+  },
+  "bottom": {
+    "skirt": {
+      "type": "asymmetric mixed-media mini skirt",
+      "primary_panel": {
+        "pattern": "leopard print",
+        "colors": ["brown", "black"]
+      },
+      "secondary_panel": {
+        "color": "pink",
+        "detail": "vertical white sporty stripes",
+        "vibe": "Y2K trackwear influence"
+      },
+      "hem_detail": {
+        "material": "sheer ruffle",
+        "color": "beige",
+        "placement": "full hemline"
+      },
+      "waist": {
+        "visible_brand_band": "Calvin Klein",
+        "belt": "loose silver chain belt"
+      },
+      "extra_embellishment": {
+        "material": "faux fur",
+        "color": "white",
+        "location": "side attachment"
+      }
+    }
+  },
+  "accessories": {
+    "gloves": {
+      "type": "fingerless gloves",
+      "color": "pink",
+      "material": "mesh/perforated",
+      "vibe": "punk + Y2K"
+    },
+    "necklace": {
+      "type": "pearl necklace",
+      "vibe": "kawaii contrast to punk elements"
+    },
+    "chains": {
+      "location": "skirt area",
+      "color": "silver",
+      "purpose": "decorative"
+    }
+  },
+  "footwear": {
+    "boots": {
+      "type": "lace-up combat boots",
+      "color": "dark pink",
+      "material": "matte leather or suede",
+      "sole": "chunky"
+    },
+    "legwear": {
+      "type": "mid-calf sock",
+      "color": "black",
+      "placement": "one leg only",
+      "vibe": "alt-fashion asymmetry"
+    }
+  },
+  "hair": {
+    "color": "blonde",
+    "length": "long",
+    "style": {
+      "front": "sleek parted sections",
+      "top": "slightly teased volume",
+      "details": "small accent braids integrated",
+      "overall_vibe": "Harajuku + kawaii"
+    }
+  },
+  "makeup": {
+    "eyes": {
+      "eyeshadow_color": "pink",
+      "style": "heavy application with bold liner"
+    },
+    "lips": {
+      "color": "soft pink",
+      "style": "slightly overlined"
+    },
+    "overall_vibe": "doll-like with alt-punk intensity"
+  },
+  "color_palette": [
+    "hot pink",
+    "red",
+    "leopard brown/black",
+    "beige",
+    "black",
+    "white"
   ]
 }
 
-Guidelines:
-- Use the information below (title, description, existing prompt) to infer silhouette, colors, fabrics, footwear, and environment.
-- "image_prompt" should be ready for an image model (full body, color, setting).
-- Every clothing mention in "image_prompt" and in each item must explicitly include a color descriptor (e.g., "sage wool trench" instead of just "wool trench").
-- Create 4-6 items covering tops, bottoms, footwear, outer layers, statement accessories. Each search_query should be 6-10 words with gender, fabric, color, vibe.
-- Keep the JSON minified (no comments).
-
-Look data:
+Use the provided photo (if available) plus this metadata:
 Title: ${look.title}
 Description: ${look.description}
 Vibe: ${look.vibe}
-Prompt: ${look.imagePrompt || look.prompt}
-${styleTag ? `Style tag focus: ${styleTag}` : ''}`;
+Style tag: ${styleTag ?? 'n/a'}
 
-  const output = await runReplicateModel(GPT5_MODEL, {
+Be as specific as possible (colors, textiles, cuts, layering, accessories, makeup, hair). If an element is not present, set it to null.`;
+
+  const replicateInput: Record<string, unknown> = {
     prompt,
     max_tokens: 900,
-    temperature: 0.5,
-  });
+    temperature: 0.4,
+  };
+
+  const referenceImage = look.gridImageUrl || look.imageUrl;
+  if (referenceImage) {
+    replicateInput.image_input = [referenceImage];
+  }
+
+  const output = await runReplicateModel(GPT5_MODEL, replicateInput);
 
   const raw = extractPromptText(output);
   const jsonMatch = raw.match(/\{[\s\S]+\}/);
@@ -1507,6 +1678,9 @@ ${styleTag ? `Style tag focus: ${styleTag}` : ''}`;
     throw new Error('GPT-5 single look response was not JSON.');
   }
   const parsed = JSON.parse(jsonMatch[0]);
+  if (isSegmentedLookResponse(parsed)) {
+    return convertSegmentedLookToPrompt(parsed, look, styleTag);
+  }
   return normalizePromptSpec(parsed, look.gender, styleTag);
 }
 

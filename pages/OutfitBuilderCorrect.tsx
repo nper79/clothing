@@ -1,10 +1,33 @@
 ﻿import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import type { LikedItem } from '../types/lookBuilder';
+import type { LikedItem, Category } from '../types/lookBuilder';
 import { ArrowLeft, Sparkles, Trash2, Check, RefreshCw } from 'lucide-react';
 import { ExploreService } from '../services/exploreService';
 import { PersonalStylingService } from '../services/personalStylingService';
+
+const categories: Category[] = [
+  { id: 'headwear', name: 'Headwear', icon: '' },
+  { id: 'tops', name: 'Tops', icon: '' },
+  { id: 'bottoms', name: 'Bottoms', icon: '' },
+  { id: 'dresses', name: 'Dresses', icon: '' },
+  { id: 'outerwear', name: 'Outerwear', icon: '' },
+  { id: 'footwear', name: 'Footwear', icon: '' },
+  { id: 'accessories', name: 'Accessories', icon: '' }
+];
+const fallbackCategory = categories[1];
+
+const categorizeByName = (name?: string): Category => {
+  if (!name) return fallbackCategory;
+  const lower = name.toLowerCase();
+  if (lower.includes('hat') || lower.includes('cap') || lower.includes('beanie')) return categories[0];
+  if (lower.includes('coat') || lower.includes('jacket') || lower.includes('blazer')) return categories[4];
+  if (lower.includes('dress') || lower.includes('gown')) return categories[3];
+  if (lower.includes('pants') || lower.includes('trouser') || lower.includes('jean') || lower.includes('skirt') || lower.includes('short')) return categories[2];
+  if (lower.includes('shoe') || lower.includes('sneaker') || lower.includes('boot') || lower.includes('heel')) return categories[5];
+  if (lower.includes('bag') || lower.includes('purse') || lower.includes('belt') || lower.includes('earring') || lower.includes('ring') || lower.includes('bracelet')) return categories[6];
+  return fallbackCategory;
+};
 
 const OutfitBuilderCorrect: React.FC = () => {
   const { user } = useAuth();
@@ -15,6 +38,7 @@ const OutfitBuilderCorrect: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isTryingOnSelection, setIsTryingOnSelection] = useState(false);
   const [tryOnError, setTryOnError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -31,7 +55,7 @@ const OutfitBuilderCorrect: React.FC = () => {
             id: 'demo_1',
             name: 'Classic White T-Shirt',
             imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
-            category: { name: 'tops' },
+            category: categories[1],
             lookTitle: 'Casual Everyday Look',
             createdAt: new Date().toISOString()
           },
@@ -39,7 +63,7 @@ const OutfitBuilderCorrect: React.FC = () => {
             id: 'demo_2',
             name: 'Blue Denim Jeans',
             imageUrl: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400',
-            category: { name: 'bottoms' },
+            category: categories[2],
             lookTitle: 'Classic Denim Style',
             createdAt: new Date().toISOString()
           },
@@ -47,7 +71,7 @@ const OutfitBuilderCorrect: React.FC = () => {
             id: 'demo_3',
             name: 'White Sneakers',
             imageUrl: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400',
-            category: { name: 'footwear' },
+            category: categories[5],
             lookTitle: 'Sporty Casual Look',
             createdAt: new Date().toISOString()
           },
@@ -55,7 +79,7 @@ const OutfitBuilderCorrect: React.FC = () => {
             id: 'demo_4',
             name: 'Black Leather Jacket',
             imageUrl: 'https://images.unsplash.com/photo-1551488831-00ddcb2c79c5?w=400',
-            category: { name: 'outerwear' },
+            category: categories[4],
             lookTitle: 'Edgy Street Style',
             createdAt: new Date().toISOString()
           }
@@ -63,7 +87,11 @@ const OutfitBuilderCorrect: React.FC = () => {
         localStorage.setItem(`likedItems_${user.id}`, JSON.stringify(demoItems));
         setLikedItems(demoItems);
       } else {
-        setLikedItems(parsedItems);
+        const sanitized = parsedItems.map((item: LikedItem) => ({
+          ...item,
+          category: item.category?.id ? item.category : categorizeByName(item.name)
+        }));
+        setLikedItems(sanitized);
       }
     } catch (error) {
       console.error('Failed to parse liked items', error);
@@ -84,6 +112,19 @@ const OutfitBuilderCorrect: React.FC = () => {
     () => likedItems.filter((item) => selectedMap[item.id]),
     [likedItems, selectedMap]
   );
+
+  const categoryCounts = useMemo(() => {
+    return likedItems.reduce<Record<string, number>>((acc, item) => {
+      const id = item.category?.id ?? 'uncategorized';
+      acc[id] = (acc[id] || 0) + 1;
+      return acc;
+    }, {});
+  }, [likedItems]);
+
+  const filteredItems = useMemo(() => {
+    if (!selectedCategory) return likedItems;
+    return likedItems.filter((item) => item.category?.id === selectedCategory.id);
+  }, [likedItems, selectedCategory]);
 
   const handleRemove = (itemId: string) => {
     if (!user) return;
@@ -223,9 +264,38 @@ const OutfitBuilderCorrect: React.FC = () => {
         ) : (
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.6fr)_minmax(0,0.4fr)]">
             <div className="space-y-4">
-              <p className="text-xs uppercase tracking-[0.4em] text-white/40">All liked items</p>
+              <div className="flex flex-col gap-3">
+                <p className="text-xs uppercase tracking-[0.4em] text-white/40">Filter by category</p>
+                <div className="flex flex-wrap gap-2 text-sm">
+                  <button
+                    onClick={() => setSelectedCategory(null)}
+                    className={`rounded-full px-4 py-1.5 border transition whitespace-nowrap ${
+                      !selectedCategory ? 'bg-white text-black border-white' : 'border-white/20 text-white/70 hover:text-white'
+                    }`}
+                  >
+                    All ({likedItems.length})
+                  </button>
+                  {categories.map((category) => {
+                    const count = categoryCounts[category.id] || 0;
+                    return (
+                      <button
+                        key={category.id}
+                        onClick={() => (count ? setSelectedCategory(category) : undefined)}
+                        disabled={count === 0}
+                        className={`rounded-full px-4 py-1.5 border transition whitespace-nowrap ${
+                          selectedCategory?.id === category.id
+                            ? 'bg-white text-black border-white'
+                            : 'border-white/15 text-white/70 hover:text-white'
+                        } ${count === 0 ? 'opacity-40 cursor-not-allowed' : ''}`}
+                      >
+                        {category.name} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                {likedItems.map((item) => {
+                {filteredItems.map((item) => {
                   const itemName = item.name || 'Saved item';
                   const categoryName = item.category?.name || 'Collection';
                   return (

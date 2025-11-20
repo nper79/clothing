@@ -279,11 +279,8 @@ export const ExploreService = {
   getRemixes(userId: string): SavedRemix[] {
     const stored = readJson<SavedRemix[]>(remixKey(userId), []);
     return stored.map((entry) => {
-      if (entry.storagePath) {
-        return {
-          ...entry,
-          imageUrl: undefined,
-        };
+      if (entry.storagePath && !entry.imageUrl) {
+        return { ...entry, imageUrl: undefined };
       }
       return entry;
     });

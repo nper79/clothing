@@ -2,6 +2,406 @@
   "male": [],
   "female": [
     {
+      "id": "explore_female_ref_1763649639489_0",
+      "gender": "female",
+      "title": "Harajuku-inspired alt-pop mix with punk, Y2K, and kawaii elements; eclectic layers, bold prints, chunky accessories.",
+      "description": "Harajuku-inspired alt-pop mix with punk, Y2K, and kawaii elements; eclectic layers, bold prints, chunky accessories.-Top-black sleeveless tank top (hot pink graphic print with abstract/tech motifs; tight and fitted; Y2K cyber-punk)",
+      "vibe": "Harajuku-inspired alt-pop mix with punk, Y2K, and kawaii elements; eclectic layers, bold prints, chunky accessories.",
+      "prompt": "Overall style: Harajuku-inspired alt-pop mix with punk, Y2K, and kawaii elements; eclectic layers, bold prints, chunky accessories.. Top-black sleeveless tank top (hot pink graphic print with abstract/tech motifs; tight and fitted; Y2K cyber-punk). Top-bright red layered tulle tulle bolero / shoulder ruffle piece (voluminous, exaggerated shoulders; theatrical, Harajuku-inspired). Bottom-asymmetric mixed-media mini skirt (Material sheer ruffle, Color beige, Placementfull hemline; Visible Brand Band Calvin Klein, Belt loose silver chain belt; Material faux fur, Color white, Location side attachment). Accessories-pink mesh/perforated fingerless gloves (punk + Y2K). Accessories-pearl necklace (kawaii contrast to punk elements). Accessories-silver Chains (decorative). Accessories-neutral/pink accents small clips/braids (front sections). Footwear-dark pink / magenta matte leather or suede lace-up combat boots. Footwear-black mid-calf sock (alt-fashion asymmetry; one leg only). Hair: Color blonde, Length long, Style Front sleek parted sections with mini braids, Top slightly teased volume, Details small accent braids integrated, Overall Vibe Harajuku + kawaii. Makeup: Eyes Eyeshadow Color pink, Style heavy application with bold liner and under-eye detail, Lips Color soft pink, Style slightly overlined, Overall Vibe doll-like with alt-punk intensity. Palette focuses on hot pink, red, leopard brown/black, beige, black, white, silver. Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background.",
+      "imagePrompt": "Overall style: Harajuku-inspired alt-pop mix with punk, Y2K, and kawaii elements; eclectic layers, bold prints, chunky accessories.. Top-black sleeveless tank top (hot pink graphic print with abstract/tech motifs; tight and fitted; Y2K cyber-punk). Top-bright red layered tulle tulle bolero / shoulder ruffle piece (voluminous, exaggerated shoulders; theatrical, Harajuku-inspired). Bottom-asymmetric mixed-media mini skirt (Material sheer ruffle, Color beige, Placementfull hemline; Visible Brand Band Calvin Klein, Belt loose silver chain belt; Material faux fur, Color white, Location side attachment). Accessories-pink mesh/perforated fingerless gloves (punk + Y2K). Accessories-pearl necklace (kawaii contrast to punk elements). Accessories-silver Chains (decorative). Accessories-neutral/pink accents small clips/braids (front sections). Footwear-dark pink / magenta matte leather or suede lace-up combat boots. Footwear-black mid-calf sock (alt-fashion asymmetry; one leg only). Hair: Color blonde, Length long, Style Front sleek parted sections with mini braids, Top slightly teased volume, Details small accent braids integrated, Overall Vibe Harajuku + kawaii. Makeup: Eyes Eyeshadow Color pink, Style heavy application with bold liner and under-eye detail, Lips Color soft pink, Style slightly overlined, Overall Vibe doll-like with alt-punk intensity. Palette focuses on hot pink, red, leopard brown/black, beige, black, white, silver. Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background. Scene: art gallery cube with floating plinths and diffused spotlights. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "items": [
+        {
+          "id": "top_0_base_top",
+          "label": "black sleeveless tank top",
+          "searchQuery": "female black sleeveless tank top Y2K cyber-punk",
+          "category": "Base Top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-1-1763649656910.jpg"
+        },
+        {
+          "id": "top_1_layer",
+          "label": "bright red layered tulle tulle bolero / shoulder ruffle piece",
+          "searchQuery": "female bright red layered tulle tulle bolero / shoulder ruffle piece theatrical, Harajuku-inspired",
+          "category": "Layer",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-2-1763649657191.jpg"
+        },
+        {
+          "id": "bottom_0_skirt",
+          "label": "asymmetric mixed-media mini skirt",
+          "searchQuery": "female asymmetric mixed-media mini skirt",
+          "category": "Skirt",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-3-1763649657378.jpg"
+        },
+        {
+          "id": "accessories_0_gloves",
+          "label": "pink mesh/perforated fingerless gloves",
+          "searchQuery": "female pink mesh/perforated fingerless gloves punk + Y2K",
+          "category": "Gloves",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-4-1763649657642.jpg"
+        },
+        {
+          "id": "accessories_1_necklace",
+          "label": "pearl necklace",
+          "searchQuery": "female pearl necklace kawaii contrast to punk elements",
+          "category": "Necklace",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-5-1763649657816.jpg"
+        },
+        {
+          "id": "accessories_2_chains",
+          "label": "silver Chains",
+          "searchQuery": "female silver Chains",
+          "category": "Chains",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-6-1763649658002.jpg"
+        },
+        {
+          "id": "accessories_5_hair_accessories",
+          "label": "neutral/pink accents small clips/braids",
+          "searchQuery": "female neutral/pink accents small clips/braids",
+          "category": "Hair Accessories",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-7-1763649658266.jpg"
+        },
+        {
+          "id": "footwear_0_boots",
+          "label": "dark pink / magenta matte leather or suede lace-up combat boots",
+          "searchQuery": "female dark pink / magenta matte leather or suede lace-up combat boots",
+          "category": "Boots",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-8-1763649658455.jpg"
+        },
+        {
+          "id": "footwear_1_legwear",
+          "label": "black mid-calf sock",
+          "searchQuery": "female black mid-calf sock alt-fashion asymmetry",
+          "category": "Legwear",
+          "gender": "female"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0-1763649639489.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-1763649656046.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-1-1763649656910.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-2-1763649657191.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-3-1763649657378.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-4-1763649657642.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-5-1763649657816.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-6-1763649658002.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-7-1763649658266.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-8-1763649658455.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_ref_1763646098797_0",
+      "gender": "female",
+      "title": "Graphite Glide",
+      "description": "Charcoal ripstop parka over slatehoodie, black nylon cargos, silver runners.",
+      "vibe": "streetwear",
+      "prompt": "Full-body 9:16 shot, visible footwear. A woman stands at a foggy riverside boardwalk. She wears a charcoal gray longline ripstop parka with matte finish, dropped shoulders, and ribbed cuffs layered over a slate gray boxyhoodie; a crisp white longline cotton tee peeks below. Bottoms are jet-black straight-leg nylon cargo trousers with slight puddling. Footwear is metallic silver and white chunky mesh sneakers with slate gray accents. Accessories include a black nylon web belt with a gunmetal carabiner, graphite technical crossbody sling with waterproof zippers, and a charcoal ribbed beanie. Hair is tucked under the beanie with brushed-up brows; makeup is dewy skin, clear gloss, and soft taupe liner. The setting shows misty water, damp planks, and cool morning light. The render is full-color, rich, and never black-and-white.",
+      "imagePrompt": "Full-body 9:16 shot, visible footwear. A woman stands at a foggy riverside boardwalk. She wears a charcoal gray longline ripstop parka with matte finish, dropped shoulders, and ribbed cuffs layered over a slate gray boxyhoodie; a crisp white longline cotton tee peeks below. Bottoms are jet-black straight-leg nylon cargo trousers with slight puddling. Footwear is metallic silver and white chunky mesh sneakers with slate gray accents. Accessories include a black nylon web belt with a gunmetal carabiner, graphite technical crossbody sling with waterproof zippers, and a charcoal ribbed beanie. Hair is tucked under the beanie with brushed-up brows; makeup is dewy skin, clear gloss, and soft taupe liner. The setting shows misty water, damp planks, and cool morning light. The render is full-color, rich, and never black-and-white. Scene: lush botanical greenhouse filled with humidity haze and backlit palms. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "items": [
+        {
+          "id": "outerwear",
+          "label": "Charcoal longline ripstop parka",
+          "searchQuery": "women's charcoal longline ripstop parka matte nylon dropped shoulders ribbed cuffs",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-1-1763646113490.jpg"
+        },
+        {
+          "id": "hoodie",
+          "label": "Slate gray boxyhoodie",
+          "searchQuery": "women's slate gray boxyhoodie heavyweight fleece dropped shoulder",
+          "category": "sweatshirt",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-2-1763646113669.jpg"
+        },
+        {
+          "id": "tee",
+          "label": "White longline cotton tee",
+          "searchQuery": "women's white longline cotton t-shirt crewneck",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-3-1763646113868.jpg"
+        },
+        {
+          "id": "pants",
+          "label": "Jet-black straight-leg nylon cargo trousers",
+          "searchQuery": "women's black straight-leg nylon cargo pants water-resistant",
+          "category": "pants",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-4-1763646114059.jpg"
+        },
+        {
+          "id": "shoes",
+          "label": "Metallic silver and white chunky sneakers",
+          "searchQuery": "women's metallic silver white chunky mesh sneakers slate accents",
+          "category": "shoes",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-5-1763646114257.jpg"
+        },
+        {
+          "id": "accessory",
+          "label": "Graphite technical crossbody sling",
+          "searchQuery": "women's graphite technical crossbody sling waterproof zippers",
+          "category": "bag",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-6-1763646114470.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0-1763646098797.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-1763646112993.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-1-1763646113490.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-2-1763646113669.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-3-1763646113868.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-4-1763646114059.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-5-1763646114257.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-6-1763646114470.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-7-1763646114681.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763646098797_0/grid-cell-8-1763646115242.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_ref_1763644271931_0",
+      "gender": "female",
+      "title": "Graphite Drift",
+      "description": "Charcoal boxy bomber, dovehoodie, inky cargos, chunky cement runners.",
+      "vibe": "streetwear",
+      "prompt": "Full-body 9:16 shot, visible footwear. A female model in a slate-charcoal bomber jacket with subtle ripstop sheen, slightly cropped and boxy, layered over a pale-dove gray oversizedhoodie with a generoushood and ribbed hem. Underneath, a crisp white longline cotton tee extends past thehoodie hem. She wears inky black straight-leg cargo trousers in soft washed twill, lightly pooling at the ankle with matte utility pockets. On feet are chunky cement-gray mesh-and-suede runners with off-white midsoles and gum-brown outsoles, laced loose. Accessories include graphite-gray beanie, polished silver sculptural hoop earrings, a slim silver curb chain at the neckline, an asphalt-black nylon crossbody sling with a dangling clear transit card tag, and a black rubber sports watch stacked with a brushed-steel link bracelet. Nails are natural buffed, skin dewy with soft taupe brows and a sheer rose-brown lip; hair tucked into the beanie with loose strands. Environment: corner cafe patio with black-and-white bistro tables, steaming takeaway coffee, morning city light on concrete and painted crosswalk lines. The render is full-color, rich, and never black-and-white.",
+      "imagePrompt": "Full-body 9:16 shot, visible footwear. A female model in a slate-charcoal bomber jacket with subtle ripstop sheen, slightly cropped and boxy, layered over a pale-dove gray oversizedhoodie with a generoushood and ribbed hem. Underneath, a crisp white longline cotton tee extends past thehoodie hem. She wears inky black straight-leg cargo trousers in soft washed twill, lightly pooling at the ankle with matte utility pockets. On feet are chunky cement-gray mesh-and-suede runners with off-white midsoles and gum-brown outsoles, laced loose. Accessories include graphite-gray beanie, polished silver sculptural hoop earrings, a slim silver curb chain at the neckline, an asphalt-black nylon crossbody sling with a dangling clear transit card tag, and a black rubber sports watch stacked with a brushed-steel link bracelet. Nails are natural buffed, skin dewy with soft taupe brows and a sheer rose-brown lip; hair tucked into the beanie with loose strands. Environment: corner cafe patio with black-and-white bistro tables, steaming takeaway coffee, morning city light on concrete and painted crosswalk lines. The render is full-color, rich, and never black-and-white. Scene: rain-soaked neon alley with puddle reflections and haze. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "items": [
+        {
+          "id": "jacket",
+          "label": "Slate-charcoal ripstop boxy bomber jacket",
+          "searchQuery": "women's slate charcoal ripstop bomber jacket boxy cropped ribbed cuffs hem",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-1-1763644287106.jpg"
+        },
+        {
+          "id": "hoodie",
+          "label": "Pale-dove gray oversizedhoodie",
+          "searchQuery": "women's pale dove gray oversizedhoodie generoushood ribbed hem",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-2-1763644287333.jpg"
+        },
+        {
+          "id": "tee",
+          "label": "Crisp white longline cotton tee",
+          "searchQuery": "women's white longline cotton t-shirt clean hem layering tee",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-3-1763644287514.jpg"
+        },
+        {
+          "id": "pants",
+          "label": "Inky black straight-leg cargo trousers in washed twill",
+          "searchQuery": "women's inky black cargo pants straight leg washed twill matte pockets",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-4-1763644287683.jpg"
+        },
+        {
+          "id": "shoes",
+          "label": "Cement-gray chunky sneakers with off-white midsoles and gum outsoles",
+          "searchQuery": "women's cement gray chunky sneakers off-white midsole gum outsole",
+          "category": "footwear",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-5-1763644287867.jpg"
+        },
+        {
+          "id": "bag",
+          "label": "Asphalt-black nylon crossbody sling bag",
+          "searchQuery": "women's black nylon crossbody sling bag minimalist adjustable strap",
+          "category": "accessories",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-6-1763644288047.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0-1763644271931.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-1763644286561.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-1-1763644287106.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-2-1763644287333.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-3-1763644287514.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-4-1763644287683.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-5-1763644287867.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-6-1763644288047.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-7-1763644288245.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763644271931_0/grid-cell-8-1763644288424.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_1763641877308_0",
+      "gender": "female",
+      "title": "Frosted Linen Luxe",
+      "description": "Charcoal tweed coat, cream cable-knit, indigo denim, silver ballet flats.",
+      "vibe": "minimal luxe",
+      "prompt": "Full-body, vertical 9:16 fashion shot. Model in charcoal tweed overcoat layered over cream cable-knit wool sweater and pale heather thermal underlayer, with mid-rise indigo straight-leg denim and dove-silver leather ballet flats; charcoal ribbed knit beanie, soft oatmeal chunky scarf, black leather gloves, and brushed-silver sculptural hoop earrings. Hair tucked under beanie with loose tendrils; makeup soft taupe eyes, berry lip. Pose relaxed stride with hands in pockets, approachable confidence. Shot at a windswept Mediterranean pier with terracotta planters and visible sea mist; overcast winter twilight with snowflakes drifting, frosty breath visible. Sculptural side light adds crisp texture; shoes clearly visible on wet stone. Cold-weather textures emphasized.",
+      "imagePrompt": "Full-body, vertical 9:16 fashion shot. Model in charcoal tweed overcoat layered over cream cable-knit wool sweater and pale heather thermal underlayer, with mid-rise indigo straight-leg denim and dove-silver leather ballet flats; charcoal ribbed knit beanie, soft oatmeal chunky scarf, black leather gloves, and brushed-silver sculptural hoop earrings. Hair tucked under beanie with loose tendrils; makeup soft taupe eyes, berry lip. Pose relaxed stride with hands in pockets, approachable confidence. Shot at a windswept Mediterranean pier with terracotta planters and visible sea mist; overcast winter twilight with snowflakes drifting, frosty breath visible. Sculptural side light adds crisp texture; shoes clearly visible on wet stone. Cold-weather textures emphasized. Scene: sunset rooftop lounge bathed in neon tube lighting with skyline backdrop. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion.",
+      "items": [
+        {
+          "id": "coat",
+          "label": "Charcoal tweed wool overcoat",
+          "searchQuery": "women charcoal tweed wool overcoat winter tailored lapel",
+          "category": "jacket",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-1-1763642246963.jpg",
+          "cachedProducts": [
+            {
+              "title": "WOOL BLEND STRUCTURED COAT-Black | ZARA India",
+              "link": "https://www.zara.com/in/en/wool-blend-structured-coat-p06612675.html",
+              "price": "₹16,550",
+              "source": "www.zara.com",
+              "imageUrl": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRzzvJkD_7vjJnCH5-lbieiHg_RBMVmu6sjAUK4WSVgdvPUC_02",
+              "position": 1
+            },
+            {
+              "title": "Single-breasted coat-Black/Herringbone-patterned-Ladies | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.1249223002.html",
+              "price": "₹4,499",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73ucM8TL0HVNmxXdfhhvv-irRxxqtXs21HMiGHQRSqSbbcjkv",
+              "position": 2
+            },
+            {
+              "title": "Petite Cortazar Herringbone Topcoat | Banana Republic",
+              "link": "https://bananarepublic.gapcanada.ca/browse/product.do?pid=445524003",
+              "price": "CA$200",
+              "source": "bananarepublic.gapcanada.ca",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTxY8Fo8oaPOs38_hEmauYv850IqrmoHI3j1kV18wZ0cuC5fMSX",
+              "position": 29
+            }
+          ],
+          "cachedAt": "2025-11-20T12:31:46.731Z"
+        },
+        {
+          "id": "sweater",
+          "label": "Cream cable-knit wool sweater",
+          "searchQuery": "women cream cable knit wool sweater chunky winter",
+          "category": "top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-2-1763642247161.jpg",
+          "cachedProducts": [
+            {
+              "title": "Relaxed Fit Cable-knit jumper-Light beige-Men | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.1103288001.html",
+              "price": "₹2,249",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSaikLruXLJ7IuttNCwGqwHRHrdJLVCRUmfI7RaFSSjVOSP-xnt",
+              "position": 1
+            },
+            {
+              "title": "Buy Carraig Donn Childs Irish Merino Wool Crew Cut Sweater (XSmall, Kiwi Green) at Amazon.in",
+              "link": "https://www.amazon.in/Aran-Woollen-Mills-Carraig-Sweater/dp/B083Q946ZQ",
+              "price": "₹11,557",
+              "source": "www.amazon.in",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWnXdUqqmEL730nbfdY4HOzpIqOgxVzKhJnjBGhRRv8jUPOYEc",
+              "position": 5
+            },
+            {
+              "title": "Regular Fit Cable-knit jumper-Cream-Men | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.1240974001.html",
+              "price": "₹2,999",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSCaaw197dWU3uw-qecTB2Tbzrx-_9Ef1qClXGP8RdANJQjbOB6",
+              "position": 7
+            },
+            {
+              "title": "Cable-knit jumper-Cream-Ladies | H&M IN",
+              "link": "https://www2.hm.com/en_in/productpage.1101022001.html",
+              "price": "₹809",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRwGWydZDNfAeB6Y2qkg7z9in1DMSxcoohb21mfQNIUl0RmFy1i",
+              "position": 9
+            },
+            {
+              "title": "Suéter detejido trenzado enmezcla de lana-Beige-Ladies | H&M MX",
+              "link": "https://www2.hm.com/es_mx/productpage.1201110002.html",
+              "price": "MX$1,999",
+              "source": "www2.hm.com",
+              "imageUrl": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQBvbN47gmP1C989e1T7AD4Aye_INWlEYgCz8fec9pl39fAFxzl",
+              "position": 17
+            }
+          ],
+          "cachedAt": "2025-11-20T12:31:59.657Z"
+        },
+        {
+          "id": "denim",
+          "label": "Indigo straight-leg denim jeans",
+          "searchQuery": "women indigo straight leg denim jeans classic",
+          "category": "bottom",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-3-1763642247375.jpg",
+          "cachedProducts": [
+            {
+              "title": "High Rise Vintage Slim Jeans | Gap",
+              "link": "https://www.gap.com/browse/product.do?pid=818866002",
+              "price": "$55",
+              "source": "www.gap.com",
+              "imageUrl": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRtRRwdHY90ixlZyGkGIIwT8OzUWS9K8Eq4DF_3GiGvhygei-JO",
+              "position": 57
+            }
+          ],
+          "cachedAt": "2025-11-20T12:32:12.199Z"
+        },
+        {
+          "id": "shoes",
+          "label": "Dove-silver leather ballet flats",
+          "searchQuery": "women silver leather ballet flats minimal metallic",
+          "category": "shoes",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-4-1763642247586.jpg",
+          "cachedProducts": [
+            {
+              "title": "Amazon.co.jp: PLATA Women's Pumps, Shoes, Ballet Shoes, Cute, Wide, 3E, Flats, V-Cut, Fashionable, Ivory: Clothing, Shoes & Jewelry",
+              "link": "https://www.amazon.co.jp/-/en/PLATA-Womens-Pumps-Ballet-Fashionable/dp/B0D7ZN91N5",
+              "price": "¥1,980",
+              "source": "www.amazon.co.jp",
+              "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjteUYUIBpd79vch9QUw3DD1RFy-aJFIsp22haMRkTPl-pHpLl",
+              "position": 9
+            }
+          ],
+          "cachedAt": "2025-11-20T12:32:23.189Z"
+        },
+        {
+          "id": "accessory1",
+          "label": "Oatmeal chunky knit scarf",
+          "searchQuery": "women oatmeal chunky knit scarf winter cozy",
+          "category": "accessories",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-5-1763642247797.jpg"
+        },
+        {
+          "id": "accessory2",
+          "label": "Matte charcoal ribbed beanie",
+          "searchQuery": "women charcoal ribbed knit beanie winter",
+          "category": "accessories",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-6-1763642248011.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0-1763641877308.jpg",
+      "styleTag": "winter",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-1763642246151.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-1-1763642246963.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-2-1763642247161.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-3-1763642247375.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-4-1763642247586.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-5-1763642247797.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-6-1763642248011.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-7-1763642248181.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_1763641877308_0/grid-cell-8-1763642248351.jpg"
+      ]
+    },
+    {
       "id": "explore_female_1763578891238_0",
       "gender": "female",
       "title": "Neon Rooftop Clean",
