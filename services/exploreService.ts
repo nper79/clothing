@@ -181,7 +181,12 @@ export const ExploreService = {
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(text || 'Failed to regenerate grid');
+      try {
+        const payload = JSON.parse(text);
+        throw new Error(payload?.error || 'Failed to regenerate grid');
+      } catch {
+        throw new Error(text || 'Failed to regenerate grid');
+      }
     }
 
     const payload = await response.json();
@@ -197,7 +202,12 @@ export const ExploreService = {
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(text || 'Failed to regenerate grids');
+      try {
+        const payload = JSON.parse(text);
+        throw new Error(payload?.error || 'Failed to regenerate grids');
+      } catch {
+        throw new Error(text || 'Failed to regenerate grids');
+      }
     }
 
     const payload = await response.json();

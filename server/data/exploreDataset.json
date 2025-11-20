@@ -2,6 +2,77 @@
   "male": [],
   "female": [
     {
+      "id": "explore_female_ref_1763650681664_0",
+      "gender": "female",
+      "title": "Casual chic dayti...",
+      "description": "Casual chic daytime look with soft pastels and minimal accessories; relaxed cafe vibe.-Top-pale mint/seafoam green long-sleeve blouse/tunic (solid; relaxed, slightly loose; easy, feminine)",
+      "vibe": "Casual chic daytime look with soft pastels and minimal accessories; relaxed cafe vibe.",
+      "prompt": "Overall style: Casual chic daytime look with soft pastels and minimal accessories; relaxed cafe vibe.. Top-pale mint/seafoam green long-sleeve blouse/tunic (solid; relaxed, slightly loose; easy, feminine). Top-matching mint lightweight woven fabric self-tie belt (subtle waist cinch; polished casual). Bottom-white or light woven trousers (partially visible) (straight/relaxed; summer casual). Accessories-silver with light blue accents metal/beads stacked charm bracelets (playful, personal). Accessories-silver/white Watch (minimal). Accessories-silver thin chain belt (over blouse waist tie). Hair: Color light brown, Length medium-long, Style Front center part, Top smooth and sleek, Overall Vibe natural, polished. Makeup: Eyes Eyeshadow Color neutral, Style soft, everyday with defined lashes, Lips Color natural pink, Style sheer/cream finish, Overall Vibe fresh and minimal. Palette focuses on pale mint/seafoam, silver, white, light brown (hair), natural pink (makeup). Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background.",
+      "imagePrompt": "Overall style: Casual chic daytime look with soft pastels and minimal accessories; relaxed cafe vibe.. Top-pale mint/seafoam green long-sleeve blouse/tunic (solid; relaxed, slightly loose; easy, feminine). Top-matching mint lightweight woven fabric self-tie belt (subtle waist cinch; polished casual). Bottom-white or light woven trousers (partially visible) (straight/relaxed; summer casual). Accessories-silver with light blue accents metal/beads stacked charm bracelets (playful, personal). Accessories-silver/white Watch (minimal). Accessories-silver thin chain belt (over blouse waist tie). Hair: Color light brown, Length medium-long, Style Front center part, Top smooth and sleek, Overall Vibe natural, polished. Makeup: Eyes Eyeshadow Color neutral, Style soft, everyday with defined lashes, Lips Color natural pink, Style sheer/cream finish, Overall Vibe fresh and minimal. Palette focuses on pale mint/seafoam, silver, white, light brown (hair), natural pink (makeup). Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background. Scene: sunset rooftop lounge bathed in neon tube lighting with skyline backdrop. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "items": [
+        {
+          "id": "top_0_base_top",
+          "label": "pale mint/seafoam green long-sleeve blouse/tunic",
+          "searchQuery": "female pale mint/seafoam green long-sleeve blouse/tunic easy, feminine",
+          "category": "Base Top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-1-1763675933678.jpg"
+        },
+        {
+          "id": "top_1_layer",
+          "label": "matching mint lightweight woven fabric self-tie belt",
+          "searchQuery": "female matching mint lightweight woven fabric self-tie belt polished casual",
+          "category": "Layer",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-2-1763675933916.jpg"
+        },
+        {
+          "id": "bottom_1_pants",
+          "label": "white or light woven trousers (partially visible)",
+          "searchQuery": "female white or light woven trousers (partially visible) summer casual",
+          "category": "Pants",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-3-1763675934108.jpg"
+        },
+        {
+          "id": "accessories_3_bracelets",
+          "label": "silver with light blue accents metal/beads stacked charm bracelets",
+          "searchQuery": "female silver with light blue accents metal/beads stacked charm bracelets playful, personal",
+          "category": "Bracelets",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-4-1763675934287.jpg"
+        },
+        {
+          "id": "accessories_4_watch",
+          "label": "silver/white Watch",
+          "searchQuery": "female silver/white Watch minimal",
+          "category": "Watch",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-5-1763675934509.jpg"
+        },
+        {
+          "id": "accessories_5_belt",
+          "label": "silver thin chain belt",
+          "searchQuery": "female silver thin chain belt",
+          "category": "Belt",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-6-1763675934739.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0-1763650681664.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-1763675933094.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-1-1763675933678.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-2-1763675933916.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-3-1763675934108.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-4-1763675934287.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-5-1763675934509.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-6-1763675934739.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-7-1763675934928.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763650681664_0/grid-cell-8-1763675935076.jpg"
+      ]
+    },
+    {
       "id": "explore_female_ref_1763649639489_0",
       "gender": "female",
       "title": "Harajuku-inspired alt-pop mix with punk, Y2K, and kawaii elements; eclectic layers, bold prints, chunky accessories.",
@@ -16,7 +87,7 @@
           "searchQuery": "female black sleeveless tank top Y2K cyber-punk",
           "category": "Base Top",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-1-1763649656910.jpg"
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-1-1763675868828.jpg"
         },
         {
           "id": "top_1_layer",
@@ -24,7 +95,7 @@
           "searchQuery": "female bright red layered tulle tulle bolero / shoulder ruffle piece theatrical, Harajuku-inspired",
           "category": "Layer",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-2-1763649657191.jpg"
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-2-1763675869030.jpg"
         },
         {
           "id": "bottom_0_skirt",
@@ -32,7 +103,7 @@
           "searchQuery": "female asymmetric mixed-media mini skirt",
           "category": "Skirt",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-3-1763649657378.jpg"
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-3-1763675869386.jpg"
         },
         {
           "id": "accessories_0_gloves",
@@ -40,7 +111,7 @@
           "searchQuery": "female pink mesh/perforated fingerless gloves punk + Y2K",
           "category": "Gloves",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-4-1763649657642.jpg"
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-4-1763675869575.jpg"
         },
         {
           "id": "accessories_1_necklace",
@@ -48,7 +119,7 @@
           "searchQuery": "female pearl necklace kawaii contrast to punk elements",
           "category": "Necklace",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-5-1763649657816.jpg"
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-5-1763675869781.jpg"
         },
         {
           "id": "accessories_2_chains",
@@ -56,7 +127,7 @@
           "searchQuery": "female silver Chains",
           "category": "Chains",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-6-1763649658002.jpg"
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-6-1763675869958.jpg"
         },
         {
           "id": "accessories_5_hair_accessories",
@@ -64,7 +135,7 @@
           "searchQuery": "female neutral/pink accents small clips/braids",
           "category": "Hair Accessories",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-7-1763649658266.jpg"
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-7-1763675870180.jpg"
         },
         {
           "id": "footwear_0_boots",
@@ -72,7 +143,7 @@
           "searchQuery": "female dark pink / magenta matte leather or suede lace-up combat boots",
           "category": "Boots",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-8-1763649658455.jpg"
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-8-1763675870408.jpg"
         },
         {
           "id": "footwear_1_legwear",
@@ -83,16 +154,16 @@
         }
       ],
       "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0-1763649639489.jpg",
-      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-1763649656046.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-1763675867965.jpg",
       "gridCellUrls": [
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-1-1763649656910.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-2-1763649657191.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-3-1763649657378.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-4-1763649657642.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-5-1763649657816.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-6-1763649658002.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-7-1763649658266.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-8-1763649658455.jpg"
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-1-1763675868828.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-2-1763675869030.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-3-1763675869386.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-4-1763675869575.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-5-1763675869781.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-6-1763675869958.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-7-1763675870180.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763649639489_0/grid-cell-8-1763675870408.jpg"
       ]
     },
     {

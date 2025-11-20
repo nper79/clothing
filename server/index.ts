@@ -11,6 +11,7 @@ import {
   enrichLookItems,
   regenerateLookGrid,
   regenerateAllLookGrids,
+  runFalGridDebug,
 } from './personalStylingWorkflow';
 import { getRemixSignedUrl } from './imageStorage';
 import { readExploreDataset, writeExploreDataset } from './exploreDatasetStore';
@@ -370,6 +371,25 @@ app.post('/api/credits/purchase', async (req, res) => {
     }
     console.error('[server] Failed to purchase credits', error);
     res.status(500).json({ error: 'Failed to purchase credits' });
+  }
+});
+
+app.post('/api/dev/fal-grid-test', async (req, res) => {
+  const { prompt, imageUrl } = req.body ?? {};
+  if (!prompt || typeof prompt !== 'string') {
+    return res.status(400).json({ error: 'Missing prompt.' });
+  }
+
+  const inputs = typeof imageUrl === 'string' && imageUrl.length > 0 ? [imageUrl] : [];
+
+  try {
+    const gridUrl = await runFalGridDebug(prompt, inputs);
+    res.json({ imageUrl: gridUrl });
+  } catch (error) {
+    console.error('[server] fal grid test failed', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to run fal grid test',
+    });
   }
 });
 

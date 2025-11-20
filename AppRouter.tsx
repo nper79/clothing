@@ -1,40 +1,118 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SimpleApp from './SimpleApp';
 import StyleApp from './App';
+import FalGridTestPage from './pages/FalGridTestPage';
+
+const navButtonStyle: React.CSSProperties = {
+  padding: '8px 14px',
+  borderRadius: '8px',
+  border: 'none',
+  cursor: 'pointer',
+  fontSize: '14px',
+  fontWeight: 600,
+};
+
+type View = 'home' | 'app' | 'falTest';
+
+const getViewFromPath = (): View => {
+  if (typeof window === 'undefined') return 'app';
+  const path = window.location.pathname;
+  if (path === '/fal-grid-test') return 'falTest';
+  if (path === '/' || path === '/home') return 'home';
+  return 'app';
+};
+
+const getPathForView = (view: View): string => {
+  switch (view) {
+    case 'home':
+      return '/home';
+    case 'falTest':
+      return '/fal-grid-test';
+    default:
+      return '/app';
+  }
+};
 
 const AppRouter: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'home' | 'app'>('app');
+  const [currentView, setCurrentView] = useState<View>(() => getViewFromPath());
 
+  useEffect(() => {
+    const handlePopState = () => setCurrentView(getViewFromPath());
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigate = (view: View) => {
+    const nextPath = getPathForView(view);
+    if (window.location.pathname !== nextPath) {
+      window.history.pushState({}, '', nextPath);
+    }
+    setCurrentView(view);
+  };
+
+  const NavBar = () => (
+    <div
+      style={{
+        position: 'fixed',
+        top: '20px',
+        left: '20px',
+        zIndex: 1000,
+        display: 'flex',
+        gap: '8px',
+        background: 'rgba(255,255,255,0.9)',
+        padding: '10px',
+        borderRadius: '999px',
+        boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
+      }}
+    >
+      <button
+        onClick={() => navigate('home')}
+        style={{
+          ...navButtonStyle,
+          backgroundColor: currentView === 'home' ? '#3b82f6' : '#eef2ff',
+          color: currentView === 'home' ? '#fff' : '#1f2937',
+        }}
+      >
+        Home
+      </button>
+      <button
+        onClick={() => navigate('app')}
+        style={{
+          ...navButtonStyle,
+          backgroundColor: currentView === 'app' ? '#10b981' : '#dcfce7',
+          color: currentView === 'app' ? '#fff' : '#1f2937',
+        }}
+      >
+        Style App
+      </button>
+      <button
+        onClick={() => navigate('falTest')}
+        style={{
+          ...navButtonStyle,
+          backgroundColor: currentView === 'falTest' ? '#f59e0b' : '#fef3c7',
+          color: '#1f2937',
+        }}
+      >
+        fal Grid Test
+      </button>
+    </div>
+  );
+
+  let view: React.ReactNode;
   if (currentView === 'home') {
-    return <SimpleApp onNavigateToApp={() => setCurrentView('app')} />;
+    view = <SimpleApp onNavigateToApp={() => navigate('app')} />;
+  } else if (currentView === 'falTest') {
+    view = <FalGridTestPage onBack={() => navigate('home')} />;
   } else {
-    return (
-      <div style={{ minHeight: '100vh' }}>
-        <div style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          zIndex: 1000
-        }}>
-          <button
-            onClick={() => setCurrentView('home')}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              fontSize: '14px',
-              cursor: 'pointer'
-            }}
-          >
-             Back to Home
-          </button>
-        </div>
-        <StyleApp />
-      </div>
-    );
+    view = <StyleApp />;
   }
+
+  return (
+    <div style={{ minHeight: '100vh' }}>
+      <NavBar />
+      {view}
+    </div>
+  );
 };
 
 // Simple feature page

@@ -480,6 +480,24 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
           res.end(JSON.stringify({ error: 'Method Not Allowed' }));
         }
       });
+
+      server.middlewares.use('/api/dev/fal-grid-test', async (req: IncomingMessage, res: ServerResponse) => {
+        await handleJsonPost(
+          req,
+          res,
+          async (body) => {
+            const prompt = typeof body.prompt === 'string' ? body.prompt.trim() : '';
+            if (!prompt) {
+              throw new Error('Missing prompt.');
+            }
+            const image = typeof body.imageUrl === 'string' && body.imageUrl.length > 0 ? body.imageUrl : undefined;
+            const { runFalGridDebug } = await import('./server/personalStylingWorkflow');
+            const gridUrl = await runFalGridDebug(prompt, image ? [image] : []);
+            return { imageUrl: gridUrl };
+          },
+          '/api/dev/fal-grid-test'
+        );
+      });
     }
   };
 };
@@ -508,6 +526,15 @@ export default defineConfig(({ mode, command }) => {
   }
   if (!process.env.GRID_TEMPLATE_URL && env.GRID_TEMPLATE_URL) {
     process.env.GRID_TEMPLATE_URL = env.GRID_TEMPLATE_URL;
+  }
+  if (!process.env.FAL_KEY && env.FAL_KEY) {
+    process.env.FAL_KEY = env.FAL_KEY;
+  }
+  if (!process.env.FAL_KEY_ID && env.FAL_KEY_ID) {
+    process.env.FAL_KEY_ID = env.FAL_KEY_ID;
+  }
+  if (!process.env.FAL_KEY_SECRET && env.FAL_KEY_SECRET) {
+    process.env.FAL_KEY_SECRET = env.FAL_KEY_SECRET;
   }
 
   const backendTarget = env.VITE_PERSONAL_STYLING_API_URL || 'http://localhost:4000';

@@ -1,5 +1,7 @@
 import Replicate from 'replicate';
+import Replicate from 'replicate';
 import fetch from 'node-fetch';
+import { fal } from '@fal-ai/client';
 import type { PersonalLook, UserPreferences } from '../types/personalStyling';
 import type { ExploreLook, ShopItem, CachedShoppingProduct } from '../types/explore';
 import { ComprehensivePromptLibrary, type ComprehensiveLook } from '../services/comprehensivePromptLibrary';
@@ -12,6 +14,18 @@ import sharp, { type OverlayOptions } from 'sharp';
 const GPT5_MODEL = 'openai/gpt-5';
 const REVE_MODEL = 'reve/edit-fast:f0253eb7b26cc2416ad98c20492fbe4b842e09d808318fdf9e7caeffa9ae78f5';
 const NANO_BANANA_MODEL = 'google/nano-banana';
+const FAL_GRID_ENDPOINT = 'fal-ai/nano-banana-pro/edit';
+const FAL_GRID_CREDENTIALS = process.env.FAL_KEY
+  || (process.env.FAL_KEY_ID && process.env.FAL_KEY_SECRET
+    ? `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}`
+    : undefined);
+const FAL_GRID_ENABLED = Boolean(FAL_GRID_CREDENTIALS);
+
+if (FAL_GRID_CREDENTIALS) {
+  fal.config({ credentials: FAL_GRID_CREDENTIALS });
+} else {
+  console.warn('[grid] FAL_KEY not set. Grid generation will fall back to Replicate nano-banana.');
+}
 const DEFAULT_LOOK_LIMIT = 1;
 const GRID_TEMPLATE_WIDTH = 1344;
 const GRID_TEMPLATE_HEIGHT = 2048;
@@ -504,6 +518,63 @@ function extractPromptText(raw: unknown): string {
   return '';
 }
 
+async function generateFalGridImage(prompt: string, imageInputs: FalImageSource[], fallbackLabelBase = 'input'): Promise<string> {
+  if (!FAL_GRID_ENABLED) {
+    throw new Error('fal grid is not configured (FAL_KEY missing).');
+  }
+
+  const filteredImages = imageInputs.filter((item) => Boolean(item?.source));
+  const preparedImages = await Promise.all(
+    filteredImages.map((value, index) => prepareFalImageInput(value, `${fallbackLabelBase}-${index}`))
+  );
+  const input: Record<string, unknown> = {
+    prompt,
+    num_images: 1,
+    aspect_ratio: '9:16',
+    output_format: 'jpeg',
+    resolution: '1K',
+  };
+
+  if (preparedImages.length) {
+    input.image_urls = preparedImages;
+  }
+
+  const response = await fal.run(FAL_GRID_ENDPOINT, { input });
+  const extractUrl = (payload: unknown): string | null => {
+    if (!payload) return null;
+    if (typeof payload === 'string') return payload;
+    if (Array.isArray(payload)) {
+      for (const entry of payload) {
+        const found = extractUrl(entry);
+        if (found) return found;
+      }
+      return null;
+    }
+    if (typeof payload === 'object') {
+      const obj = payload as Record<string, unknown>;
+      if (typeof obj.url === 'string') {
+        return obj.url;
+      }
+      if (Array.isArray(obj.images)) {
+        const found = extractUrl(obj.images);
+        if (found) return found;
+      }
+      if (obj.output) return extractUrl(obj.output);
+      if (obj.result) return extractUrl(obj.result);
+      if (obj.data) return extractUrl(obj.data);
+    }
+    return null;
+  };
+
+  const imageUrl = extractUrl(response);
+  if (imageUrl) {
+    return imageUrl;
+  }
+
+  console.error('[fal] Unexpected response payload:', response);
+  throw new Error('fal-ai nano-banana-pro did not return an image URL.');
+}
+
 async function normalizeImageInput(value: string): Promise<string | Buffer> {
   if (!value) {
     throw new Error('Invalid image input.');
@@ -518,13 +589,19 @@ async function normalizeImageInput(value: string): Promise<string | Buffer> {
   return value;
 }
 
-async function generateNanoBananaImage(prompt: string, imageInputs: string[] = []): Promise<string> {
+async function generateNanoBananaImage(
+  prompt: string,
+  imageInputs: string[] = [],
+  options?: { aspectRatio?: string }
+): Promise<string> {
   const filteredImages = imageInputs.filter((value): value is string => Boolean(value));
   const preparedImages = await Promise.all(filteredImages.map((value) => normalizeImageInput(value)));
+  const aspectRatio =
+    options?.aspectRatio ?? (preparedImages.length > 0 ? 'match_input_image' : '9:16');
   const output = await runReplicateModel(NANO_BANANA_MODEL, {
     prompt,
     output_format: 'jpg',
-    aspect_ratio: preparedImages.length > 0 ? 'match_input_image' : '9:16',
+    aspect_ratio: aspectRatio,
     image_input: preparedImages,
   });
 
@@ -533,6 +610,41 @@ async function generateNanoBananaImage(prompt: string, imageInputs: string[] = [
     throw new Error('nano-banana did not return an image URL.');
   }
   return imageUrl;
+}
+
+type FalImageSource = {
+  source: string;
+  label?: string;
+};
+
+const isRemoteUrl = (value: string) => /^https?:\/\//i.test(value);
+
+async function prepareFalImageInput(descriptor: FalImageSource, fallbackLabel: string): Promise<File> {
+  const { source, label } = descriptor;
+  if (!source) {
+    throw new Error('Invalid image input.');
+  }
+  const fileLabel = label ?? fallbackLabel;
+  if (source.startsWith('data:')) {
+    const match = source.match(dataUriRegex);
+    if (!match?.groups?.data || !match.groups.mime) {
+      throw new Error('Invalid data URI input.');
+    }
+    const mime = normalizeFalMime(match.groups.mime);
+    const fileName = ensureFileName(fileLabel, mime);
+    return new File([Buffer.from(match.groups.data, 'base64')], fileName, { type: mime });
+  }
+  if (isRemoteUrl(source)) {
+    const response = await fetch(source);
+    if (!response.ok) {
+      throw new Error(`Failed to download image for fal (${response.status})`);
+    }
+    const mime = normalizeFalMime(response.headers.get('content-type') || 'image/jpeg');
+    const arrayBuffer = await response.arrayBuffer();
+    const fileName = ensureFileName(fileLabel, mime);
+    return new File([Buffer.from(arrayBuffer)], fileName, { type: mime });
+  }
+  return new File([Buffer.from(source)], ensureFileName(fileLabel, 'image/jpeg'), { type: 'image/jpeg' });
 }
 
 async function createGridTemplateDataUri(): Promise<string> {
@@ -717,14 +829,17 @@ async function generateLookGridAssets(look: ExploreLook): Promise<{ gridImageUrl
     return null;
   }
 
+  const template = await getGridTemplateDataUri();
+  const baseInputs: FalImageSource[] = [
+    { source: look.imageUrl, label: `${look.id}.jpg` },
+  ];
+  if (template) {
+    baseInputs.push({ source: template, label: 'grid-template.png' });
+  }
+  const gridPrompt = buildGridPrompt(look);
+
   try {
-    const template = await getGridTemplateDataUri();
-    const inputs = [look.imageUrl];
-    if (template) {
-      inputs.push(template);
-    }
-    const gridPrompt = buildGridPrompt(look);
-    const gridUrl = await generateNanoBananaImage(gridPrompt, inputs);
+    const gridUrl = await generateFalGridImage(gridPrompt, baseInputs, look.id);
     const response = await fetch(gridUrl);
     if (!response.ok) {
       throw new Error(`Failed to download grid image (${response.status})`);
@@ -735,12 +850,18 @@ async function generateLookGridAssets(look: ExploreLook): Promise<{ gridImageUrl
       .resize(GRID_TEMPLATE_WIDTH, GRID_TEMPLATE_HEIGHT, { fit: 'contain', background: { r: 179, g: 179, b: 179 } })
       .jpeg({ quality: 94 })
       .toBuffer();
-    const gridImageUrl = await persistExploreAssetBuffer(normalizedBuffer, look.gender, look.id, 'grid', 'image/jpeg');
+    const gridImageUrl = await persistExploreAssetBuffer(
+      normalizedBuffer,
+      look.gender,
+      look.id,
+      'grid',
+      'image/jpeg'
+    );
     const gridCellUrls = await sliceGridCells(normalizedBuffer, look.gender, look.id);
     return { gridImageUrl, gridCellUrls };
   } catch (error) {
     console.error(`[server] Failed to generate grid assets for ${look.id}`, error);
-    return null;
+    throw error;
   }
 }
 
@@ -1711,3 +1832,34 @@ export async function enrichLookItems(lookId: string): Promise<ExploreLook> {
 
   throw new Error('Look not found for enrichment.');
 }
+
+export async function runFalGridDebug(prompt: string, imageInputs: string[] = []) {
+  const descriptors: FalImageSource[] = imageInputs.map((source, index) => ({
+    source,
+    label: `debug-${index + 1}.png`,
+  }));
+  return generateFalGridImage(prompt, descriptors, 'debug');
+}
+const normalizeFalMime = (mime?: string): string => {
+  if (!mime) return 'image/jpeg';
+  const lower = mime.toLowerCase();
+  if (lower.includes('png')) return 'image/png';
+  if (lower.includes('webp')) return 'image/webp';
+  if (lower.includes('jpeg') || lower.includes('jpg')) return 'image/jpeg';
+  return 'image/jpeg';
+};
+
+const inferExtensionFromMime = (mime: string): string => {
+  if (mime.includes('png')) return 'png';
+  if (mime.includes('webp')) return 'webp';
+  return 'jpg';
+};
+
+const ensureFileName = (label: string, mime: string): string => {
+  const ext = inferExtensionFromMime(mime);
+  const normalized = label.toLowerCase();
+  if (normalized.endsWith(`.${ext}`)) {
+    return label;
+  }
+  return `${label.replace(/\.[a-z0-9]+$/i, '')}.${ext}`;
+};
