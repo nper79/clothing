@@ -15,6 +15,7 @@ export interface ShopItem {
   searchQuery: string;
   category: string;
   gender: 'male' | 'female';
+  gridPosition?: number;
   gridCellUrl?: string;
   cachedProducts?: CachedShoppingProduct[];
   cachedAt?: string;

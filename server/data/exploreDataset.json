@@ -2,51 +2,150 @@
   "male": [],
   "female": [
     {
-      "id": "explore_female_ref_1763744403441_0",
+      "id": "explore_female_ref_1763757313810_0",
       "gender": "female",
-      "title": "Casual retro West...",
-      "description": "Casual retro Western-graphic tee with classic denim; laid-back everyday look with ranch/cowboy motif.-Top-cream body with chocolate brown sleeves long-sleeve raglan crop tee (cowboy/cowgirl cartoon graphic with text; slim, cropped; vintage Americana)",
-      "vibe": "Casual retro Western-graphic tee with classic denim; laid-back everyday look with ranch/cowboy motif.",
-      "prompt": "Overall style: Casual retro Western-graphic tee with classic denim; laid-back everyday look with ranch/cowboy motif.. Top-cream body with chocolate brown sleeves long-sleeve raglan crop tee (cowboy/cowgirl cartoon graphic with text; slim, cropped; vintage Americana). Bottom-straight/skinny jeans (fitted through leg). Accessories-brown classic leather belt (utility Western touch). Palette focuses on chocolate brown, cream, medium blue denim, silver (buckle). Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background.",
+      "title": "Chic streetwear w...",
+      "description": "Chic streetwear with bold color pop; polished yet playful mix of satin blouse, high-waisted denim, and statement heels.-Top-golden yellow long-sleeve wrap blouse (magenta polka dots; blousy with deep V-neck; elevated playful)",
+      "vibe": "Chic streetwear with bold color pop; polished yet playful mix of satin blouse, high-waisted denim, and statement heels.",
+      "prompt": "Overall style: Chic streetwear with bold color pop; polished yet playful mix of satin blouse, high-waisted denim, and statement heels.. Top-golden yellow long-sleeve wrap blouse (magenta polka dots; blousy with deep V-neck; elevated playful). Bottom-high-waisted tapered jeans (slim with ankle length; modern tailored denim). Accessories-white/ivory small round shoulder bag (polished statement mini bag). Accessories-layered gold necklaces (delicate yet noticeable shine). Accessories-small gold hoops (minimal classic). Footwear-fuchsia/hot pink satin or matte leather pointed-toe stiletto pumps. Hair: Color brunette, Length medium, Style Front center part with face-framing pieces, Top sleek and smooth, Overall Vibe polished waves. Makeup: Eyes Eyeshadow Color neutral warm tones, Style defined liner andfull brows, Lips Color nude/peach, Style satin finish, Overall Vibe glam yet natural emphasis on eyes. Palette focuses on golden yellow, magenta/fuchsia, light stone-wash blue, white/ivory, gold hardware. Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background.",
       "imagePrompt": "Full body fashion photo of a woman, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, background should match the vibe of the clothes. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
       "items": [
         {
-          "id": "top_0_base_top",
-          "label": "cream body with chocolate brown sleeves long-sleeve raglan crop tee",
-          "searchQuery": "female cream body with chocolate brown sleeves long-sleeve raglan crop tee vintage Americana",
-          "category": "Base Top",
+          "id": "Top",
+          "label": "Yellow polka-dot wrap blouse",
+          "searchQuery": "yellow satin polka dot wrap blouse deep v",
+          "category": "Top",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-1-1763744408842.jpg"
+          "gridPosition": 1,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-1-1763757316609.jpg"
         },
         {
-          "id": "bottom_1_pants",
-          "label": "straight/skinny jeans",
-          "searchQuery": "female straight/skinny jeans fitted through leg",
-          "category": "Pants",
+          "id": "Bottom",
+          "label": "High-waisted paperbag jeans",
+          "searchQuery": "light wash paperbag waist jeans tie belt tapered",
+          "category": "Bottom",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-2-1763744409127.jpg"
+          "gridPosition": 2,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-2-1763757316939.jpg"
         },
         {
-          "id": "accessories_0_belt",
-          "label": "brown classic leather belt",
-          "searchQuery": "female brown classic leather belt utility Western touch",
-          "category": "Belt",
+          "id": "Footwear",
+          "label": "Fuchsia pointed-toe pumps",
+          "searchQuery": "fuchsia hot pink pointed toe stiletto pumps",
+          "category": "Footwear",
           "gender": "female",
-          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-3-1763744409398.jpg"
+          "gridPosition": 3,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-3-1763757317300.jpg"
+        },
+        {
+          "id": "Bag",
+          "label": "Round white mini bag",
+          "searchQuery": "white round mini shoulder bag gold chain logo",
+          "category": "Bag",
+          "gender": "female",
+          "gridPosition": 4,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-4-1763757317556.jpg"
+        },
+        {
+          "id": "Jewelry",
+          "label": "Layered gold necklaces",
+          "searchQuery": "layered gold necklaces choker pendant set",
+          "category": "Jewelry",
+          "gender": "female",
+          "gridPosition": 5,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-5-1763757317865.jpg"
         }
       ],
-      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0-1763744403441.jpg",
-      "referenceImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/references/female/ref_0-1763744243075.jpg",
-      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-1763744407106.jpg",
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0-1763757313810.jpg",
+      "referenceImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/references/female/ref_0-1763757207635.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-1763757315954.jpg",
       "gridCellUrls": [
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-1-1763744408842.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-2-1763744409127.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-3-1763744409398.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-4-1763744409678.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-5-1763744409923.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-6-1763744410148.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-7-1763744410364.jpg",
-        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-8-1763744410587.jpg"
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-1-1763757316609.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-2-1763757316939.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-3-1763757317300.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-4-1763757317556.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-5-1763757317865.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-6-1763757318091.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-7-1763757318292.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763757313810_0/grid-cell-8-1763757318488.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_ref_1763756835210_0",
+      "gender": "female",
+      "title": "2000s-inspired ca...",
+      "description": "2000s-inspired casual with Western graphic, mall-girl flares, and skater sneakers.-Top-ivory/cream cropped baby tee (vintage-style Western graphic with cowboy boot and rope text; tight, cropped above navel; retro Y2K country graphic)",
+      "vibe": "2000s-inspired casual with Western graphic, mall-girl flares, and skater sneakers.",
+      "prompt": "Overall style: 2000s-inspired casual with Western graphic, mall-girl flares, and skater sneakers.. Top-ivory/cream cropped baby tee (vintage-style Western graphic with cowboy boot and rope text; tight, cropped above navel; retro Y2K country graphic). Top-chocolate brown cotton knit long-sleeve underlayer (slim-fitting sleeves extending to wrists; layered baby tee look). Bottom-low-rise bootcut/flare jeans (fitted through thigh, flared hem over shoes). Bottom-Waist. Accessories-silver navel piercing (small gemstone charm). Accessories-black Phone Case (matte slim case). Footwear-white leather/synthetic low-top skate sneakers. Hair: Color dark blonde/light brown with highlights, Length medium-long, Style Front soft face-framing strands, Top natural part, slight volume, Details loose waves, Overall Vibe casual effortless. Makeup: Eyes Eyeshadow Color neutral taupe, Style soft liner and mascara, Lips Color natural pink, Style sheer gloss, Overall Vibe minimal everyday. Palette focuses on cream, brown, medium blue denim, white, silver (buckle/jewelry). Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background.",
+      "imagePrompt": "Full body fashion photo of a woman, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, background should match the vibe of the clothes. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "items": [
+        {
+          "id": "Top",
+          "label": "Cream cropped Western graphic tee",
+          "searchQuery": "cream cropped baby tee western graphic cowboy boot",
+          "category": "Top",
+          "gender": "female",
+          "gridPosition": 1,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-1-1763756837707.jpg"
+        },
+        {
+          "id": "Top Layer",
+          "label": "Brown long-sleeve underlayer",
+          "searchQuery": "women brown long sleeve layering tee slim fit",
+          "category": "Top Layer",
+          "gender": "female",
+          "gridPosition": 2,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-2-1763756837952.jpg"
+        },
+        {
+          "id": "Bottom",
+          "label": "Medium-wash bootcut jeans",
+          "searchQuery": "women bootcut flare jeans medium wash distressed knees",
+          "category": "Bottom",
+          "gender": "female",
+          "gridPosition": 3,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-3-1763756838781.jpg"
+        },
+        {
+          "id": "Accessory",
+          "label": "Brown belt with silver Western buckle",
+          "searchQuery": "brown leather belt silver western engraved buckle",
+          "category": "Accessory",
+          "gender": "female",
+          "gridPosition": 4,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-4-1763756839023.jpg"
+        },
+        {
+          "id": "Footwear",
+          "label": "White low-top skate sneakers",
+          "searchQuery": "white low top skate sneakers women flat sole",
+          "category": "Footwear",
+          "gender": "female",
+          "gridPosition": 5,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-5-1763756839262.jpg"
+        },
+        {
+          "id": "Jewelry",
+          "label": "Silver navel piercing",
+          "searchQuery": "silver belly button ring small gemstone",
+          "category": "Jewelry",
+          "gender": "female",
+          "gridPosition": 6,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-6-1763756839465.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0-1763756835210.jpg",
+      "referenceImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/references/female/ref_0-1763756762863.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-1763756837232.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-1-1763756837707.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-2-1763756837952.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-3-1763756838781.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-4-1763756839023.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-5-1763756839262.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-6-1763756839465.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-7-1763756839654.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763756835210_0/grid-cell-8-1763756839865.jpg"
       ]
     },
     {

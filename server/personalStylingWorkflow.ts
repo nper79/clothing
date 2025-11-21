@@ -400,6 +400,10 @@ const sanitizeShopItem = (item: ShopItem): ShopItem => ({
   searchQuery: sanitizeText(item.searchQuery),
   category: sanitizeText(item.category),
   gender: item.gender === 'male' ? 'male' : 'female',
+  gridPosition:
+    typeof item.gridPosition === 'number' && Number.isFinite(item.gridPosition)
+      ? Math.max(1, Math.min(GRID_TEMPLATE_COLUMNS * GRID_TEMPLATE_ROWS, Math.round(item.gridPosition)))
+      : undefined,
   gridCellUrl: typeof item.gridCellUrl === 'string' ? item.gridCellUrl : undefined,
   cachedProducts: Array.isArray(item.cachedProducts)
     ? item.cachedProducts
@@ -724,13 +728,16 @@ async function sliceGridCells(
   return urls;
 }
 
-async function generateReferenceGrid(referenceUrl: string, lookId: string): Promise<string> {
+async function generateReferenceGrid(referenceUrl: string, lookId: string, layoutGuide?: string): Promise<string> {
   const template = await getGridTemplateDataUri();
   const inputs: FalImageSource[] = [{ source: referenceUrl, label: `${lookId}-reference.jpg` }];
   if (template) {
     inputs.push({ source: template, label: 'grid-template.png' });
   }
-  return generateFalGridImage(FAL_SEGMENT_PROMPT, inputs, lookId);
+  const prompt = layoutGuide
+    ? `${FAL_SEGMENT_PROMPT}\n\nGrid placement order:\n${layoutGuide}\n\nAlways place each extracted item in the specified numbered cell.`
+    : FAL_SEGMENT_PROMPT;
+  return generateFalGridImage(prompt, inputs, lookId);
 }
 
 type GridAssetOptions = {
@@ -879,6 +886,7 @@ type ExplorePrompt = {
   imagePrompt?: string;
   items?: ShopItem[];
   styleTag?: string;
+  gridLayoutGuide?: string;
 };
 
 const normalizeShopItems = (
@@ -894,18 +902,35 @@ const normalizeShopItems = (
       const labelSource = candidate.label ?? candidate.name ?? candidate.title;
       const searchSource = candidate.search_query ?? candidate.searchQuery ?? candidate.query;
       const categorySource = candidate.category ?? candidate.type ?? `item_${index}`;
+      const gridPositionSource =
+        candidate.grid_position ??
+        candidate.gridPosition ??
+        candidate.grid_cell ??
+        candidate.gridCell ??
+        candidate.cell ??
+        candidate.position;
       if (typeof labelSource !== 'string' || typeof searchSource !== 'string') {
         return null;
       }
       const genderSource = candidate.gender === 'male' || candidate.gender === 'female'
         ? candidate.gender
         : defaultGender;
+      let gridPosition: number | undefined;
+      if (typeof gridPositionSource === 'number') {
+        gridPosition = gridPositionSource;
+      } else if (typeof gridPositionSource === 'string') {
+        const parsed = Number(gridPositionSource.trim());
+        if (Number.isFinite(parsed)) {
+          gridPosition = parsed;
+        }
+      }
       return {
         id: sanitizeText(String(idSource)),
         label: sanitizeText(labelSource),
         searchQuery: sanitizeText(searchSource),
         category: sanitizeText(String(categorySource)),
         gender: genderSource,
+        gridPosition,
       };
     })
     .filter((value): value is ShopItem => Boolean(value));
@@ -1092,12 +1117,7 @@ export async function generateExploreLooks(
     if (gridAssets) {
       look.gridImageUrl = gridAssets.gridImageUrl;
       look.gridCellUrls = gridAssets.gridCellUrls;
-      if (look.items?.length) {
-        look.items = look.items.map((item, index) => ({
-          ...item,
-          gridCellUrl: gridAssets.gridCellUrls[index] ?? item.gridCellUrl,
-        }));
-      }
+      look.items = mapItemsToGridCells(look.items, gridAssets.gridCellUrls);
     }
 
     await cacheLookShoppingResults(look);
@@ -1147,20 +1167,20 @@ async function storeReferenceImages(
     const label = `ref_${i}`;
     const url = await persistReferenceImage(images[i], gender, label);
     const placeholderId = `reference_${Date.now()}_${i}`;
-    const gridUrl = await generateReferenceGrid(url, placeholderId);
     const placeholder: ExploreLook = {
       id: placeholderId,
       gender,
       title: `Reference look ${i + 1}`,
       description: 'Uploaded inspiration look',
       prompt: '',
-      imageUrl: gridUrl,
-      gridImageUrl: gridUrl,
+      imageUrl: url,
+      gridImageUrl: undefined,
       vibe: styleTag ? `reference ${styleTag}` : 'reference inspiration',
       styleTag,
       referenceImageUrl: url,
     };
     const promptSpec = await generateSingleLookSpec(placeholder, styleTag);
+    const gridUrl = await generateReferenceGrid(url, placeholderId, promptSpec.gridLayoutGuide);
     stored.push({
       url,
       prompt: promptSpec,
@@ -1231,12 +1251,7 @@ export async function generateExploreLooksFromReferences(options: ReferenceInspi
     if (gridAssets) {
       look.gridImageUrl = gridAssets.gridImageUrl;
       look.gridCellUrls = gridAssets.gridCellUrls;
-      if (look.items?.length) {
-        look.items = look.items.map((item, index) => ({
-          ...item,
-          gridCellUrl: gridAssets.gridCellUrls[index] ?? item.gridCellUrl,
-        }));
-      }
+      look.items = mapItemsToGridCells(look.items, gridAssets.gridCellUrls);
     }
 
     await cacheLookShoppingResults(look);
@@ -1270,10 +1285,7 @@ async function applyGridAssetsToLook(
     throw new Error('Failed to generate grid assets.');
   }
 
-  const itemsWithCells = look.items?.map((item, index) => ({
-    ...item,
-    gridCellUrl: assets.gridCellUrls[index] ?? item.gridCellUrl,
-  }));
+  const itemsWithCells = mapItemsToGridCells(look.items, assets.gridCellUrls);
 
   const lookWithAssets: ExploreLook = {
     ...look,
@@ -1343,6 +1355,13 @@ interface SegmentedLookResponse {
   hair?: Record<string, unknown>;
   makeup?: Record<string, unknown>;
   color_palette?: unknown;
+  grid_layout?: Array<{
+    cell?: number;
+    label?: string;
+    search_query?: string;
+    category?: string;
+    summary?: string;
+  }>;
 }
 
 const SEGMENT_DETAIL_KEYS = [
@@ -1403,6 +1422,85 @@ const segmentValueToText = (value: unknown): string | undefined => {
     return entries.length ? entries.join(', ') : undefined;
   }
   return undefined;
+};
+
+const normalizeGridLayout = (
+  layout: unknown,
+  gender: 'male' | 'female'
+): { items: ShopItem[]; guide: string } | null => {
+  if (!Array.isArray(layout)) {
+    return null;
+  }
+  const maxCells = GRID_TEMPLATE_COLUMNS * GRID_TEMPLATE_ROWS;
+  const normalized: ShopItem[] = [];
+  const guideParts: string[] = [];
+
+  layout.forEach((entry, index) => {
+    if (!entry || typeof entry !== 'object') {
+      return;
+    }
+    const candidate = entry as Record<string, unknown>;
+    const labelSource = candidate.label ?? candidate.name ?? candidate.summary ?? candidate.description;
+    const searchSource = candidate.search_query ?? candidate.searchQuery ?? candidate.label ?? candidate.name;
+    if (typeof labelSource !== 'string' || typeof searchSource !== 'string') {
+      return;
+    }
+    const cellRaw = candidate.cell ?? candidate.grid_cell ?? candidate.position ?? index + 1;
+    let cellIndex: number | undefined;
+    if (typeof cellRaw === 'number') {
+      cellIndex = cellRaw;
+    } else if (typeof cellRaw === 'string') {
+      const parsed = Number(cellRaw.trim());
+      if (Number.isFinite(parsed)) {
+        cellIndex = parsed;
+      }
+    }
+    const safeCell = Math.max(1, Math.min(maxCells, Math.round(cellIndex ?? index + 1)));
+    const categorySource = candidate.category ?? candidate.type ?? `cell_${safeCell}_${index}`;
+    const idSource = candidate.id ?? categorySource ?? `cell_${safeCell}_${index}`;
+    normalized.push({
+      id: sanitizeText(String(idSource)),
+      label: sanitizeText(labelSource),
+      searchQuery: sanitizeText(searchSource),
+      category: sanitizeText(String(categorySource)),
+      gender,
+      gridPosition: safeCell,
+    });
+    const summarySource = candidate.summary ?? labelSource;
+    guideParts.push(`${safeCell}: ${sanitizeText(String(summarySource))}`);
+  });
+
+  if (!normalized.length) {
+    return null;
+  }
+
+  const seen = new Set<string>();
+  const deduped = normalized.filter((item) => {
+    if (!item.id) return false;
+    if (seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
+  });
+
+  return {
+    items: deduped,
+    guide: guideParts.join('\n'),
+  };
+};
+
+const mapItemsToGridCells = (items: ShopItem[] | undefined, gridCellUrls: string[]): ShopItem[] | undefined => {
+  if (!items?.length || !gridCellUrls.length) {
+    return items;
+  }
+  const total = gridCellUrls.length;
+  return items.map((item, index) => {
+    const targetIndex =
+      typeof item.gridPosition === 'number' && Number.isFinite(item.gridPosition)
+        ? Math.max(0, Math.min(total - 1, Math.round(item.gridPosition) - 1))
+        : index;
+    const gridCellUrl = gridCellUrls[targetIndex] ?? item.gridCellUrl;
+    return gridCellUrl && gridCellUrl !== item.gridCellUrl ? { ...item, gridCellUrl } : item;
+  });
 };
 
 const buildSegmentLabel = (pieceKey: string, piece: SegmentedPiece): string | null => {
@@ -1503,6 +1601,7 @@ const convertSegmentedLookToPrompt = (
   look: ExploreLook,
   styleTag?: string
 ): ExplorePrompt => {
+  const gridLayout = normalizeGridLayout(spec.grid_layout, look.gender);
   const sections = [
     describeSectionPieces('Top', spec.top, look.gender),
     describeSectionPieces('Bottom', spec.bottom, look.gender),
@@ -1510,7 +1609,8 @@ const convertSegmentedLookToPrompt = (
     describeSectionPieces('Footwear', spec.footwear, look.gender),
   ];
   const sentences = sections.flatMap((section) => section.sentences);
-  const items = sections.flatMap((section) => section.items);
+  const fallbackItems = sections.flatMap((section) => section.items);
+  const items = gridLayout?.items ?? fallbackItems;
 
   const paletteText =
     Array.isArray(spec.color_palette) && spec.color_palette.length
@@ -1544,6 +1644,7 @@ const convertSegmentedLookToPrompt = (
     imagePrompt: sanitizeText(prompt || SEGMENT_PROMPT_SUFFIX),
     items: items.length ? items : undefined,
     styleTag,
+    gridLayoutGuide: gridLayout?.guide,
   };
 };
 
@@ -1672,6 +1773,22 @@ async function generateSingleLookSpec(
     "beige",
     "black",
     "white"
+  ],
+  "grid_layout": [
+    {
+      "cell": 1,
+      "label": "Red feathered headpiece",
+      "category": "Headwear",
+      "search_query": "woman red feather fascinator avant garde",
+      "summary": "Place the red feathered headpiece in cell 1."
+    },
+    {
+      "cell": 2,
+      "label": "Black graphic tank",
+      "category": "Top",
+      "search_query": "women black graphic tank top cyber y2k",
+      "summary": "Cell 2: fitted black tank with neon tech graphic."
+    }
   ]
 }
 
@@ -1681,7 +1798,14 @@ Description: ${look.description}
 Vibe: ${look.vibe}
 Style tag: ${styleTag ?? 'n/a'}
 
-Be as specific as possible (colors, textiles, cuts, layering, accessories, makeup, hair). If an element is not present, set it to null.`;
+Be as specific as possible (colors, textiles, cuts, layering, accessories, makeup, hair). If an element is not present, set it to null.
+
+For "grid_layout":
+- Output an array describing up to ${GRID_TEMPLATE_COLUMNS * GRID_TEMPLATE_ROWS} cells (2 columns by 4 rows).
+- Follow the top-to-bottom, left-to-right order (cell 1 = top-left, cell 2 = top-right, cell 3 = next row left, etc.).
+- Each entry must include: cell (1-8), label, category, search_query (6-10 English keywords), and a short summary explaining what to place there.
+- Only include actual garments or accessories shown in the reference. If there are fewer than ${GRID_TEMPLATE_COLUMNS * GRID_TEMPLATE_ROWS} items, omit the remaining cells.
+- These summaries will be passed to an image segmentation model, so be explicit about colors, garment type, and distinctive traits.`;
 
   const replicateInput: Record<string, unknown> = {
     prompt,
