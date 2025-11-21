@@ -33,4 +33,5 @@ export interface ExploreLook {
   styleTag?: string;
   gridImageUrl?: string;
   gridCellUrls?: string[];
+  referenceImageUrl?: string;
 }

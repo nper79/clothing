@@ -9,7 +9,7 @@ import { ExploreLookLibrary } from '../services/exploreLookLibrary';
 import { readExploreDataset, writeExploreDataset } from './exploreDatasetStore';
 import { persistExploreImage, persistRemixImage, getRemixSignedUrl, persistReferenceImage, persistExploreAssetBuffer } from './imageStorage';
 import { searchShoppingByImage, type ShoppingProduct } from './serperClient.js';
-import sharp, { type OverlayOptions } from 'sharp';
+import sharp from 'sharp';
 
 const GPT5_MODEL = 'openai/gpt-5';
 const REVE_MODEL = 'reve/edit-fast:f0253eb7b26cc2416ad98c20492fbe4b842e09d808318fdf9e7caeffa9ae78f5';
@@ -29,6 +29,8 @@ if (FAL_GRID_CREDENTIALS) {
 const DEFAULT_LOOK_LIMIT = 1;
 const GRID_TEMPLATE_WIDTH = 1344;
 const GRID_TEMPLATE_HEIGHT = 2048;
+const GRID_TEMPLATE_COLUMNS = 2;
+const GRID_TEMPLATE_ROWS = 4;
 const GRID_TEMPLATE_BACKGROUND = '#b3b3b3';
 const GRID_TEMPLATE_LINE_COLOR = '#f4f4f4';
 const GRID_TEMPLATE_LINE_THICKNESS = 8;
@@ -96,8 +98,58 @@ const gridTemplateDataUriPromise: Promise<string | null> = GRID_TEMPLATE_URL
       return null;
     });
 
+const getGridTemplateDataUri = () => gridTemplateDataUriPromise;
+
 const FRAMING_REQUIREMENTS =
   'Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.';
+
+const FAL_SEGMENT_PROMPT = `You will receive an empty grid image.
+The grid already defines the exact positions of all cells.
+Do NOT create a new grid. Use the one provided.
+
+Your task is:
+1. Extract all clothing items from the reference outfit photo.
+2. Arrange the extracted items into the grid cells IN ORDER, following this rule:
+   - Fill the grid from top to bottom and left to right.
+   - One item per cell.
+   - If there are fewer items than cells, leave the remaining cells empty.
+3. Always keep each item entirely inside its assigned cell.
+4. Never rearrange or sort the items by type or size: the extraction order determines the placement order.
+5. Always preserve the layout, proportions, and alignment of the grid cells exactly as in the provided grid image.
+6. Items must be centered within their filled cells, with a soft product-photography shadow.
+7. Do not place any items outside the cells.
+8. Do not merge items or combine them.
+9. Empty cells must remain completely blank.
+
+The order rule is strict:
+- The first detected item goes into the first cell (top-left).
+- The second item goes into the second cell (top-right).
+- The third goes into the next cell down the left column.
+Continue row by row until all items are placed or all cells are filled.`;
+
+async function createGridTemplateDataUri(): Promise<string> {
+  const width = GRID_TEMPLATE_WIDTH;
+  const height = GRID_TEMPLATE_HEIGHT;
+  const svgLines: string[] = [];
+  for (let column = 1; column < GRID_TEMPLATE_COLUMNS; column++) {
+    const x = (width / GRID_TEMPLATE_COLUMNS) * column;
+    svgLines.push(
+      `<line x1="${x}" y1="0" x2="${x}" y2="${height}" stroke="${GRID_TEMPLATE_LINE_COLOR}" stroke-width="${GRID_TEMPLATE_LINE_THICKNESS}" />`
+    );
+  }
+  for (let row = 1; row < GRID_TEMPLATE_ROWS; row++) {
+    const y = (height / GRID_TEMPLATE_ROWS) * row;
+    svgLines.push(
+      `<line x1="0" y1="${y}" x2="${width}" y2="${y}" stroke="${GRID_TEMPLATE_LINE_COLOR}" stroke-width="${GRID_TEMPLATE_LINE_THICKNESS}" />`
+    );
+  }
+  const svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100%" height="100%" fill="${GRID_TEMPLATE_BACKGROUND}" />
+    ${svgLines.join('\n')}
+  </svg>`;
+  const buffer = await sharp(Buffer.from(svg)).png().toBuffer();
+  return `data:image/png;base64,${buffer.toString('base64')}`;
+}
 
 const GLOBAL_TRENDS = [
   'Reference current runways like Loewe, Ferragamo, The Row, Coperni, Khaite, and Prada for silhouette inspiration.',
@@ -172,6 +224,43 @@ async function runReplicateModel(model: string, input: Record<string, unknown>) 
   return runWithRetry(() => replicate.run(model, { input }));
 }
 const dataUriRegex = /^data:(?<mime>.+);base64,(?<data>.+)$/;
+
+type FalImageSource = {
+  source?: string | null;
+  label?: string;
+};
+
+const sanitizeFileLabel = (value: string, fallback: string): string => {
+  const base = (value ?? '').trim() || fallback;
+  return base.replace(/[^\w.-]+/g, '_');
+};
+
+async function prepareFalImageInput(descriptor: FalImageSource, fallbackLabel: string): Promise<string> {
+  if (!descriptor?.source) {
+    throw new Error('Missing image source for fal grid.');
+  }
+
+  const { source } = descriptor;
+  if (/^https?:\/\//i.test(source)) {
+    return source;
+  }
+
+  if (!source.startsWith('data:')) {
+    return source;
+  }
+
+  const match = source.match(dataUriRegex);
+  if (!match?.groups?.data) {
+    throw new Error('Invalid data URI for fal grid input.');
+  }
+
+  const mime = normalizeFalMime(match.groups.mime);
+  const buffer = Buffer.from(match.groups.data, 'base64');
+  const safeLabel = sanitizeFileLabel(descriptor.label ?? fallbackLabel, fallbackLabel);
+  const fileName = ensureFileName(safeLabel, mime);
+  const blobWithName = Object.assign(new Blob([buffer], { type: mime }), { name: fileName });
+  return fal.storage.upload(blobWithName as Blob & { name: string });
+}
 
 const PROTECTED_SHORT_WORDS = new Set([
   'a',
@@ -329,6 +418,7 @@ export const sanitizeExploreLook = (look: ExploreLook): ExploreLook => ({
   items: Array.isArray(look.items) ? look.items.map(sanitizeShopItem) : undefined,
   vibe: sanitizeText(look.vibe),
   styleTag: look.styleTag ? sanitizeText(look.styleTag) : undefined,
+  referenceImageUrl: look.referenceImageUrl ? sanitizeText(look.referenceImageUrl) : undefined,
 });
 
 const uniquenessKey = (look: ExploreLook): string =>
@@ -471,6 +561,27 @@ function extractImageUrl(output: unknown): string {
   return '';
 }
 
+async function generateNanoBananaImage(prompt: string, imageInputs: Array<string | undefined | null> = []): Promise<string> {
+  const validInputs = imageInputs.filter((value): value is string => typeof value === 'string' && value.trim().length > 0);
+  const preparedImages = await Promise.all(validInputs.map((source) => prepareImageInput(source)));
+  const input: Record<string, unknown> = {
+    prompt,
+    aspect_ratio: '9:16',
+    output_format: 'jpg',
+  };
+
+  if (preparedImages.length) {
+    input.image_input = preparedImages;
+  }
+
+  const output = await runReplicateModel(NANO_BANANA_MODEL, input);
+  const imageUrl = extractImageUrl(output);
+  if (!imageUrl) {
+    throw new Error('nano-banana did not return an image URL.');
+  }
+  return imageUrl;
+}
+
 function buildPreferencesContext(preferences?: UserPreferences): string {
   if (!preferences) {
     return '';
@@ -575,279 +686,87 @@ async function generateFalGridImage(prompt: string, imageInputs: FalImageSource[
   throw new Error('fal-ai nano-banana-pro did not return an image URL.');
 }
 
-async function normalizeImageInput(value: string): Promise<string | Buffer> {
-  if (!value) {
-    throw new Error('Invalid image input.');
-  }
-  if (value.startsWith('data:')) {
-    const match = value.match(dataUriRegex);
-    if (!match || !match.groups?.data) {
-      throw new Error('Invalid data URI input.');
-    }
-    return Buffer.from(match.groups.data, 'base64');
-  }
-  return value;
-}
+async function sliceGridCells(
+  gridBuffer: Buffer,
+  gender: 'male' | 'female',
+  lookId: string
+): Promise<string[]> {
+  const columns = GRID_TEMPLATE_COLUMNS;
+  const rows = GRID_TEMPLATE_ROWS;
+  const cellWidth = GRID_TEMPLATE_WIDTH / columns;
+  const cellHeight = GRID_TEMPLATE_HEIGHT / rows;
+  const padding = Math.max(2, Math.ceil(GRID_TEMPLATE_LINE_THICKNESS * 1.5));
+  const urls: string[] = [];
 
-async function generateNanoBananaImage(
-  prompt: string,
-  imageInputs: string[] = [],
-  options?: { aspectRatio?: string }
-): Promise<string> {
-  const filteredImages = imageInputs.filter((value): value is string => Boolean(value));
-  const preparedImages = await Promise.all(filteredImages.map((value) => normalizeImageInput(value)));
-  const aspectRatio =
-    options?.aspectRatio ?? (preparedImages.length > 0 ? 'match_input_image' : '9:16');
-  const output = await runReplicateModel(NANO_BANANA_MODEL, {
-    prompt,
-    output_format: 'jpg',
-    aspect_ratio: aspectRatio,
-    image_input: preparedImages,
-  });
+  for (let row = 0; row < rows; row++) {
+    for (let column = 0; column < columns; column++) {
+      const x0 = Math.max(0, Math.round(column * cellWidth + padding));
+      const x1 = Math.min(GRID_TEMPLATE_WIDTH, Math.round((column + 1) * cellWidth - padding));
+      const y0 = Math.max(0, Math.round(row * cellHeight + padding));
+      const y1 = Math.min(GRID_TEMPLATE_HEIGHT, Math.round((row + 1) * cellHeight - padding));
+      const width = Math.max(1, x1 - x0);
+      const height = Math.max(1, y1 - y0);
 
-  const imageUrl = extractImageUrl(output);
-  if (!imageUrl) {
-    throw new Error('nano-banana did not return an image URL.');
-  }
-  return imageUrl;
-}
-
-type FalImageSource = {
-  source: string;
-  label?: string;
-};
-
-const isRemoteUrl = (value: string) => /^https?:\/\//i.test(value);
-
-async function prepareFalImageInput(descriptor: FalImageSource, fallbackLabel: string): Promise<File> {
-  const { source, label } = descriptor;
-  if (!source) {
-    throw new Error('Invalid image input.');
-  }
-  const fileLabel = label ?? fallbackLabel;
-  if (source.startsWith('data:')) {
-    const match = source.match(dataUriRegex);
-    if (!match?.groups?.data || !match.groups.mime) {
-      throw new Error('Invalid data URI input.');
-    }
-    const mime = normalizeFalMime(match.groups.mime);
-    const fileName = ensureFileName(fileLabel, mime);
-    return new File([Buffer.from(match.groups.data, 'base64')], fileName, { type: mime });
-  }
-  if (isRemoteUrl(source)) {
-    const response = await fetch(source);
-    if (!response.ok) {
-      throw new Error(`Failed to download image for fal (${response.status})`);
-    }
-    const mime = normalizeFalMime(response.headers.get('content-type') || 'image/jpeg');
-    const arrayBuffer = await response.arrayBuffer();
-    const fileName = ensureFileName(fileLabel, mime);
-    return new File([Buffer.from(arrayBuffer)], fileName, { type: mime });
-  }
-  return new File([Buffer.from(source)], ensureFileName(fileLabel, 'image/jpeg'), { type: 'image/jpeg' });
-}
-
-async function createGridTemplateDataUri(): Promise<string> {
-  const base = sharp({
-    create: {
-      width: GRID_TEMPLATE_WIDTH,
-      height: GRID_TEMPLATE_HEIGHT,
-      channels: 3,
-      background: GRID_TEMPLATE_BACKGROUND,
-    },
-  });
-
-  const verticalLine = await sharp({
-    create: {
-      width: GRID_TEMPLATE_LINE_THICKNESS,
-      height: GRID_TEMPLATE_HEIGHT,
-      channels: 3,
-      background: GRID_TEMPLATE_LINE_COLOR,
-    },
-  })
-    .png()
-    .toBuffer();
-
-  const horizontalLine = await sharp({
-    create: {
-      width: GRID_TEMPLATE_WIDTH,
-      height: GRID_TEMPLATE_LINE_THICKNESS,
-      channels: 3,
-      background: GRID_TEMPLATE_LINE_COLOR,
-    },
-  })
-    .png()
-    .toBuffer();
-
-  const overlays: OverlayOptions[] = [
-    {
-      input: verticalLine,
-      left: Math.round(GRID_TEMPLATE_WIDTH / 2 - GRID_TEMPLATE_LINE_THICKNESS / 2),
-      top: 0,
-    },
-    {
-      input: horizontalLine,
-      left: 0,
-      top: Math.round(GRID_TEMPLATE_HEIGHT / 4 - GRID_TEMPLATE_LINE_THICKNESS / 2),
-    },
-    {
-      input: horizontalLine,
-      left: 0,
-      top: Math.round(GRID_TEMPLATE_HEIGHT / 2 - GRID_TEMPLATE_LINE_THICKNESS / 2),
-    },
-    {
-      input: horizontalLine,
-      left: 0,
-      top: Math.round((GRID_TEMPLATE_HEIGHT * 3) / 4 - GRID_TEMPLATE_LINE_THICKNESS / 2),
-    },
-  ];
-
-  const buffer = await base.composite(overlays).png().toBuffer();
-  return `data:image/png;base64,${buffer.toString('base64')}`;
-}
-
-const getGridTemplateDataUri = async (): Promise<string | null> => gridTemplateDataUriPromise;
-
-const buildGridSlotBlock = (look: ExploreLook): string => {
-  const items = Array.isArray(look.items) ? look.items : [];
-  const slots = Array.from({ length: 8 }, (_, index) => items[index]);
-  const rows: string[] = [];
-
-  for (let row = 0; row < 4; row++) {
-    rows.push(`Row ${row + 1}`);
-    for (let col = 0; col < 2; col++) {
-      const idx = row * 2 + col;
-      const item = slots[idx];
-      if (item) {
-        rows.push(`${idx + 1}. ${sanitizeText(item.label)} – ${sanitizeText(item.searchQuery)}`);
-      } else {
-        rows.push(`${idx + 1}. Leave this cell completely empty with only the neutral grey background.`);
-      }
-    }
-    rows.push('');
-  }
-
-  return rows.join('\n').trim();
-};
-
-const buildGridPrompt = (look: ExploreLook): string => {
-  const slotBlock = buildGridSlotBlock(look);
-  const summaryPieces = [look.title, look.description, look.vibe]
-    .map((text) => sanitizeText(text ?? ''))
-    .filter(Boolean)
-    .join(' · ');
-
-  return `You will receive a reference outfit photo as the ONLY visual input. Do not render the person or any background.
-Reference outfit summary: ${summaryPieces || 'modern outfit'}.
-
-Create a clean 2×4 fashion flat-lay grid on a neutral grey background.
-Each cell must contain ONE item, centered, evenly spaced, with soft shadow, shot as high-quality product photography. No model, no hands, no background elements.
-
-IMPORTANT: Show complete, full garments - NO CUTS! Ensure each clothing item is fully visible with proper margins.
-- For tops: Show entire neckline, sleeves, and hem
-- For bottoms: Show full waistband to hem
-- For dresses: Show complete garment from top to bottom
-- For outerwear: Display entire jacket/coat with all details
-- For shoes: Show complete pair, not cut off
-- CRITICAL: Make sure ALL items fit PROPERLY and FULLY inside each cell - do NOT let items touch or cross cell borders
-- IMPORTANT: Scale items SMALLER to ensure they fit completely - leave significant empty space around each item
-- FIRST COLUMN items (positions 1, 3, 5, 7): Make them especially smaller to guarantee they fit within their cells
-- Each item must be scaled appropriately to fit completely within its allocated space
-
-Use this exact order:
-
-${slotBlock}
-
-Strict rules:
-– The layout must be exactly 2×4.
-– All items must match the descriptions precisely.
-– Show COMPLETE items - no cropping or cutting off any part of the garments
-– IMPORTANT: Make items SMALLER rather than larger - better to have too much empty space than cut off items
-– Leave EXTRA padding around each item (at least 15% of cell size for safety)
-– CRITICAL: Ensure items fit COMPLETELY inside their cells without touching borders
-– FIRST COLUMN: Scale these items even smaller to prevent overflow
-– Scale items appropriately to fit fully within each individual cell space
-– Identical camera angle, fixed scale, consistent lighting.
-– No people, no mannequins, no props.
-– If a slot specifies leaving it empty, leave that cell blank with only the neutral grey background.`;
-};
-
-async function sliceGridCells(buffer: Buffer, gender: 'male' | 'female', lookId: string): Promise<string[]> {
-  const verticalGap = GRID_TEMPLATE_LINE_THICKNESS;
-  const horizontalGap = GRID_TEMPLATE_LINE_THICKNESS;
-
-  const usableWidth = GRID_TEMPLATE_WIDTH - verticalGap;
-  const firstColumnWidth = Math.floor(usableWidth / 2);
-  const secondColumnWidth = GRID_TEMPLATE_WIDTH - firstColumnWidth - verticalGap;
-  const columnWidths = [firstColumnWidth, secondColumnWidth];
-  const columnLefts = [0, firstColumnWidth + verticalGap];
-
-  const usableHeight = GRID_TEMPLATE_HEIGHT - horizontalGap * 3;
-  const baseRowHeight = Math.floor(usableHeight / 4);
-  const rowHeights = [
-    baseRowHeight,
-    baseRowHeight,
-    baseRowHeight,
-    GRID_TEMPLATE_HEIGHT - (baseRowHeight * 3 + horizontalGap * 3),
-  ];
-  const rowTops = rowHeights.map((_, index) => {
-    const gapCount = index === 0 ? 0 : index;
-    const previousHeights = rowHeights.slice(0, index).reduce((sum, value) => sum + value, 0);
-    return previousHeights + gapCount * horizontalGap;
-  });
-
-  const cells: string[] = [];
-
-  for (let row = 0; row < 4; row++) {
-    for (let col = 0; col < 2; col++) {
-      const left = columnLefts[col];
-      const top = rowTops[row];
-      const width = columnWidths[col];
-      const height = rowHeights[row];
-
-      // Add padding to avoid cutting items at cell borders
-      const padding = Math.min(width, height) * 0.05; // 5% padding
-      const paddedLeft = Math.round(left + padding);
-      const paddedTop = Math.round(top + padding);
-      const paddedWidth = Math.round(width - padding * 2);
-      const paddedHeight = Math.round(height - padding * 2);
-
-      const cellBuffer = await sharp(buffer)
-        .extract({ left: paddedLeft, top: paddedTop, width: paddedWidth, height: paddedHeight })
-        .jpeg({ quality: 92 })
+      const cellBuffer = await sharp(gridBuffer)
+        .extract({ left: x0, top: y0, width, height })
+        .resize(640, 960, {
+          fit: 'contain',
+          background: { r: 240, g: 240, b: 240, alpha: 1 },
+        })
+        .jpeg({ quality: 94 })
         .toBuffer();
-      const url = await persistExploreAssetBuffer(cellBuffer, gender, lookId, `grid-cell-${row * 2 + col + 1}`, 'image/jpeg');
-      cells.push(url);
+      const label = `grid-cell-${row * columns + column + 1}`;
+      const cellUrl = await persistExploreAssetBuffer(cellBuffer, gender, lookId, label, 'image/jpeg');
+      urls.push(cellUrl);
     }
   }
 
-  return cells;
+  return urls;
 }
 
-async function generateLookGridAssets(look: ExploreLook): Promise<{ gridImageUrl: string; gridCellUrls: string[] } | null> {
+async function generateReferenceGrid(referenceUrl: string, lookId: string): Promise<string> {
+  const template = await getGridTemplateDataUri();
+  const inputs: FalImageSource[] = [{ source: referenceUrl, label: `${lookId}-reference.jpg` }];
+  if (template) {
+    inputs.push({ source: template, label: 'grid-template.png' });
+  }
+  return generateFalGridImage(FAL_SEGMENT_PROMPT, inputs, lookId);
+}
+
+type GridAssetOptions = {
+  reuseOnly?: boolean;
+};
+
+async function generateLookGridAssets(
+  look: ExploreLook,
+  options: GridAssetOptions = {}
+): Promise<{ gridImageUrl: string; gridCellUrls: string[] } | null> {
+  const { reuseOnly = false } = options;
   if (!look.imageUrl) {
     return null;
   }
 
-  const template = await getGridTemplateDataUri();
-  const baseInputs: FalImageSource[] = [
-    { source: look.imageUrl, label: `${look.id}.jpg` },
-  ];
-  if (template) {
-    baseInputs.push({ source: template, label: 'grid-template.png' });
-  }
-  const gridPrompt = buildGridPrompt(look);
-
-  try {
-    const gridUrl = await generateFalGridImage(gridPrompt, baseInputs, look.id);
-    const response = await fetch(gridUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to download grid image (${response.status})`);
+  const processGridSource = async (sourceUrl: string) => {
+    let baseBuffer: Buffer;
+    if (sourceUrl.startsWith('data:')) {
+      const match = sourceUrl.match(dataUriRegex);
+      if (!match?.groups?.data) {
+        throw new Error('Invalid grid data URI.');
+      }
+      baseBuffer = Buffer.from(match.groups.data, 'base64');
+    } else {
+      const response = await fetch(sourceUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to download grid image (${response.status})`);
+      }
+      const arrayBuffer = await response.arrayBuffer();
+      baseBuffer = Buffer.from(arrayBuffer);
     }
-    const arrayBuffer = await response.arrayBuffer();
-    const baseBuffer = Buffer.from(arrayBuffer);
     const normalizedBuffer = await sharp(baseBuffer)
-      .resize(GRID_TEMPLATE_WIDTH, GRID_TEMPLATE_HEIGHT, { fit: 'contain', background: { r: 179, g: 179, b: 179 } })
+      .resize(GRID_TEMPLATE_WIDTH, GRID_TEMPLATE_HEIGHT, {
+        fit: 'contain',
+        background: { r: 179, g: 179, b: 179 },
+      })
       .jpeg({ quality: 94 })
       .toBuffer();
     const gridImageUrl = await persistExploreAssetBuffer(
@@ -859,61 +778,31 @@ async function generateLookGridAssets(look: ExploreLook): Promise<{ gridImageUrl
     );
     const gridCellUrls = await sliceGridCells(normalizedBuffer, look.gender, look.id);
     return { gridImageUrl, gridCellUrls };
+  };
+
+  if (look.gridImageUrl) {
+    try {
+      return await processGridSource(look.gridImageUrl);
+    } catch (error) {
+      console.error(`[server] Failed to reuse existing grid for ${look.id}`, error);
+    }
+  }
+
+  const template = await getGridTemplateDataUri();
+  const baseInputs: FalImageSource[] = [
+    { source: look.referenceImageUrl ?? look.imageUrl, label: `${look.id}.jpg` },
+  ];
+  if (template) {
+    baseInputs.push({ source: template, label: 'grid-template.png' });
+  }
+
+  try {
+    const gridUrl = await generateFalGridImage(FAL_SEGMENT_PROMPT, baseInputs, look.id);
+    return await processGridSource(gridUrl);
   } catch (error) {
     console.error(`[server] Failed to generate grid assets for ${look.id}`, error);
     throw error;
   }
-}
-
-async function generateEditPrompt(basePrompt: string, preferences?: UserPreferences): Promise<string> {
-  const gptPrompt = `You are a professional fashion stylist and AI image editing expert.
-
-You need to create a detailed edit prompt for the AI image editing model "reve/edit-fast" to transform a person's uploaded photo into a specific fashion style.
-
-Base Style Description: ${basePrompt}
-${buildPreferencesContext(preferences)}
-
-Requirements for the edit prompt:
-1. Apply the style to the person in the uploaded photo
-2. Be specific about clothing items, colors, patterns, and textures
-3. Include accessories, shoes, and overall aesthetic
-4. Ensure the result shows only the person from the original photo
-5. Make sure all clothing items are clearly visible and well-defined
-6. Maintain the person's approximate body shape and features
-7. Use fashion terminology that works well with AI image editing
-8. If user has preferences, adapt the style accordingly (avoid disliked items)
-
-CRITICAL REQUIREMENTS:
-- Must be FULL BODY IMAGE from head to toe
-- Must clearly show FOOTWEAR/SHOES
-- No cropped images, no close-ups
-- Complete outfit must be visible including shoes
-
-Output format:
-Generate ONLY the optimized edit prompt (no explanations). The prompt should be direct and clear for image editing.`;
-
-  const output = await runReplicateModel(GPT5_MODEL, {
-    prompt: gptPrompt,
-    max_tokens: 1024,
-    temperature: 0.7,
-  });
-
-  const extracted = extractPromptText(output).trim();
-  if (extracted) {
-    return extracted;
-  }
-
-  return `Make the person wear ${basePrompt}. FULL BODY IMAGE from head to toe, INCLUDING FOOTWEAR/SHOES clearly visible. Maintain natural features. Single person only, solo portrait. Complete outfit must be shown including shoes.`;
-}
-
-async function editPhotoWithReve(userPhoto: string, prompt: string): Promise<string> {
-  const imageInput = await prepareImageInput(userPhoto);
-  const output = await runReplicateModel(REVE_MODEL, {
-    image: imageInput,
-    prompt,
-  });
-
-  return extractImageUrl(output);
 }
 
 function selectLooks(gender: 'male' | 'female', limit = DEFAULT_LOOK_LIMIT, lookIds?: string[]): ComprehensiveLook[] {
@@ -1196,6 +1085,7 @@ export async function generateExploreLooks(
       items: prompt.items,
       imageUrl: persistentUrl,
       styleTag,
+      referenceImageUrl: undefined,
     });
 
     const gridAssets = await generateLookGridAssets(look);
@@ -1244,6 +1134,7 @@ interface ReferenceInspiredOptions {
 type StoredReference = {
   url: string;
   prompt: ExplorePrompt;
+  gridUrl: string;
 };
 
 async function storeReferenceImages(
@@ -1255,20 +1146,25 @@ async function storeReferenceImages(
   for (let i = 0; i < images.length; i++) {
     const label = `ref_${i}`;
     const url = await persistReferenceImage(images[i], gender, label);
+    const placeholderId = `reference_${Date.now()}_${i}`;
+    const gridUrl = await generateReferenceGrid(url, placeholderId);
     const placeholder: ExploreLook = {
-      id: `reference_${Date.now()}_${i}`,
+      id: placeholderId,
       gender,
       title: `Reference look ${i + 1}`,
       description: 'Uploaded inspiration look',
       prompt: '',
-      imageUrl: url,
+      imageUrl: gridUrl,
+      gridImageUrl: gridUrl,
       vibe: styleTag ? `reference ${styleTag}` : 'reference inspiration',
       styleTag,
+      referenceImageUrl: url,
     };
     const promptSpec = await generateSingleLookSpec(placeholder, styleTag);
     stored.push({
       url,
       prompt: promptSpec,
+      gridUrl,
     });
   }
   return stored;
@@ -1289,6 +1185,7 @@ export async function generateExploreLooksFromReferences(options: ReferenceInspi
     storedReferences = limitedImages.map((dataUrl, index) => ({
       url: dataUrl,
       prompt: fallbackPrompts[index % fallbackPrompts.length],
+      gridUrl: dataUrl,
     }));
   }
 
@@ -1306,8 +1203,11 @@ export async function generateExploreLooksFromReferences(options: ReferenceInspi
     const scene = pickRandom(scenes);
     const baseImagePrompt = prompt.imagePrompt ?? prompt.prompt;
     const cleanedPrompt = stripSceneClauses(baseImagePrompt.trim());
-    const finalPrompt = `${cleanedPrompt} Scene: ${scene}. ${FRAMING_REQUIREMENTS} Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.`;
-    const styledPhotoUrl = await generateNanoBananaImage(finalPrompt);
+    const gridReference = storedReferences[i]?.gridUrl;
+    const genderLabel = gender === 'female' ? 'woman' : 'man';
+    const finalPrompt = `Full body fashion photo of a ${genderLabel}, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, background should match the vibe of the clothes. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.`;
+    const imageInputs = gridReference ? [gridReference] : [];
+    const styledPhotoUrl = await generateNanoBananaImage(finalPrompt, imageInputs);
     const lookId = `explore_${gender}_ref_${Date.now()}_${i}`;
     const persistentUrl = await persistExploreImage(styledPhotoUrl, gender, lookId);
 
@@ -1322,9 +1222,12 @@ export async function generateExploreLooksFromReferences(options: ReferenceInspi
       items: prompt.items,
       imageUrl: persistentUrl,
       styleTag,
+      referenceImageUrl: storedReferences[i]?.url,
+      gridImageUrl: storedReferences[i]?.gridUrl,
     });
 
-    const gridAssets = await generateLookGridAssets(look);
+    const shouldReuseOnly = Boolean(storedReferences[i]?.gridUrl);
+    const gridAssets = await generateLookGridAssets(look, { reuseOnly: shouldReuseOnly });
     if (gridAssets) {
       look.gridImageUrl = gridAssets.gridImageUrl;
       look.gridCellUrls = gridAssets.gridCellUrls;
@@ -1840,26 +1743,31 @@ export async function runFalGridDebug(prompt: string, imageInputs: string[] = []
   }));
   return generateFalGridImage(prompt, descriptors, 'debug');
 }
-const normalizeFalMime = (mime?: string): string => {
+function normalizeFalMime(mime?: string): string {
   if (!mime) return 'image/jpeg';
   const lower = mime.toLowerCase();
   if (lower.includes('png')) return 'image/png';
   if (lower.includes('webp')) return 'image/webp';
   if (lower.includes('jpeg') || lower.includes('jpg')) return 'image/jpeg';
   return 'image/jpeg';
-};
+}
 
-const inferExtensionFromMime = (mime: string): string => {
+function inferExtensionFromMime(mime: string): string {
   if (mime.includes('png')) return 'png';
   if (mime.includes('webp')) return 'webp';
   return 'jpg';
-};
+}
 
-const ensureFileName = (label: string, mime: string): string => {
+function ensureFileName(label: string, mime: string): string {
   const ext = inferExtensionFromMime(mime);
   const normalized = label.toLowerCase();
   if (normalized.endsWith(`.${ext}`)) {
     return label;
   }
   return `${label.replace(/\.[a-z0-9]+$/i, '')}.${ext}`;
-};
+}
+
+
+
+
+

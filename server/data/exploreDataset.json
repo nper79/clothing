@@ -2,6 +2,94 @@
   "male": [],
   "female": [
     {
+      "id": "explore_female_ref_1763744403441_0",
+      "gender": "female",
+      "title": "Casual retro West...",
+      "description": "Casual retro Western-graphic tee with classic denim; laid-back everyday look with ranch/cowboy motif.-Top-cream body with chocolate brown sleeves long-sleeve raglan crop tee (cowboy/cowgirl cartoon graphic with text; slim, cropped; vintage Americana)",
+      "vibe": "Casual retro Western-graphic tee with classic denim; laid-back everyday look with ranch/cowboy motif.",
+      "prompt": "Overall style: Casual retro Western-graphic tee with classic denim; laid-back everyday look with ranch/cowboy motif.. Top-cream body with chocolate brown sleeves long-sleeve raglan crop tee (cowboy/cowgirl cartoon graphic with text; slim, cropped; vintage Americana). Bottom-straight/skinny jeans (fitted through leg). Accessories-brown classic leather belt (utility Western touch). Palette focuses on chocolate brown, cream, medium blue denim, silver (buckle). Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background.",
+      "imagePrompt": "Full body fashion photo of a woman, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, background should match the vibe of the clothes. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "items": [
+        {
+          "id": "top_0_base_top",
+          "label": "cream body with chocolate brown sleeves long-sleeve raglan crop tee",
+          "searchQuery": "female cream body with chocolate brown sleeves long-sleeve raglan crop tee vintage Americana",
+          "category": "Base Top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-1-1763744408842.jpg"
+        },
+        {
+          "id": "bottom_1_pants",
+          "label": "straight/skinny jeans",
+          "searchQuery": "female straight/skinny jeans fitted through leg",
+          "category": "Pants",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-2-1763744409127.jpg"
+        },
+        {
+          "id": "accessories_0_belt",
+          "label": "brown classic leather belt",
+          "searchQuery": "female brown classic leather belt utility Western touch",
+          "category": "Belt",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-3-1763744409398.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0-1763744403441.jpg",
+      "referenceImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/references/female/ref_0-1763744243075.jpg",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-1763744407106.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-1-1763744408842.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-2-1763744409127.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-3-1763744409398.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-4-1763744409678.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-5-1763744409923.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-6-1763744410148.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-7-1763744410364.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763744403441_0/grid-cell-8-1763744410587.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_ref_1763734490108_0",
+      "gender": "female",
+      "title": "Casual streetwear...",
+      "description": "Casual streetwear with graphic sweatshirt and relaxed plaid trousers; comfortable, laid-back campus/skate vibe.-Top-white crewneck sweatshirt (multicolor abstract/creature graphic centered on chest; additional teal graphic on right sleeve; relaxed, slightly boxy; graphic streetwear)",
+      "vibe": "Casual streetwear with graphic sweatshirt and relaxed plaid trousers; comfortable, laid-back campus/skate vibe.",
+      "prompt": "Overall style: Casual streetwear with graphic sweatshirt and relaxed plaid trousers; comfortable, laid-back campus/skate vibe.. Top-white crewneck sweatshirt (multicolor abstract/creature graphic centered on chest; additional teal graphic on right sleeve; relaxed, slightly boxy; graphic streetwear). Bottom-teal navy white plaid trousers (tartan grid; straight leg, elastic waistband; casual smart-casual mix). Palette focuses on white, teal, navy, orange, light blue, black. Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background.",
+      "imagePrompt": "Full body fashion photo of a woman, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, background should match the vibe of the clothes. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "items": [
+        {
+          "id": "top_0_base_top",
+          "label": "white crewneck sweatshirt",
+          "searchQuery": "female white crewneck sweatshirt graphic streetwear",
+          "category": "Base Top",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-cell-1-1763734522789.jpg"
+        },
+        {
+          "id": "bottom_1_pants",
+          "label": "teal navy white plaid trousers",
+          "searchQuery": "female teal navy white plaid trousers casual smart-casual mix",
+          "category": "Pants",
+          "gender": "female",
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-cell-2-1763734523071.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0-1763734490108.jpg",
+      "referenceImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/references/female/ref_0-1763734437813.png",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-1763734522208.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-cell-1-1763734522789.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-cell-2-1763734523071.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-cell-3-1763734523311.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-cell-4-1763734523511.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-cell-5-1763734523732.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-cell-6-1763734523898.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-cell-7-1763734524052.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763734490108_0/grid-cell-8-1763734524208.jpg"
+      ]
+    },
+    {
       "id": "explore_female_ref_1763650681664_0",
       "gender": "female",
       "title": "Casual chic dayti...",
