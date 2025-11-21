@@ -2,6 +2,162 @@
   "male": [],
   "female": [
     {
+      "id": "explore_female_ref_1763763026228_0",
+      "gender": "female",
+      "title": "Casual summer ath...",
+      "description": "Casual summer athleisure with minimalist basics and a denim-knot top; sporty, clean, and practical.-Top-light blue short-sleeve button-up shirt (solid chambray/denim-look; relaxed through shoulders; casual classic)",
+      "vibe": "Casual summer athleisure with minimalist basics and a denim-knot top; sporty, clean, and practical.",
+      "prompt": "Overall style: Casual summer athleisure with minimalist basics and a denim-knot top; sporty, clean, and practical.. Top-light blue short-sleeve button-up shirt (solid chambray/denim-look; relaxed through shoulders; casual classic). Top-light blue lightweight chambray/cotton self-tie front knot (cropped by tie, open V-neck; easy summer). Bottom-white high-waisted leggings (bodycon, seamless look; athleisure; ankle/cropped). Accessories-aviator sunglasses (sporty). Accessories-black slim clutch or tablet case (minimal). Accessories-teal/transparent reusable water bottle (functional accessory). Footwear-black canvas slip-on sneakers. Hair: Color dark brown, Length long, Style Front clean hairline with minimal flyaways, Top high ponytail, Details loose natural wave/texture in pony, Overall Vibe sporty neat. Makeup: Eyes Style natural with sunglasses covering eyes, Lips Color neutral pink, Style sheer, Overall Vibe fresh minimal daytime. Palette focuses on light blue chambray, white, black, silver, blue mirror, teal. Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background.",
+      "imagePrompt": "Full body fashion photo of a woman, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, background should match the vibe of the clothes. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "items": [
+        {
+          "id": "Top",
+          "label": "Light blue tie-front chambray shirt",
+          "searchQuery": "women light blue chambray button shirt tie front",
+          "category": "Top",
+          "gender": "female",
+          "gridPosition": 1,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-1-1763763029746.jpg"
+        },
+        {
+          "id": "Bottom",
+          "label": "White high-waisted ankle leggings",
+          "searchQuery": "women white high waisted ankle leggings athleisure",
+          "category": "Bottom",
+          "gender": "female",
+          "gridPosition": 2,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-2-1763763031030.jpg"
+        },
+        {
+          "id": "Footwear",
+          "label": "Black canvas slip-on sneakers",
+          "searchQuery": "women black canvas slip on sneakers white sole",
+          "category": "Footwear",
+          "gender": "female",
+          "gridPosition": 3,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-3-1763763032532.jpg"
+        },
+        {
+          "id": "Accessories",
+          "label": "Blue mirrored aviator sunglasses",
+          "searchQuery": "blue mirrored aviator sunglasses silver frame women",
+          "category": "Accessories",
+          "gender": "female",
+          "gridPosition": 4,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-4-1763763033858.jpg"
+        },
+        {
+          "id": "Bag",
+          "label": "Black slim clutch/tablet case",
+          "searchQuery": "black slim clutch tablet case minimalist",
+          "category": "Bag",
+          "gender": "female",
+          "gridPosition": 5,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-5-1763763035075.jpg"
+        },
+        {
+          "id": "Accessory",
+          "label": "Teal reusable water bottle",
+          "searchQuery": "teal reusable water bottle transparent tumbler",
+          "category": "Accessory",
+          "gender": "female",
+          "gridPosition": 6,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-6-1763763036329.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0-1763763026228.jpg",
+      "referenceImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/references/female/ref_0-1763762926958.png",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-1763763027983.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-1-1763763029746.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-2-1763763031030.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-3-1763763032532.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-4-1763763033858.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-5-1763763035075.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-6-1763763036329.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-7-1763763037782.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763763026228_0/grid-cell-8-1763763039082.jpg"
+      ]
+    },
+    {
+      "id": "explore_female_ref_1763762767998_0",
+      "gender": "female",
+      "title": "Casual chic weeke...",
+      "description": "Casual chic weekend look with classic denim layering and minimalist accessories.-Top-black sleeveless V-neck camisole (slim, tucked or fitted; minimal, effortless)",
+      "vibe": "Casual chic weekend look with classic denim layering and minimalist accessories.",
+      "prompt": "Overall style: Casual chic weekend look with classic denim layering and minimalist accessories.. Top-black sleeveless V-neck camisole (slim, tucked or fitted; minimal, effortless). Top-mid-wash blue cotton denim classic denim trucker jacket (boxy, hip-length with button front; timeless casual). Bottom-midi A-line skirt (Material same fabric, Color black, Placement clean straight hem; Belt tan leather belt). Accessories-black oversized square sunglasses. Accessories-natural beige large woven straw tote. Footwear-tan/cognac leather flat slide sandals (wide cross straps). Hair: Color brown, Length medium, Style Front center part under sunglasses, Top smooth, Overall Vibe sleek everyday. Makeup: Eyes Style hidden by sunglasses, Lips Color red, Style satin finish, Overall Vibe polished pop of color. Palette focuses on mid-wash denim blue, black, tan/cognac, natural straw beige, dark gray/black lenses, silver hardware. Full body fashion photo, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, clean background.",
+      "imagePrompt": "Full body fashion photo of a woman, vertical 9:16, complete outfit and shoes visible, realistic studio lighting, background should match the vibe of the clothes. Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwearfully visible, confident pose captured mid-motion. Use vivid, full-color photography with natural lighting; never black-and-white or monochrome.",
+      "items": [
+        {
+          "id": "Outerwear",
+          "label": "Mid-wash denim jacket",
+          "searchQuery": "women mid wash denim trucker jacket button front",
+          "category": "Outerwear",
+          "gender": "female",
+          "gridPosition": 1,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-1-1763762771579.jpg"
+        },
+        {
+          "id": "Top",
+          "label": "Black V-neck camisole",
+          "searchQuery": "women black Vneck camisole sleeveless minimalist",
+          "category": "Top",
+          "gender": "female",
+          "gridPosition": 2,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-2-1763762772962.jpg"
+        },
+        {
+          "id": "Bottom",
+          "label": "Black midi A-line skirt",
+          "searchQuery": "women black midi A line skirt high waist",
+          "category": "Bottom",
+          "gender": "female",
+          "gridPosition": 3,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-3-1763762774299.jpg"
+        },
+        {
+          "id": "Accessory",
+          "label": "Tan leather belt",
+          "searchQuery": "women tan leather belt medium width",
+          "category": "Accessory",
+          "gender": "female",
+          "gridPosition": 4,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-4-1763762775552.jpg"
+        },
+        {
+          "id": "Bag",
+          "label": "Woven straw tote bag",
+          "searchQuery": "women large straw tote bag tan leather handles",
+          "category": "Bag",
+          "gender": "female",
+          "gridPosition": 5,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-5-1763762776834.jpg"
+        },
+        {
+          "id": "Footwear",
+          "label": "Tan slide sandals",
+          "searchQuery": "women tan leather slide sandals flat cross strap",
+          "category": "Footwear",
+          "gender": "female",
+          "gridPosition": 6,
+          "gridCellUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-6-1763762778150.jpg"
+        }
+      ],
+      "imageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0-1763762767999.jpg",
+      "referenceImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/references/female/ref_0-1763762690733.png",
+      "gridImageUrl": "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-1763762769847.jpg",
+      "gridCellUrls": [
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-1-1763762771579.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-2-1763762772962.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-3-1763762774299.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-4-1763762775552.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-5-1763762776834.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-6-1763762778150.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-7-1763762779500.jpg",
+        "https://hztmmirbdwmlmwauytmi.supabase.co/storage/v1/object/public/explore-images/female/explore_female_ref_1763762767998_0/grid-cell-8-1763762780753.jpg"
+      ]
+    },
+    {
       "id": "explore_female_ref_1763757313810_0",
       "gender": "female",
       "title": "Chic streetwear w...",

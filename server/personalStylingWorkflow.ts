@@ -14,6 +14,7 @@ import sharp from 'sharp';
 const GPT5_MODEL = 'openai/gpt-5';
 const REVE_MODEL = 'reve/edit-fast:f0253eb7b26cc2416ad98c20492fbe4b842e09d808318fdf9e7caeffa9ae78f5';
 const NANO_BANANA_MODEL = 'google/nano-banana';
+const BACKGROUND_REMOVER_MODEL = '851-labs/background-remover:a029dff38972b5fda4ce5d75d71cd25aeff621d2cf4964a1055d7db06b80bc';
 const FAL_GRID_ENDPOINT = 'fal-ai/nano-banana-pro/edit';
 const FAL_GRID_CREDENTIALS = process.env.FAL_KEY
   || (process.env.FAL_KEY_ID && process.env.FAL_KEY_SECRET
@@ -103,9 +104,9 @@ const getGridTemplateDataUri = () => gridTemplateDataUriPromise;
 const FRAMING_REQUIREMENTS =
   'Full body portrait, vertical 9:16 composition (tall), camera at waist height, editorial lighting, footwear fully visible, confident pose captured mid-motion.';
 
-const FAL_SEGMENT_PROMPT = `You will receive an empty grid image.
+const FAL_SEGMENT_PROMPT = `You will receive an empty grid image with number on each cell.
 The grid already defines the exact positions of all cells.
-Do NOT create a new grid. Use the one provided.
+Do NOT create a new grid. Use the one provided. When creating a new image, dont put the numbers on the grid, remove them. 
 
 Your task is:
 1. Extract all clothing items from the reference outfit photo.
@@ -586,6 +587,27 @@ async function generateNanoBananaImage(prompt: string, imageInputs: Array<string
   return imageUrl;
 }
 
+async function removeBackgroundFromBuffer(buffer: Buffer): Promise<{ buffer: Buffer; mime: string }> {
+  try {
+    const blob = new Blob([buffer], { type: 'image/jpeg' });
+    const response = await runReplicateModel(BACKGROUND_REMOVER_MODEL, { image: blob });
+    const cleanedUrl = extractImageUrl(response);
+    if (!cleanedUrl) {
+      throw new Error('background remover did not return an image URL.');
+    }
+    const cleanedResponse = await fetch(cleanedUrl);
+    if (!cleanedResponse.ok) {
+      throw new Error(`Failed to download cleaned image (${cleanedResponse.status})`);
+    }
+    const mime = normalizeFalMime(cleanedResponse.headers.get('content-type') ?? 'image/png');
+    const cleanedBuffer = Buffer.from(await cleanedResponse.arrayBuffer());
+    return { buffer: cleanedBuffer, mime };
+  } catch (error) {
+    console.error('[background-remover] Falling back to original cell image', error);
+    return { buffer, mime: 'image/jpeg' };
+  }
+}
+
 function buildPreferencesContext(preferences?: UserPreferences): string {
   if (!preferences) {
     return '';
@@ -711,7 +733,7 @@ async function sliceGridCells(
       const width = Math.max(1, x1 - x0);
       const height = Math.max(1, y1 - y0);
 
-      const cellBuffer = await sharp(gridBuffer)
+      const baseCellBuffer = await sharp(gridBuffer)
         .extract({ left: x0, top: y0, width, height })
         .resize(640, 960, {
           fit: 'contain',
@@ -719,8 +741,9 @@ async function sliceGridCells(
         })
         .jpeg({ quality: 94 })
         .toBuffer();
+      const { buffer: cellBuffer, mime } = await removeBackgroundFromBuffer(baseCellBuffer);
       const label = `grid-cell-${row * columns + column + 1}`;
-      const cellUrl = await persistExploreAssetBuffer(cellBuffer, gender, lookId, label, 'image/jpeg');
+      const cellUrl = await persistExploreAssetBuffer(cellBuffer, gender, lookId, label, mime);
       urls.push(cellUrl);
     }
   }
