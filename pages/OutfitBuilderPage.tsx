@@ -19,7 +19,10 @@ const OutfitBuilderPage: React.FC = () => {
       setSavedOutfits(outfits.reverse()); // Show newest first
 
       // Load liked items
-      const items = JSON.parse(localStorage.getItem(`likedItems_${user.id}`) || '[]');
+      const items = JSON.parse(localStorage.getItem(`likedItems_${user.id}`) || '[]').map((item: LikedItem) => ({
+        ...item,
+        gridCellUrl: item.gridCellUrl || item.imageUrl,
+      }));
       setLikedItems(items.reverse());
     };
 

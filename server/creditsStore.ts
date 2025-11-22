@@ -4,6 +4,8 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const DEFAULT_STARTING_CREDITS = Number(process.env.DEFAULT_STARTING_CREDITS ?? '5');
+const CREDITS_INFINITE_MODE = process.env.CREDITS_INFINITE_MODE !== 'false';
+const INFINITE_BALANCE = 1_000_000_000;
 
 export { DEFAULT_STARTING_CREDITS };
 const PERSONAL_LOOK_CREDIT_COST = Math.max(Number(process.env.PERSONAL_LOOK_CREDIT_COST ?? '2'), 1);
@@ -182,6 +184,9 @@ const recordTransaction = async (
 };
 
 export const getCreditBalance = async (userId: string): Promise<number> => {
+  if (CREDITS_INFINITE_MODE) {
+    return INFINITE_BALANCE;
+  }
   const account = await ensureAccount(userId);
   return account.credits;
 };
@@ -192,6 +197,9 @@ export const addCredits = async (
   reason: string,
   metadata?: Record<string, unknown>
 ): Promise<number> => {
+  if (CREDITS_INFINITE_MODE) {
+    return INFINITE_BALANCE;
+  }
   if (amount <= 0) {
     throw new Error('Amount must be positive');
   }
@@ -207,6 +215,9 @@ export const deductCredits = async (
   amount: number,
   reason: string
 ): Promise<number> => {
+  if (CREDITS_INFINITE_MODE) {
+    return INFINITE_BALANCE;
+  }
   if (amount <= 0) {
     throw new Error('Amount must be positive');
   }
@@ -221,11 +232,17 @@ export const deductCredits = async (
 };
 
 export const chargeForPersonalizedLooks = async (userId: string, lookCount: number) => {
+  if (CREDITS_INFINITE_MODE) {
+    return;
+  }
   const totalCost = PERSONAL_LOOK_CREDIT_COST * Math.max(lookCount, 1);
   await deductCredits(userId, totalCost, 'personalized_looks');
 };
 
 export const chargeForRemix = async (userId: string) => {
+  if (CREDITS_INFINITE_MODE) {
+    return;
+  }
   await deductCredits(userId, REMIX_LOOK_CREDIT_COST, 'remix');
 };
 

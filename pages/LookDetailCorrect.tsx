@@ -133,6 +133,7 @@ const LookDetailCorrect: React.FC = () => {
         id: itemId,
         name: itemName,
         imageUrl,
+        gridCellUrl: imageUrl,
         category,
         lookId: lookId!,
         lookTitle: look?.title || '',

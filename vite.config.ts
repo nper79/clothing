@@ -112,19 +112,32 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
       server.middlewares.use('/api/remix-look', async (req: IncomingMessage, res: ServerResponse) => {
         await handleJsonPost(
           req,
-        res,
-        async (body) => {
-          if (typeof body.userId !== 'string' || body.userId.trim().length === 0) {
-            throw new Error('Missing user id.');
-          }
+          res,
+          async (body) => {
+            if (typeof body.userId !== 'string' || body.userId.trim().length === 0) {
+              throw new Error('Missing user id.');
+            }
 
-          await chargeForRemix(body.userId);
+            await chargeForRemix(body.userId);
 
-          const { remixLookWithPrompt } = await import('./server/personalStylingWorkflow');
-          const referenceImage = typeof body.referenceImage === 'string' ? body.referenceImage : undefined;
-          const result = await remixLookWithPrompt(body.userPhoto, body.prompt, referenceImage);
-          return result;
-        },
+            const { remixLookWithPrompt } = await import('./server/personalStylingWorkflow');
+            const normalizedItemImages = Array.isArray(body.itemImages)
+              ? body.itemImages.filter((url: unknown): url is string => typeof url === 'string' && url.trim().length > 0)
+              : [];
+            const customItemImages = Array.isArray(body.metadata?.customItems)
+              ? body.metadata.customItems
+                  .map((item: Record<string, unknown>) => item?.imageUrl)
+                  .filter((url): url is string => typeof url === 'string' && url.trim().length > 0)
+              : [];
+            const mergedItemImages =
+              normalizedItemImages.length || customItemImages.length
+                ? Array.from(new Set([...normalizedItemImages, ...customItemImages]))
+                : undefined;
+            const referenceImage = typeof body.referenceImage === 'string' ? body.referenceImage : undefined;
+
+            const result = await remixLookWithPrompt(body.userPhoto, body.prompt, referenceImage, mergedItemImages);
+            return result;
+          },
           '/api/remix-look'
         );
       });
@@ -479,6 +492,41 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ error: 'Method Not Allowed' }));
         }
+      });
+
+      server.middlewares.use('/api/style-analysis/analyze', async (req: IncomingMessage, res: ServerResponse) => {
+        await handleJsonPost(
+          req,
+          res,
+          async (body) => {
+            const { analyzeOutfitForUser } = await import('./server/styleAnalysis');
+            const profile = body?.profile;
+            const outfitDescription = typeof body?.outfitDescription === 'string' ? body.outfitDescription.trim() : '';
+            const lookName = typeof body?.lookName === 'string' ? body.lookName : undefined;
+            if (!profile || !outfitDescription) {
+              throw new Error('profile and outfitDescription are required.');
+            }
+            return analyzeOutfitForUser(profile, outfitDescription, lookName);
+          },
+          '/api/style-analysis/analyze'
+        );
+      });
+
+      server.middlewares.use('/api/style-analysis/insights', async (req: IncomingMessage, res: ServerResponse) => {
+        await handleJsonPost(
+          req,
+          res,
+          async (body) => {
+            const { generateStyleInsights } = await import('./server/styleAnalysis');
+            const profile = body?.profile;
+            if (!profile) {
+              throw new Error('profile is required.');
+            }
+            const insights = await generateStyleInsights(profile);
+            return { insights };
+          },
+          '/api/style-analysis/insights'
+        );
       });
 
       server.middlewares.use('/api/dev/fal-grid-test', async (req: IncomingMessage, res: ServerResponse) => {

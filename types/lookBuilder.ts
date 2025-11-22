@@ -2,6 +2,7 @@ export interface LikedItem {
   id: string;
   name: string;
   imageUrl: string;
+  gridCellUrl?: string;
   category: Category;
   lookId: string;
   lookTitle: string;

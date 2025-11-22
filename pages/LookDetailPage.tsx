@@ -79,6 +79,7 @@ const LookDetailPage: React.FC = () => {
       itemName,
       itemIndex,
       imageUrl,
+      gridCellUrl: imageUrl,
       searchQuery: itemName, // Use itemName directly to avoid undefined errors
       likedAt: new Date()
     };

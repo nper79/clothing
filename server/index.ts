@@ -24,6 +24,10 @@ import {
   getCreditPacks,
   purchaseCreditPack,
 } from './creditsStore';
+import {
+  analyzeOutfitForUser as serverAnalyzeStyle,
+  generateStyleInsights as serverGenerateStyleInsights,
+} from './styleAnalysis';
 
 const app = express();
 const port = Number(process.env.PORT || 4000);
@@ -88,7 +92,7 @@ app.post('/api/personalized-looks', async (req, res) => {
 });
 
 app.post('/api/remix-look', async (req, res) => {
-  const { userId, userPhoto, prompt, referenceImage, itemImages } = req.body ?? {};
+  const { userId, userPhoto, prompt, referenceImage, itemImages, metadata } = req.body ?? {};
 
   if (!userPhoto || typeof userPhoto !== 'string') {
     return res.status(400).json({ error: 'Missing userPhoto. Provide a base64 data URL or a remote URL.' });
@@ -104,13 +108,30 @@ app.post('/api/remix-look', async (req, res) => {
 
   try {
     await chargeForRemix(userId);
-    const normalizedItemImages =
-      Array.isArray(itemImages) ? itemImages.filter((url) => typeof url === 'string') : undefined;
+    const normalizedItemImages = Array.isArray(itemImages)
+      ? itemImages.filter((url): url is string => typeof url === 'string' && url.trim().length > 0)
+      : [];
+
+    const customItemImages = Array.isArray(metadata?.customItems)
+      ? metadata.customItems
+        .map((item: Record<string, unknown>) => item?.imageUrl)
+        .filter((url): url is string => typeof url === 'string' && url.trim().length > 0)
+      : [];
+    const mergedItemImages =
+      normalizedItemImages.length || customItemImages.length
+        ? Array.from(new Set([...normalizedItemImages, ...customItemImages]))
+        : undefined;
+    console.log('[server] remix-look images', {
+      normalized: normalizedItemImages.length,
+      custom: customItemImages.length,
+      merged: mergedItemImages?.length ?? 0,
+    });
+
     const result = await remixLookWithPrompt(
       userPhoto,
       prompt,
       typeof referenceImage === 'string' ? referenceImage : undefined,
-      normalizedItemImages
+      mergedItemImages
     );
     res.json(result);
   } catch (error) {
@@ -257,6 +278,34 @@ app.post('/api/explore/itemize', async (req, res) => {
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Failed to enrich look items',
     });
+  }
+});
+
+app.post('/api/style-analysis/analyze', async (req, res) => {
+  const { profile, outfitDescription, lookName } = req.body ?? {};
+  if (!profile || typeof outfitDescription !== 'string' || outfitDescription.trim().length === 0) {
+    return res.status(400).json({ error: 'profile and outfitDescription are required.' });
+  }
+  try {
+    const analysis = await serverAnalyzeStyle(profile, outfitDescription, typeof lookName === 'string' ? lookName : undefined);
+    res.json(analysis);
+  } catch (error) {
+    console.error('[server] Failed to run style analysis', error);
+    res.status(500).json({ error: 'Failed to analyze outfit' });
+  }
+});
+
+app.post('/api/style-analysis/insights', async (req, res) => {
+  const { profile } = req.body ?? {};
+  if (!profile) {
+    return res.status(400).json({ error: 'profile is required.' });
+  }
+  try {
+    const insights = await serverGenerateStyleInsights(profile);
+    res.json({ insights });
+  } catch (error) {
+    console.error('[server] Failed to generate style insights', error);
+    res.status(500).json({ error: 'Failed to generate style insights' });
   }
 });
 

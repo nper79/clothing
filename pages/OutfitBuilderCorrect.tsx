@@ -55,6 +55,7 @@ const OutfitBuilderCorrect: React.FC = () => {
             id: 'demo_1',
             name: 'Classic White T-Shirt',
             imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
+            gridCellUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
             category: categories[1],
             lookTitle: 'Casual Everyday Look',
             createdAt: new Date().toISOString()
@@ -63,6 +64,7 @@ const OutfitBuilderCorrect: React.FC = () => {
             id: 'demo_2',
             name: 'Blue Denim Jeans',
             imageUrl: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400',
+            gridCellUrl: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400',
             category: categories[2],
             lookTitle: 'Classic Denim Style',
             createdAt: new Date().toISOString()
@@ -71,6 +73,7 @@ const OutfitBuilderCorrect: React.FC = () => {
             id: 'demo_3',
             name: 'White Sneakers',
             imageUrl: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400',
+            gridCellUrl: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400',
             category: categories[5],
             lookTitle: 'Sporty Casual Look',
             createdAt: new Date().toISOString()
@@ -79,6 +82,7 @@ const OutfitBuilderCorrect: React.FC = () => {
             id: 'demo_4',
             name: 'Black Leather Jacket',
             imageUrl: 'https://images.unsplash.com/photo-1551488831-00ddcb2c79c5?w=400',
+            gridCellUrl: 'https://images.unsplash.com/photo-1551488831-00ddcb2c79c5?w=400',
             category: categories[4],
             lookTitle: 'Edgy Street Style',
             createdAt: new Date().toISOString()
@@ -89,7 +93,8 @@ const OutfitBuilderCorrect: React.FC = () => {
       } else {
         const sanitized = parsedItems.map((item: LikedItem) => ({
           ...item,
-          category: item.category?.id ? item.category : categorizeByName(item.name)
+          category: item.category?.id ? item.category : categorizeByName(item.name),
+          gridCellUrl: item.gridCellUrl || item.imageUrl
         }));
         setLikedItems(sanitized);
       }
@@ -178,12 +183,23 @@ const OutfitBuilderCorrect: React.FC = () => {
       const customItems = selectedItems.map((item) => ({
         id: item.id,
         name: item.name || 'Saved item',
-        imageUrl: item.imageUrl,
+        imageUrl: item.gridCellUrl || item.imageUrl,
         category: item.category?.name,
       }));
       const itemImages = selectedItems
-        .map((item) => item.imageUrl)
-        .filter((url): url is string => Boolean(url));
+        .map((item) => item.gridCellUrl || item.imageUrl)
+        .filter((url): url is string => Boolean(url && typeof url === 'string' && url.trim().length > 0));
+
+      console.log('[OutfitBuilder] Selected items for try-on:', {
+        count: selectedItems.length,
+        itemImagesCount: itemImages.length,
+        itemImages
+      });
+
+      if (selectedItems.length > 0 && itemImages.length === 0) {
+        console.warn('[OutfitBuilder] No valid images found for selected items');
+        // Proceeding anyway might result in just the user photo + reference being used
+      }
 
       const metadata = {
         lookId: boardId,
@@ -269,9 +285,8 @@ const OutfitBuilderCorrect: React.FC = () => {
                 <div className="flex flex-wrap gap-2 text-sm">
                   <button
                     onClick={() => setSelectedCategory(null)}
-                    className={`rounded-full px-4 py-1.5 border transition whitespace-nowrap ${
-                      !selectedCategory ? 'bg-white text-black border-white' : 'border-white/20 text-white/70 hover:text-white'
-                    }`}
+                    className={`rounded-full px-4 py-1.5 border transition whitespace-nowrap ${!selectedCategory ? 'bg-white text-black border-white' : 'border-white/20 text-white/70 hover:text-white'
+                      }`}
                   >
                     All ({likedItems.length})
                   </button>
@@ -282,11 +297,10 @@ const OutfitBuilderCorrect: React.FC = () => {
                         key={category.id}
                         onClick={() => (count ? setSelectedCategory(category) : undefined)}
                         disabled={count === 0}
-                        className={`rounded-full px-4 py-1.5 border transition whitespace-nowrap ${
-                          selectedCategory?.id === category.id
-                            ? 'bg-white text-black border-white'
-                            : 'border-white/15 text-white/70 hover:text-white'
-                        } ${count === 0 ? 'opacity-40 cursor-not-allowed' : ''}`}
+                        className={`rounded-full px-4 py-1.5 border transition whitespace-nowrap ${selectedCategory?.id === category.id
+                          ? 'bg-white text-black border-white'
+                          : 'border-white/15 text-white/70 hover:text-white'
+                          } ${count === 0 ? 'opacity-40 cursor-not-allowed' : ''}`}
                       >
                         {category.name} ({count})
                       </button>
@@ -301,57 +315,55 @@ const OutfitBuilderCorrect: React.FC = () => {
                   return (
                     <div
                       key={item.id}
-                      className={`rounded-2xl border bg-white/5 overflow-hidden transition relative cursor-pointer ${
-                        selectedMap[item.id]
-                          ? 'border-pink-400/60 shadow-[0_10px_30px_rgba(236,72,153,0.25)]'
-                          : 'border-white/10'
-                      }`}
+                      className={`rounded-2xl border bg-white/5 overflow-hidden transition relative cursor-pointer ${selectedMap[item.id]
+                        ? 'border-pink-400/60 shadow-[0_10px_30px_rgba(236,72,153,0.25)]'
+                        : 'border-white/10'
+                        }`}
                       onClick={() => handleCardToggle(item.id)}
                     >
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleSelect(item.id);
-                      }}
-                      className={`absolute top-2 left-2 rounded-full border px-2.5 py-1 text-xs font-medium flex items-center gap-1 transition z-10 ${
-                        selectedMap[item.id]
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleSelect(item.id);
+                        }}
+                        className={`absolute top-2 left-2 rounded-full border px-2.5 py-1 text-xs font-medium flex items-center gap-1 transition z-10 ${selectedMap[item.id]
                           ? 'bg-white text-black border-white'
                           : 'bg-black/60 border-white/40 text-white/90 backdrop-blur-sm'
-                      }`}
-                    >
-                      {selectedMap[item.id] ? (
-                        <>
-                          <Check className="h-2.5 w-2.5" />
-                          <span>Selected</span>
-                        </>
-                      ) : (
-                        <span>Select</span>
-                      )}
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemove(item.id);
-                      }}
-                      className="absolute top-2 right-2 rounded-full border border-white/20 bg-black/60 p-1.5 text-white/80 hover:text-white hover:bg-black/80 transition z-10"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
-                    <div className="aspect-square overflow-hidden">
-                      <img
-                        src={item.imageUrl}
-                        alt={itemName}
-                        className="w-full h-full object-cover"
-                        style={{ transform: 'scale(1.03)', transformOrigin: 'center' }}
-                      />
-                    </div>
-                    <div className="p-3">
-                      <p className="text-sm font-semibold text-white truncate">{itemName}</p>
-                      <p className="text-xs text-white/50 capitalize">{categoryName}</p>
-                      <p className="text-xs text-white/40">
-                        From {item.lookTitle || 'Explore look'}
-                      </p>
-                    </div>
+                          }`}
+                      >
+                        {selectedMap[item.id] ? (
+                          <>
+                            <Check className="h-2.5 w-2.5" />
+                            <span>Selected</span>
+                          </>
+                        ) : (
+                          <span>Select</span>
+                        )}
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemove(item.id);
+                        }}
+                        className="absolute top-2 right-2 rounded-full border border-white/20 bg-black/60 p-1.5 text-white/80 hover:text-white hover:bg-black/80 transition z-10"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                      <div className="aspect-square overflow-hidden">
+                        <img
+                          src={item.imageUrl}
+                          alt={itemName}
+                          className="w-full h-full object-cover"
+                          style={{ transform: 'scale(1.03)', transformOrigin: 'center' }}
+                        />
+                      </div>
+                      <div className="p-3">
+                        <p className="text-sm font-semibold text-white truncate">{itemName}</p>
+                        <p className="text-xs text-white/50 capitalize">{categoryName}</p>
+                        <p className="text-xs text-white/40">
+                          From {item.lookTitle || 'Explore look'}
+                        </p>
+                      </div>
                     </div>
                   );
                 })}
@@ -362,11 +374,10 @@ const OutfitBuilderCorrect: React.FC = () => {
               <button
                 onClick={handleTryOnSelection}
                 disabled={!selectedItems.length || isTryingOnSelection}
-                className={`rounded-2xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 border transition ${
-                  selectedItems.length && !isTryingOnSelection
-                    ? 'border-white/40 text-white hover:border-white/70'
-                    : 'border-white/20 text-white/40 cursor-not-allowed'
-                }`}
+                className={`rounded-2xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 border transition ${selectedItems.length && !isTryingOnSelection
+                  ? 'border-white/40 text-white hover:border-white/70'
+                  : 'border-white/20 text-white/40 cursor-not-allowed'
+                  }`}
               >
                 {isTryingOnSelection ? (
                   <>
@@ -409,16 +420,16 @@ const OutfitBuilderCorrect: React.FC = () => {
                     const itemName = item.name || 'Saved item';
                     return (
                       <div key={item.id} className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
-                      <div className="aspect-square overflow-hidden">
-                        <img
-                          src={item.imageUrl}
-                          alt={itemName}
-                          className="w-full h-full object-cover"
-                          style={{ transform: 'scale(1.03)', transformOrigin: 'center' }}
-                        />
+                        <div className="aspect-square overflow-hidden">
+                          <img
+                            src={item.imageUrl}
+                            alt={itemName}
+                            className="w-full h-full object-cover"
+                            style={{ transform: 'scale(1.03)', transformOrigin: 'center' }}
+                          />
+                        </div>
+                        <p className="text-xs text-white/70 truncate px-2 py-1">{itemName}</p>
                       </div>
-                      <p className="text-xs text-white/70 truncate px-2 py-1">{itemName}</p>
-                    </div>
                     );
                   })
                 )}

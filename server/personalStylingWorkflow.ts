@@ -1,5 +1,4 @@
 import Replicate from 'replicate';
-import Replicate from 'replicate';
 import fetch from 'node-fetch';
 import { fal } from '@fal-ai/client';
 import type { PersonalLook, UserPreferences } from '../types/personalStyling';
@@ -95,9 +94,9 @@ const ALL_SCENE_REFERENCES = Array.from(
 const gridTemplateDataUriPromise: Promise<string | null> = GRID_TEMPLATE_URL
   ? Promise.resolve(GRID_TEMPLATE_URL)
   : createGridTemplateDataUri().catch((error) => {
-      console.error('[server] Failed to build grid template overlay', error);
-      return null;
-    });
+    console.error('[server] Failed to build grid template overlay', error);
+    return null;
+  });
 
 const getGridTemplateDataUri = () => gridTemplateDataUriPromise;
 
@@ -408,8 +407,8 @@ const sanitizeShopItem = (item: ShopItem): ShopItem => ({
   gridCellUrl: typeof item.gridCellUrl === 'string' ? item.gridCellUrl : undefined,
   cachedProducts: Array.isArray(item.cachedProducts)
     ? item.cachedProducts
-        .map((product) => sanitizeCachedProduct(product))
-        .filter((product) => Boolean(product.title && product.link))
+      .map((product) => sanitizeCachedProduct(product))
+      .filter((product) => Boolean(product.title && product.link))
     : undefined,
   cachedAt: item.cachedAt ? new Date(item.cachedAt).toISOString() : undefined,
 });
@@ -424,6 +423,10 @@ export const sanitizeExploreLook = (look: ExploreLook): ExploreLook => ({
   vibe: sanitizeText(look.vibe),
   styleTag: look.styleTag ? sanitizeText(look.styleTag) : undefined,
   referenceImageUrl: look.referenceImageUrl ? sanitizeText(look.referenceImageUrl) : undefined,
+  gridImageUrl: typeof look.gridImageUrl === 'string' ? look.gridImageUrl : undefined,
+  gridCellUrls: Array.isArray(look.gridCellUrls)
+    ? look.gridCellUrls.filter((url): url is string => typeof url === 'string' && url.trim().length > 0)
+    : undefined,
 });
 
 const uniquenessKey = (look: ExploreLook): string =>
@@ -1087,9 +1090,13 @@ export async function remixLookWithPrompt(
   referenceImage?: string,
   itemImages: string[] = []
 ) {
-  const imageInputs = [userPhoto, referenceImage, ...itemImages];
+  const normalizedImages = [userPhoto, referenceImage, ...itemImages].filter(
+    (value): value is string => typeof value === 'string' && value.trim().length > 0
+  );
+  const imageInputs = Array.from(new Set(normalizedImages));
+  console.log('[remixLookWithPrompt] Sending images:', imageInputs.length, imageInputs);
   const cleanedPrompt = stripSceneClauses(prompt.trim());
-  const finalPrompt = `${cleanedPrompt} Apply this outfit to the provided person while keeping their exact face, pose, and body proportions unchanged. Do not introduce any new people or backgrounds. ${FRAMING_REQUIREMENTS}`;
+  const finalPrompt = `${cleanedPrompt} Apply this outfit to the provided person while keeping their exact face, pose, and body proportions unchanged. Create an appropriate background that matches the vibe of the clothes the person is wearing. ${FRAMING_REQUIREMENTS}`;
   const styledPhotoUrl = await generateNanoBananaImage(finalPrompt, imageInputs);
   const storagePath = await persistRemixImage(styledPhotoUrl);
   const signedUrl = await getRemixSignedUrl(storagePath);
@@ -1678,10 +1685,10 @@ const isSegmentedLookResponse = (value: unknown): value is SegmentedLookResponse
   const candidate = value as Record<string, unknown>;
   return Boolean(
     typeof candidate.overall_style === 'string' ||
-      candidate.top ||
-      candidate.bottom ||
-      candidate.accessories ||
-      candidate.footwear
+    candidate.top ||
+    candidate.bottom ||
+    candidate.accessories ||
+    candidate.footwear
   );
 };
 

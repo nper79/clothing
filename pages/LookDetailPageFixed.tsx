@@ -144,6 +144,7 @@ export default function LookDetailPageFixed() {
         id: itemId,
         name: itemName,
         imageUrl: imageUrl,
+        gridCellUrl: imageUrl,
         category: category,
         lookId: lookId!,
         lookTitle: look?.title || '',

@@ -246,14 +246,31 @@ export const ExploreService = {
 
   async remixLook(userId: string, userPhotoUrl: string, look: ExploreLook) {
     const imagePrompt = look.imagePrompt || look.prompt;
-    return PersonalStylingService.remixLook(userId, userPhotoUrl, imagePrompt, {
-      lookId: look.id,
-      name: look.title,
-      category: look.vibe,
-      level: 'explore',
-      originalPrompt: imagePrompt,
-      referenceImage: look.imageUrl
-    });
+    const gridCells = look.gridCellUrls ?? [];
+    const itemCellUrls =
+      look.items
+        ?.map((item) => item.gridCellUrl)
+        .filter((url): url is string => typeof url === 'string' && url.trim().length > 0) ?? [];
+    const itemImages = Array.from(
+      new Set(
+        [...gridCells, ...itemCellUrls].filter((url): url is string => typeof url === 'string' && url.trim().length > 0)
+      )
+    );
+    console.log('[ExploreService] Remix item images', itemImages.length, itemImages);
+    return PersonalStylingService.remixLook(
+      userId,
+      userPhotoUrl,
+      imagePrompt,
+      {
+        lookId: look.id,
+        name: look.title,
+        category: look.vibe,
+        level: 'explore',
+        originalPrompt: imagePrompt,
+        referenceImage: look.imageUrl,
+      },
+      itemImages
+    );
   },
 
   getLatestUserPhoto(userId?: string): string | null {
