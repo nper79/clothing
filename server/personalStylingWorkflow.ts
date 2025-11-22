@@ -15,11 +15,16 @@ const REVE_MODEL = 'reve/edit-fast:f0253eb7b26cc2416ad98c20492fbe4b842e09d808318
 const NANO_BANANA_MODEL = 'google/nano-banana';
 const BACKGROUND_REMOVER_MODEL = '851-labs/background-remover:a029dff38972b5fda4ce5d75d71cd25aeff621d2cf4964a1055d7db06b80bc';
 const FAL_GRID_ENDPOINT = 'fal-ai/nano-banana-pro/edit';
-const FAL_GRID_CREDENTIALS = process.env.FAL_KEY
-  || (process.env.FAL_KEY_ID && process.env.FAL_KEY_SECRET
+const FAL_GRID_CREDENTIALS =
+  process.env.FAL_KEY ||
+  process.env.FAL_AUTH_TOKEN ||
+  process.env.FAL_TOKEN ||
+  process.env.FAL_API_KEY ||
+  (process.env.FAL_KEY_ID && process.env.FAL_KEY_SECRET
     ? `${process.env.FAL_KEY_ID}:${process.env.FAL_KEY_SECRET}`
     : undefined);
 const FAL_GRID_ENABLED = Boolean(FAL_GRID_CREDENTIALS);
+const FAL_REMIX_TIMEOUT_MS = 25000;
 
 if (FAL_GRID_CREDENTIALS) {
   fal.config({ credentials: FAL_GRID_CREDENTIALS });
@@ -1104,7 +1109,12 @@ export async function remixLookWithPrompt(
       label: index === 0 ? 'user-photo.jpg' : `remix-${index}.jpg`,
     }));
     try {
-      styledPhotoUrl = await generateFalGridImage(finalPrompt, descriptors, 'remix');
+      styledPhotoUrl = await Promise.race([
+        generateFalGridImage(finalPrompt, descriptors, 'remix'),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('fal remix timeout')), FAL_REMIX_TIMEOUT_MS)
+        ),
+      ]);
     } catch (error) {
       console.warn('[remixLookWithPrompt] fal nano-banana-pro failed, falling back to Replicate.', error);
     }

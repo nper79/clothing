@@ -402,16 +402,14 @@ export const ExploreService = {
       throw new Error('You need to be signed in to remix looks.');
     }
     const imagePrompt = look.imagePrompt || look.prompt;
-    const gridCells = look.gridCellUrls ?? [];
-    const itemCellUrls =
-      look.items
-        ?.map((item) => item.gridCellUrl)
-        .filter((url): url is string => typeof url === 'string' && url.trim().length > 0) ?? [];
-    const itemImages = Array.from(
-      new Set(
-        [...gridCells, ...itemCellUrls].filter((url): url is string => typeof url === 'string' && url.trim().length > 0)
-      )
-    );
+    const itemImages: string[] = [];
+    if (look.gridImageUrl && look.gridImageUrl.trim().length > 0) {
+      itemImages.push(look.gridImageUrl);
+    } else if (look.imageUrl && look.imageUrl.trim().length > 0) {
+      itemImages.push(look.imageUrl);
+    } else if (look.gridCellUrls?.length) {
+      itemImages.push(look.gridCellUrls[0]);
+    }
     let resolvedPhoto = userPhotoUrl ?? null;
     const refreshed = await refreshPhotoUrl(userId);
     if (refreshed) {

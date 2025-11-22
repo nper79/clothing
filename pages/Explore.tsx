@@ -172,7 +172,7 @@ const ExplorePage: React.FC = () => {
         lookId: look.id,
         lookName: look.title,
         gender: look.gender,
-        imageUrl: undefined, // Will be set when the image is ready
+        imageUrl: result.styledPhotoUrl ?? undefined,
         referenceImage: look.imageUrl,
         items: result.items,
         shopResults: result.shopResults,
@@ -183,29 +183,48 @@ const ExplorePage: React.FC = () => {
       // Add to queue
       setRemixQueue((prev) => [remix, ...prev].slice(0, 10));
 
-      // Wait for image generation
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Try to fetch the image
-      try {
-        const response = await fetch(`/api/remix-image?lookId=${look.id}&userId=${userId}`, {
-          method: 'GET',
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.url) {
-            remix.imageUrl = data.url;
-            setRemixQueue((prev) => {
-              const updated = prev.map((r) => (r.id === remix.id ? { ...r, imageUrl: data.url } : r));
-              openRemixDetailPage(remix);
-              return updated;
-            });
-          }
+      const persistRemix = (imageUrl?: string) => {
+        if (!result.storagePath && !imageUrl) {
+          return;
         }
-      } catch (error) {
-        console.error('Failed to fetch remix image:', error);
+        try {
+          ExploreService.saveRemix(userId, {
+            lookId: look.id,
+            lookName: look.title,
+            gender: look.gender,
+            storagePath: result.storagePath,
+            imageUrl,
+          });
+        } catch (error) {
+          console.warn('[ExplorePage] Failed to persist remix history', error);
+        }
+      };
+
+      if (!remix.imageUrl && result.storagePath) {
+        try {
+          const signedUrl = await ExploreService.getRemixImageUrl(result.storagePath);
+          remix.imageUrl = signedUrl;
+          persistRemix(remix.imageUrl);
+        } catch (error) {
+          console.error('Failed to fetch remix image URL:', error);
+        }
+      } else if (remix.imageUrl) {
+        persistRemix(remix.imageUrl);
       }
+
+      if (remix.imageUrl) {
+        setRemixQueue((prev) => {
+          const updated = prev.map((r) => (r.id === remix.id ? { ...r, imageUrl: remix.imageUrl } : r));
+          openRemixDetailPage({ ...remix });
+          return updated;
+        });
+        setActiveTryOnId(null);
+        showToast('Remix created!', 'success');
+        return;
+      }
+
+      // Wait briefly before showing pending remix if image not ready yet
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       if (!remix.imageUrl) {
         // If no image, open the detail page after a delay
@@ -213,6 +232,7 @@ const ExplorePage: React.FC = () => {
           openRemixDetailPage(remix);
           setRemixQueue((prev) => prev.filter((r) => r.id !== remix.id));
         }, 1000);
+        persistRemix(undefined);
       }
 
       setActiveTryOnId(null);
