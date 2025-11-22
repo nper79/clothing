@@ -169,10 +169,23 @@ const OutfitBuilderCorrect: React.FC = () => {
     if (!selectedItems.length || !user) return;
     setTryOnError(null);
 
-    const userPhotoUrl = ExploreService.getLatestUserPhoto(user.id || 'guest');
+    let userPhotoUrl = ExploreService.getLatestUserPhoto(user.id || 'guest');
     if (!userPhotoUrl) {
       setTryOnError('Upload a base photo in Explore to unlock try-ons.');
       return;
+    }
+
+    try {
+      const refreshed = await ExploreService.refreshLatestUserPhoto(user.id);
+      if (refreshed) {
+        userPhotoUrl = refreshed;
+      }
+      const remoteUrl = await ExploreService.ensureRemoteUserPhoto(user.id, userPhotoUrl);
+      if (remoteUrl) {
+        userPhotoUrl = remoteUrl;
+      }
+    } catch (error) {
+      console.warn('[OutfitBuilder] Failed to refresh profile photo URL, using cached version.', error);
     }
 
     const prompt = buildSelectionPrompt(selectedItems);
@@ -207,7 +220,6 @@ const OutfitBuilderCorrect: React.FC = () => {
         category: 'custom-board',
         level: 'custom',
         originalPrompt: prompt,
-        referenceImage: itemImages[0],
       };
 
       const remix = await PersonalStylingService.remixLook(

@@ -1097,7 +1097,22 @@ export async function remixLookWithPrompt(
   console.log('[remixLookWithPrompt] Sending images:', imageInputs.length, imageInputs);
   const cleanedPrompt = stripSceneClauses(prompt.trim());
   const finalPrompt = `${cleanedPrompt} Apply this outfit to the provided person while keeping their exact face, pose, and body proportions unchanged. Create an appropriate background that matches the vibe of the clothes the person is wearing. ${FRAMING_REQUIREMENTS}`;
-  const styledPhotoUrl = await generateNanoBananaImage(finalPrompt, imageInputs);
+  let styledPhotoUrl: string | null = null;
+  if (FAL_GRID_ENABLED) {
+    const descriptors: FalImageSource[] = imageInputs.map((source, index) => ({
+      source,
+      label: index === 0 ? 'user-photo.jpg' : `remix-${index}.jpg`,
+    }));
+    try {
+      styledPhotoUrl = await generateFalGridImage(finalPrompt, descriptors, 'remix');
+    } catch (error) {
+      console.warn('[remixLookWithPrompt] fal nano-banana-pro failed, falling back to Replicate.', error);
+    }
+  }
+
+  if (!styledPhotoUrl) {
+    styledPhotoUrl = await generateNanoBananaImage(finalPrompt, imageInputs);
+  }
   const storagePath = await persistRemixImage(styledPhotoUrl);
   const signedUrl = await getRemixSignedUrl(storagePath);
   return {

@@ -26,8 +26,21 @@ const PHOTO_STORAGE_PREFIX = 'latest_user_photo_';
 const LEGACY_PHOTO_KEY = 'latest_user_photo';
 const MAX_RECENT_PHOTOS = 3;
 const SIZE_LIMIT_BYTES = 4.5 * 1024 * 1024; // ~4.5MB to stay under the 5MB Web Storage limit
+const PHOTO_URL_TTL_MS = 55 * 60 * 1000; // 55 minutes
+const PHOTO_REFRESH_BUFFER_MS = 5 * 60 * 1000; // refresh when <5 minutes left
+
+type StoredPhotoRecord = {
+  path?: string;
+  url?: string;
+  expiresAt?: number;
+  storedAt?: number;
+  source?: 'supabase' | 'local';
+};
 
 type LikeMap = Record<string, boolean>;
+
+const isDataUrl = (value?: string | null): value is string =>
+  typeof value === 'string' && value.startsWith('data:');
 
 const loadLikes = (): LikeMap => {
   if (typeof window === 'undefined') return {};
@@ -67,28 +80,51 @@ const remixKey = (userId: string) => `${REMIX_STORAGE_PREFIX}${userId}`;
 const photoKey = (userId: string) => `${PHOTO_STORAGE_PREFIX}${userId}`;
 const parsePhotoRecord = (raw: string | null): StoredPhotoRecord | null => {
   if (!raw) return null;
-  if (raw.startsWith('data:') || raw.startsWith('http')) {
-    return { url: raw };
+  if (isDataUrl(raw) || raw.startsWith('http')) {
+    return { url: raw, storedAt: Date.now(), source: isDataUrl(raw) ? 'local' : 'supabase' };
   }
   try {
-    return JSON.parse(raw) as StoredPhotoRecord;
+    const parsed = JSON.parse(raw) as StoredPhotoRecord;
+    if (!parsed.storedAt) {
+      parsed.storedAt = Date.now();
+    }
+    if (!parsed.source) {
+      parsed.source = parsed.path ? 'supabase' : 'local';
+    }
+    return parsed;
   } catch {
-    return { url: raw };
+    return { url: raw, storedAt: Date.now() };
   }
 };
 
 const storePhotoRecord = (userId: string, record: StoredPhotoRecord) => {
   if (typeof window === 'undefined') return;
-  const serialized = JSON.stringify(record);
+  const normalized: StoredPhotoRecord = {
+    ...record,
+    storedAt: record.storedAt ?? Date.now(),
+    source: record.source ?? (record.path ? 'supabase' : 'local'),
+  };
+  const serialized = JSON.stringify(normalized);
+  const shouldMirrorLegacy = Boolean(normalized.path || (normalized.url && !isDataUrl(normalized.url)));
+
   try {
     localStorage.setItem(photoKey(userId), serialized);
-    localStorage.setItem(LEGACY_PHOTO_KEY, serialized);
+    if (shouldMirrorLegacy) {
+      localStorage.setItem(LEGACY_PHOTO_KEY, serialized);
+    }
   } catch (error) {
-    console.warn('[ExploreService] Storage quota hit while saving photo record, falling back to minimal data.', error);
+    console.warn(
+      '[ExploreService] Storage quota hit while saving photo record, falling back to minimal data.',
+      error
+    );
     try {
-      const fallback = JSON.stringify({ url: record.url ?? '' });
+      const fallback = normalized.path
+        ? JSON.stringify({ path: normalized.path, storedAt: normalized.storedAt })
+        : JSON.stringify({ url: normalized.url ?? '' });
       localStorage.setItem(photoKey(userId), fallback);
-      localStorage.setItem(LEGACY_PHOTO_KEY, fallback);
+      if (shouldMirrorLegacy) {
+        localStorage.setItem(LEGACY_PHOTO_KEY, fallback);
+      }
     } catch (fallbackError) {
       console.error('[ExploreService] Failed to store photo even after fallback.', fallbackError);
     }
@@ -103,6 +139,84 @@ const getPhotoRecord = (userId: string): StoredPhotoRecord | null => {
 const getLegacyPhotoRecord = (): StoredPhotoRecord | null => {
   if (typeof window === 'undefined') return null;
   return parsePhotoRecord(localStorage.getItem(LEGACY_PHOTO_KEY));
+};
+
+const uploadLocalPhotoRecord = async (userId: string, dataUrl: string): Promise<string | null> => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const response = await fetch('/api/profile-photo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, photoDataUrl: dataUrl }),
+    });
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || 'Failed to upload local profile photo.');
+    }
+    const payload = await response.json();
+    if (typeof payload?.url !== 'string' || typeof payload?.path !== 'string') {
+      throw new Error('Upload response missing photo URL.');
+    }
+    const record: StoredPhotoRecord = {
+      path: payload.path,
+      url: payload.url,
+      expiresAt: Date.now() + PHOTO_URL_TTL_MS,
+      source: 'supabase',
+    };
+    storePhotoRecord(userId, record);
+    return record.url;
+  } catch (error) {
+    console.warn('[ExploreService] Failed to upload existing photo to Supabase', error);
+    return dataUrl;
+  }
+};
+
+const ensureRemotePhoto = async (userId: string, currentUrl?: string | null): Promise<string | null> => {
+  if (typeof window === 'undefined') return currentUrl ?? null;
+  const record = getPhotoRecord(userId);
+  const existing = currentUrl ?? record?.url ?? getLegacyPhotoRecord()?.url ?? null;
+  if (!existing) {
+    return null;
+  }
+  if (isDataUrl(existing)) {
+    return uploadLocalPhotoRecord(userId, existing);
+  }
+  return existing;
+};
+
+const refreshPhotoUrl = async (userId: string): Promise<string | null> => {
+  if (typeof window === 'undefined') return null;
+  const record = getPhotoRecord(userId);
+  if (!record?.path) {
+    return record?.url ?? null;
+  }
+  const needsRefresh =
+    !record.url || !record.expiresAt || record.expiresAt - Date.now() < PHOTO_REFRESH_BUFFER_MS;
+  if (!needsRefresh) {
+    return record.url ?? null;
+  }
+  try {
+    const response = await fetch(`/api/profile-photo/url?path=${encodeURIComponent(record.path)}`);
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || 'Failed to refresh profile photo URL.');
+    }
+    const payload = await response.json();
+    const url = payload?.url;
+    if (typeof url !== 'string') {
+      throw new Error('Invalid photo URL response.');
+    }
+    const updated: StoredPhotoRecord = {
+      ...record,
+      url,
+      expiresAt: Date.now() + PHOTO_URL_TTL_MS,
+    };
+    storePhotoRecord(userId, updated);
+    return url;
+  } catch (error) {
+    console.warn('[ExploreService] Failed to refresh profile photo URL', error);
+    return record.url ?? null;
+  }
 };
 
 export const ExploreService = {
@@ -283,7 +397,10 @@ export const ExploreService = {
     return likes;
   },
 
-  async remixLook(userId: string, userPhotoUrl: string, look: ExploreLook) {
+  async remixLook(userId: string, userPhotoUrl: string | null, look: ExploreLook) {
+    if (!userId) {
+      throw new Error('You need to be signed in to remix looks.');
+    }
     const imagePrompt = look.imagePrompt || look.prompt;
     const gridCells = look.gridCellUrls ?? [];
     const itemCellUrls =
@@ -295,10 +412,21 @@ export const ExploreService = {
         [...gridCells, ...itemCellUrls].filter((url): url is string => typeof url === 'string' && url.trim().length > 0)
       )
     );
-    console.log('[ExploreService] Remix item images', itemImages.length, itemImages);
+    let resolvedPhoto = userPhotoUrl ?? null;
+    const refreshed = await refreshPhotoUrl(userId);
+    if (refreshed) {
+      resolvedPhoto = refreshed;
+    }
+    if (!resolvedPhoto) {
+      resolvedPhoto = getLegacyPhotoRecord()?.url ?? null;
+    }
+    if (!resolvedPhoto) {
+      throw new Error('Upload a profile photo before remixing looks.');
+    }
+    resolvedPhoto = (await ensureRemotePhoto(userId, resolvedPhoto)) ?? resolvedPhoto;
     return PersonalStylingService.remixLook(
       userId,
-      userPhotoUrl,
+      resolvedPhoto,
       imagePrompt,
       {
         lookId: look.id,
@@ -306,10 +434,14 @@ export const ExploreService = {
         category: look.vibe,
         level: 'explore',
         originalPrompt: imagePrompt,
-        referenceImage: look.imageUrl,
       },
       itemImages
     );
+  },
+
+  async ensureRemoteUserPhoto(userId: string, providedUrl?: string | null) {
+    if (!userId) return null;
+    return ensureRemotePhoto(userId, providedUrl);
   },
 
   getLatestUserPhoto(userId?: string): string | null {
@@ -328,7 +460,7 @@ export const ExploreService = {
       if (approxBytes > SIZE_LIMIT_BYTES) {
         throw new Error('Photo is too large to save locally. Please use a smaller image.');
       }
-      const record: StoredPhotoRecord = { url: dataUrl };
+      const record: StoredPhotoRecord = { url: dataUrl, source: 'local', storedAt: Date.now() };
       storePhotoRecord(userId, record);
       return dataUrl;
     };
@@ -351,6 +483,7 @@ export const ExploreService = {
         path: payload.path,
         url: payload.url,
         expiresAt: Date.now() + PHOTO_URL_TTL_MS,
+        source: 'supabase',
       };
       storePhotoRecord(userId, record);
       this.pruneRecentPhotos();
@@ -361,42 +494,7 @@ export const ExploreService = {
     }
   },
 
-  async refreshLatestUserPhoto(userId: string): Promise<string | null> {
-    if (typeof window === 'undefined') return null;
-    const record = getPhotoRecord(userId);
-    if (!record?.path) {
-      return record?.url ?? null;
-    }
-    const needsRefresh =
-      !record.url ||
-      !record.expiresAt ||
-      record.expiresAt - Date.now() < PHOTO_REFRESH_BUFFER_MS;
-    if (!needsRefresh) {
-      return record.url ?? null;
-    }
-    try {
-      const response = await fetch(`/api/profile-photo/url?path=${encodeURIComponent(record.path)}`);
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(text || 'Failed to refresh profile photo URL.');
-      }
-      const payload = await response.json();
-      const url = payload?.url;
-      if (typeof url !== 'string') {
-        throw new Error('Invalid photo URL response.');
-      }
-      const updated: StoredPhotoRecord = {
-        ...record,
-        url,
-        expiresAt: Date.now() + PHOTO_URL_TTL_MS,
-      };
-      storePhotoRecord(userId, updated);
-      return url;
-    } catch (error) {
-      console.warn('[ExploreService] Failed to refresh profile photo URL', error);
-      return record.url ?? null;
-    }
-  },
+  refreshLatestUserPhoto: refreshPhotoUrl,
 
   getRemixes(userId: string): SavedRemix[] {
     const stored = readJson<SavedRemix[]>(remixKey(userId), []);
@@ -480,40 +578,5 @@ export const ExploreService = {
     keysToRemove.forEach((key) => localStorage.removeItem(key));
   },
 
-  async refreshLatestUserPhoto(userId: string): Promise<string | null> {
-    if (typeof window === 'undefined') return null;
-    const record = getPhotoRecord(userId);
-    if (!record?.path) {
-      return record?.url ?? null;
-    }
-    const needsRefresh =
-      !record.url ||
-      !record.expiresAt ||
-      record.expiresAt - Date.now() < PHOTO_REFRESH_BUFFER_MS;
-    if (!needsRefresh) {
-      return record.url ?? null;
-    }
-    try {
-      const response = await fetch(`/api/profile-photo/url?path=${encodeURIComponent(record.path)}`);
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(text || 'Failed to refresh profile photo URL.');
-      }
-      const payload = await response.json();
-      const url = payload?.url;
-      if (typeof url !== 'string') {
-        throw new Error('Invalid photo URL response.');
-      }
-      const updated: StoredPhotoRecord = {
-        ...record,
-        url,
-        expiresAt: Date.now() + PHOTO_URL_TTL_MS,
-      };
-      storePhotoRecord(userId, updated);
-      return url;
-    } catch (error) {
-      console.warn('[ExploreService] Failed to refresh profile photo URL', error);
-      return record.url ?? null;
-    }
-  }
+  refreshLatestUserPhoto: refreshPhotoUrl,
 };
