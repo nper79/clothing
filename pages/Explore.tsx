@@ -38,11 +38,11 @@ const ExplorePage: React.FC = () => {
   const [toast, setToast] = useState<{ message: string; type: 'info' | 'error' | 'success' } | null>(null);
   const toastTimerRef = useRef<number | null>(null);
 
-  const handleSaveUploadedPhoto = () => {
+  const handleSaveUploadedPhoto = async () => {
     if (!uploadPreview) return;
     try {
-      ExploreService.setLatestUserPhoto(storageUserId, uploadPreview);
-      setUserPhoto(uploadPreview);
+      const storedUrl = await ExploreService.setLatestUserPhoto(storageUserId, uploadPreview);
+      setUserPhoto(storedUrl ?? uploadPreview);
       showToast('Photo saved! You can now try on looks.', 'success');
       setIsPhotoModalOpen(false);
       setUploadPreview(null);
@@ -104,7 +104,19 @@ const ExplorePage: React.FC = () => {
   }, [gender]);
 
   useEffect(() => {
-    setUserPhoto(ExploreService.getLatestUserPhoto(storageUserId));
+    let cancelled = false;
+    const current = ExploreService.getLatestUserPhoto(storageUserId);
+    setUserPhoto(current);
+    ExploreService.refreshLatestUserPhoto(storageUserId)
+      .then((updated) => {
+        if (!cancelled && updated) {
+          setUserPhoto(updated);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, [storageUserId]);
 
   const handleLike = (look: ExploreLook) => {

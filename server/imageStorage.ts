@@ -6,6 +6,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const EXPLORE_BUCKET = process.env.SUPABASE_EXPLORE_BUCKET || 'explore-images';
 const REMIX_BUCKET = process.env.SUPABASE_REMIX_BUCKET || 'remix-images';
+const PROFILE_BUCKET = process.env.SUPABASE_PROFILE_BUCKET || 'profilepics';
 
 const supabase = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
   ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
@@ -158,6 +159,35 @@ export const getRemixSignedUrl = async (path: string): Promise<string> => {
     .createSignedUrl(path, 3600);
   if (error || !data?.signedUrl) {
     throw new Error(error?.message || 'Failed to create signed URL');
+  }
+  return data.signedUrl;
+};
+
+export const persistProfilePhoto = async (
+  dataUri: string,
+  userId: string
+): Promise<{ path: string; url: string }> => {
+  if (!supabase) {
+    throw new Error('Supabase Storage is not configured.');
+  }
+  const { mime, buffer } = parseDataUri(dataUri);
+  const ext = inferExtension(mime);
+  const safeUser = safeSegment(userId, 'user');
+  const path = `${safeUser}/profile-${Date.now()}.${ext}`;
+  await uploadBufferToSupabase(PROFILE_BUCKET, path, buffer, mime);
+  const url = await getProfilePhotoUrl(path);
+  return { path, url };
+};
+
+export const getProfilePhotoUrl = async (path: string): Promise<string> => {
+  if (!supabase) {
+    throw new Error('Supabase Storage is not configured.');
+  }
+  const { data, error } = await supabase.storage
+    .from(PROFILE_BUCKET)
+    .createSignedUrl(path, 3600);
+  if (error || !data?.signedUrl) {
+    throw new Error(error?.message || 'Failed to create profile photo URL');
   }
   return data.signedUrl;
 };

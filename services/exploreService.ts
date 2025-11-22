@@ -65,6 +65,45 @@ const writeJson = (key: string, value: unknown) => {
 
 const remixKey = (userId: string) => `${REMIX_STORAGE_PREFIX}${userId}`;
 const photoKey = (userId: string) => `${PHOTO_STORAGE_PREFIX}${userId}`;
+const parsePhotoRecord = (raw: string | null): StoredPhotoRecord | null => {
+  if (!raw) return null;
+  if (raw.startsWith('data:') || raw.startsWith('http')) {
+    return { url: raw };
+  }
+  try {
+    return JSON.parse(raw) as StoredPhotoRecord;
+  } catch {
+    return { url: raw };
+  }
+};
+
+const storePhotoRecord = (userId: string, record: StoredPhotoRecord) => {
+  if (typeof window === 'undefined') return;
+  const serialized = JSON.stringify(record);
+  try {
+    localStorage.setItem(photoKey(userId), serialized);
+    localStorage.setItem(LEGACY_PHOTO_KEY, serialized);
+  } catch (error) {
+    console.warn('[ExploreService] Storage quota hit while saving photo record, falling back to minimal data.', error);
+    try {
+      const fallback = JSON.stringify({ url: record.url ?? '' });
+      localStorage.setItem(photoKey(userId), fallback);
+      localStorage.setItem(LEGACY_PHOTO_KEY, fallback);
+    } catch (fallbackError) {
+      console.error('[ExploreService] Failed to store photo even after fallback.', fallbackError);
+    }
+  }
+};
+
+const getPhotoRecord = (userId: string): StoredPhotoRecord | null => {
+  if (typeof window === 'undefined') return null;
+  return parsePhotoRecord(localStorage.getItem(photoKey(userId)));
+};
+
+const getLegacyPhotoRecord = (): StoredPhotoRecord | null => {
+  if (typeof window === 'undefined') return null;
+  return parsePhotoRecord(localStorage.getItem(LEGACY_PHOTO_KEY));
+};
 
 export const ExploreService = {
   async getLooks(gender: 'male' | 'female'): Promise<ExploreLook[]> {
@@ -276,30 +315,86 @@ export const ExploreService = {
   getLatestUserPhoto(userId?: string): string | null {
     if (typeof window === 'undefined') return null;
     if (!userId) {
-      return localStorage.getItem(LEGACY_PHOTO_KEY);
+      return getLegacyPhotoRecord()?.url ?? null;
     }
-    return localStorage.getItem(photoKey(userId)) || localStorage.getItem(LEGACY_PHOTO_KEY);
+    return getPhotoRecord(userId)?.url ?? getLegacyPhotoRecord()?.url ?? null;
   },
 
-  setLatestUserPhoto(userId: string, dataUrl: string) {
-    if (typeof window === 'undefined') return;
+  async setLatestUserPhoto(userId: string, dataUrl: string) {
+    if (typeof window === 'undefined') return null;
 
-    const approxBytes = Math.ceil((dataUrl.length * 3) / 4);
-    if (approxBytes > SIZE_LIMIT_BYTES) {
-      throw new Error('Photo is too large to save locally. Please use a smaller image.');
-    }
-
-    const key = photoKey(userId);
+    const saveLocally = () => {
+      const approxBytes = Math.ceil((dataUrl.length * 3) / 4);
+      if (approxBytes > SIZE_LIMIT_BYTES) {
+        throw new Error('Photo is too large to save locally. Please use a smaller image.');
+      }
+      const record: StoredPhotoRecord = { url: dataUrl };
+      storePhotoRecord(userId, record);
+      return dataUrl;
+    };
 
     try {
-      localStorage.setItem(key, dataUrl);
-      localStorage.setItem(LEGACY_PHOTO_KEY, dataUrl);
+      const response = await fetch('/api/profile-photo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, photoDataUrl: dataUrl }),
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || 'Failed to upload profile photo.');
+      }
+      const payload = await response.json();
+      if (typeof payload?.url !== 'string') {
+        throw new Error('Upload did not return a photo URL.');
+      }
+      const record: StoredPhotoRecord = {
+        path: payload.path,
+        url: payload.url,
+        expiresAt: Date.now() + PHOTO_URL_TTL_MS,
+      };
+      storePhotoRecord(userId, record);
       this.pruneRecentPhotos();
+      return payload.url;
     } catch (error) {
-      console.warn('[ExploreService] Storage quota hit while saving photo, clearing older photos.', error);
-      this.pruneRecentPhotos(true);
-      localStorage.setItem(key, dataUrl);
-      localStorage.setItem(LEGACY_PHOTO_KEY, dataUrl);
+      console.warn('[ExploreService] Failed to upload photo to Supabase. Falling back to local storage.', error);
+      return saveLocally();
+    }
+  },
+
+  async refreshLatestUserPhoto(userId: string): Promise<string | null> {
+    if (typeof window === 'undefined') return null;
+    const record = getPhotoRecord(userId);
+    if (!record?.path) {
+      return record?.url ?? null;
+    }
+    const needsRefresh =
+      !record.url ||
+      !record.expiresAt ||
+      record.expiresAt - Date.now() < PHOTO_REFRESH_BUFFER_MS;
+    if (!needsRefresh) {
+      return record.url ?? null;
+    }
+    try {
+      const response = await fetch(`/api/profile-photo/url?path=${encodeURIComponent(record.path)}`);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || 'Failed to refresh profile photo URL.');
+      }
+      const payload = await response.json();
+      const url = payload?.url;
+      if (typeof url !== 'string') {
+        throw new Error('Invalid photo URL response.');
+      }
+      const updated: StoredPhotoRecord = {
+        ...record,
+        url,
+        expiresAt: Date.now() + PHOTO_URL_TTL_MS,
+      };
+      storePhotoRecord(userId, updated);
+      return url;
+    } catch (error) {
+      console.warn('[ExploreService] Failed to refresh profile photo URL', error);
+      return record.url ?? null;
     }
   },
 
@@ -383,5 +478,42 @@ export const ExploreService = {
       }
     }
     keysToRemove.forEach((key) => localStorage.removeItem(key));
+  },
+
+  async refreshLatestUserPhoto(userId: string): Promise<string | null> {
+    if (typeof window === 'undefined') return null;
+    const record = getPhotoRecord(userId);
+    if (!record?.path) {
+      return record?.url ?? null;
+    }
+    const needsRefresh =
+      !record.url ||
+      !record.expiresAt ||
+      record.expiresAt - Date.now() < PHOTO_REFRESH_BUFFER_MS;
+    if (!needsRefresh) {
+      return record.url ?? null;
+    }
+    try {
+      const response = await fetch(`/api/profile-photo/url?path=${encodeURIComponent(record.path)}`);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || 'Failed to refresh profile photo URL.');
+      }
+      const payload = await response.json();
+      const url = payload?.url;
+      if (typeof url !== 'string') {
+        throw new Error('Invalid photo URL response.');
+      }
+      const updated: StoredPhotoRecord = {
+        ...record,
+        url,
+        expiresAt: Date.now() + PHOTO_URL_TTL_MS,
+      };
+      storePhotoRecord(userId, updated);
+      return url;
+    } catch (error) {
+      console.warn('[ExploreService] Failed to refresh profile photo URL', error);
+      return record.url ?? null;
+    }
   }
 };

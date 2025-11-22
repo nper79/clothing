@@ -529,6 +529,44 @@ const createDevBackendPlugin = (enabled: boolean): Plugin | null => {
         );
       });
 
+      server.middlewares.use('/api/profile-photo', async (req: IncomingMessage, res: ServerResponse) => {
+        await handleJsonPost(
+          req,
+          res,
+          async (body) => {
+            if (typeof body.userId !== 'string' || body.userId.trim().length === 0) {
+              throw new Error('Missing user id.');
+            }
+            if (typeof body.photoDataUrl !== 'string' || !body.photoDataUrl.startsWith('data:')) {
+              throw new Error('Provide the photo as a base64 data URL.');
+            }
+            const { persistProfilePhoto } = await import('./server/imageStorage');
+            const result = await persistProfilePhoto(body.photoDataUrl, body.userId);
+            return result;
+          },
+          '/api/profile-photo'
+        );
+      });
+
+      server.middlewares.use('/api/profile-photo/url', async (req: IncomingMessage, res: ServerResponse) => {
+        const requestUrl = new URL(req.url ?? '', 'http://localhost');
+        const path = requestUrl.searchParams.get('path');
+        res.setHeader('Content-Type', 'application/json');
+        if (!path) {
+          res.statusCode = 400;
+          res.end(JSON.stringify({ error: 'path is required.' }));
+          return;
+        }
+        try {
+          const { getProfilePhotoUrl } = await import('./server/imageStorage');
+          const url = await getProfilePhotoUrl(path);
+          res.end(JSON.stringify({ url }));
+        } catch (error) {
+          res.statusCode = 500;
+          res.end(JSON.stringify({ error: error instanceof Error ? error.message : 'Failed to refresh profile photo URL' }));
+        }
+      });
+
       server.middlewares.use('/api/dev/fal-grid-test', async (req: IncomingMessage, res: ServerResponse) => {
         await handleJsonPost(
           req,

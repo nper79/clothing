@@ -13,7 +13,7 @@ import {
   regenerateAllLookGrids,
   runFalGridDebug,
 } from './personalStylingWorkflow';
-import { getRemixSignedUrl } from './imageStorage';
+import { getRemixSignedUrl, persistProfilePhoto, getProfilePhotoUrl } from './imageStorage';
 import { readExploreDataset, writeExploreDataset } from './exploreDatasetStore';
 import { searchShoppingByImage } from './serperClient';
 import {
@@ -306,6 +306,41 @@ app.post('/api/style-analysis/insights', async (req, res) => {
   } catch (error) {
     console.error('[server] Failed to generate style insights', error);
     res.status(500).json({ error: 'Failed to generate style insights' });
+  }
+});
+
+app.post('/api/profile-photo', async (req, res) => {
+  const { userId, photoDataUrl } = req.body ?? {};
+  if (typeof userId !== 'string' || userId.trim().length === 0) {
+    return res.status(400).json({ error: 'Missing user id.' });
+  }
+  if (typeof photoDataUrl !== 'string' || !photoDataUrl.startsWith('data:')) {
+    return res.status(400).json({ error: 'Provide the photo as a base64 data URL.' });
+  }
+  try {
+    const result = await persistProfilePhoto(photoDataUrl, userId);
+    res.json(result);
+  } catch (error) {
+    console.error('[server] Failed to upload profile photo', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to upload profile photo',
+    });
+  }
+});
+
+app.get('/api/profile-photo/url', async (req, res) => {
+  const path = typeof req.query.path === 'string' ? req.query.path : '';
+  if (!path) {
+    return res.status(400).json({ error: 'path is required.' });
+  }
+  try {
+    const url = await getProfilePhotoUrl(path);
+    res.json({ url });
+  } catch (error) {
+    console.error('[server] Failed to refresh profile photo URL', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to refresh profile photo URL',
+    });
   }
 });
 
